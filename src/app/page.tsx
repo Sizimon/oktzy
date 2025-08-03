@@ -17,6 +17,8 @@ export default function Home() {
       <div>
         <label htmlFor="clip-url" className="text-lg font-medium">Clip URL:</label>
         <input id="clip-url" value={clipUrl} onChange={handleInputChange} type="text" className="mt-2 p-2 border border-gray-300 rounded" />
+      </div>
+      <div className="mt-8 w-full flex justify-center">
         <VideoDisplay clipUrl={clipUrl} />
       </div>
     </div>
