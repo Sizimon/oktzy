@@ -29,20 +29,19 @@ export default function Home() {
     }
 
   return (
-    <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8">
-      <h1 className="text-4xl font-bold">Welcome to Clip Curator</h1>
+    <div className="font-sans flex flex-col items-center justify-items-center h-lvh p-8">
       <div>
         <label htmlFor="clip-url" className="text-lg font-medium">Clip URL:</label>
         <input id="clip-url" value={clipUrl} onChange={handleInputChange} type="text" className="mt-2 p-2 border border-gray-300 rounded" />
       </div>
       <div className="mt-8 w-full flex justify-center">
-        <VideoDisplay clipUrl={clipUrl} />
+        <VideoDisplay clipUrl={clipUrl} modalOpen={timestampModalOpen} />
       </div>
       <div>
-        <button className="mt-4 p-2 bg-blue-500 text-white rounded" onClick={handleAddTimestamp}>Add Timestamp</button>
+        <button className="mt-4 p-2 bg-blue-500 text-white rounded cursor-pointer" onClick={handleAddTimestamp}>Add Timestamp</button>
       </div>
       {timestampModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/30">
           <div className="bg-white p-6 rounded shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Timestamp Added</h2>
             <p className="mb-4">Timestamp: {new Date().toLocaleTimeString()}</p>
