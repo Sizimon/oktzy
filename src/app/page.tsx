@@ -6,7 +6,9 @@ import { VideoDisplay } from '@/components/VideoDisplay';
 export default function Home() {
     const [clipUrl, setClipUrl] = useState<string>('');
     const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
+    const [currentTime, setCurrentTime] = useState<number>(0);
     console.log('Clip URL:', clipUrl);
+    console.log('Current Time:', currentTime);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setClipUrl(event.target.value);
@@ -35,7 +37,7 @@ export default function Home() {
         <input id="clip-url" value={clipUrl} onChange={handleInputChange} type="text" className="mt-2 p-2 border border-gray-300 rounded" />
       </div>
       <div className="mt-8 w-full flex justify-center">
-        <VideoDisplay clipUrl={clipUrl} modalOpen={timestampModalOpen} />
+        <VideoDisplay clipUrl={clipUrl} modalOpen={timestampModalOpen} setCurrentTime={setCurrentTime} />
       </div>
       <div>
         <button className="mt-4 p-2 bg-blue-500 text-white rounded cursor-pointer" onClick={handleAddTimestamp}>Add Timestamp</button>
