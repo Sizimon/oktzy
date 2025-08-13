@@ -17,7 +17,7 @@ export const VideoDisplay = ({
 
     return (
         <div className="w-full flex justify-center">
-            <ReactPlayer src={clipUrl} width="66%" height="500px" playing={!modalOpen} controls onTimeUpdate={handleProgress} />
+            <ReactPlayer src={clipUrl} width="100%" height="500px" playing={!modalOpen} controls onTimeUpdate={handleProgress} />
         </div>
     );
 }

@@ -19,6 +19,10 @@ export default function Home() {
   // console.log('Clip URL:', clipUrl);
   // console.log('Current Time:', currentTime);
 
+  // Function to handle saving a timestamp
+  // This function creates a new timestamp object and adds it to the timestamps state
+  // It resets the title and note fields after saving
+  // It also closes the timestamp modal
   const handleSaveTimestamp = () => {
     const newTimestamp: timestamp = {
       title: timestampTitle,
@@ -31,6 +35,10 @@ export default function Home() {
     setTimestampModalOpen(false);
   }
 
+  // Function to format the current time in HH:MM:SS format
+  // This function is used to display the time in a user-friendly format
+  // It takes a time in seconds and returns a string formatted as HH:MM:SS
+  // If the time is less than an hour, it returns MM:SS format
   function formatCurrentTime(time: number): string {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -63,32 +71,32 @@ export default function Home() {
   }
 
   return (
-    <div className="font-sans flex flex-col items-center justify-items-center h-lvh p-8">
-      <div>
-        <input
-          type="text"
-          value={clipUrl}
-          placeholder='Enter clip URL...'
-          onChange={handleInputChange}
-          className="mt-2 p-2 border border-gray-300 rounded"
-        />
+    <div className="font-sans grid grid-flow-col grid-cols-10 space-x-8 items-center justify-center h-lvh p-8">
+      <div className='col-span-6 flex flex-col items-center justify-center'>
+        <div className='flex justify-center w-full'>
+          <input
+            type="text"
+            value={clipUrl}
+            placeholder='Enter clip URL...'
+            onChange={handleInputChange}
+            className="mt-2 p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="mt-8 w-full flex justify-center">
+          <VideoDisplay
+            clipUrl={clipUrl}
+            modalOpen={timestampModalOpen}
+            setCurrentTime={setCurrentTime}
+          />
+        </div>
       </div>
-      <div className="mt-8 w-full flex justify-center">
-        <VideoDisplay
-          clipUrl={clipUrl}
-          modalOpen={timestampModalOpen}
-          setCurrentTime={setCurrentTime}
-        />
-      </div>
-      <div>
+      <div className="flex flex-col space-y-4 w-full col-span-4 justify-start items-center">
         <button
           className="mt-4 p-2 bg-blue-500 text-white rounded cursor-pointer"
           onClick={handleAddTimestamp}
         >
           Add Timestamp
         </button>
-      </div>
-      <div className="mt-8 w-full flex justify-center">
         <NoteDisplay
           timestamps={timestamps}
           formatCurrentTime={formatCurrentTime}
