@@ -13,13 +13,16 @@
   }
 }
 
-@media(prefers-color-scheme: dark) {
-  
+.dark {
+  --background: #212121;
+  --foreground: rgb(30, 30, 33);
+  --text: rgb(234, 234, 234);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-text: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -94,7 +97,8 @@
 
 .dark {
   --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
+  --foreground: oklch(27.478% 0.00918 285.739);
+  --text: oklch(90.975% 0.0001 271.152);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);

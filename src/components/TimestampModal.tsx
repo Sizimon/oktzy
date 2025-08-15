@@ -29,7 +29,7 @@ export const TimestampModal: React.FC<TimestampModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-      <div className="flex flex-col justify-center items-center bg-white p-6 rounded shadow-lg w-2/6">
+      <div className="flex flex-col justify-center items-center text-text bg-background p-6 rounded shadow-lg w-2/6">
         <p>{formatCurrentTime(currentTime)}</p>
         <input
           type="text"
@@ -37,23 +37,23 @@ export const TimestampModal: React.FC<TimestampModalProps> = ({
           value={title}
           maxLength={24}
           onChange={(e) => setTitle(e.target.value)}
-          className="my-4 p-2 border border-gray-300 rounded"
+          className="my-4 p-2 border border-gray-300 bg-foreground rounded"
         />
         <textarea
           placeholder="Timestamp note..."
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="mb-4 p-2 border border-gray-300 rounded w-full"
+          className="mb-4 p-2 border bg-foreground border-gray-300 rounded w-full"
         />
         <div className="flex flex-row justify-center w-full space-x-4">
           <button
-            className="ml-2 p-2 bg-green-500 text-white rounded cursor-pointer"
+            className="ml-2 p-2 bg-green-500 rounded cursor-pointer"
             onClick={handleSave}
           >
             Save Timestamp
           </button>
           <button
-            className="p-2 bg-red-500 text-white rounded cursor-pointer"
+            className="p-2 bg-red-500 rounded cursor-pointer"
             onClick={handleClose}
           >
             Cancel

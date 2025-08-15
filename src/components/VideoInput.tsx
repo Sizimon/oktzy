@@ -13,7 +13,7 @@ export const VideoInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }
         value={clipUrl}
         placeholder="Enter clip URL..."
         onChange={onInputChange}
-        className="mt-2 p-2 border border-gray-300 rounded"
+        className="mt-2 p-2 border bg-foreground text-text border-gray-300 rounded-full w-1/3"
       />
     </div>
   );

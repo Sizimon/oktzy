@@ -9,8 +9,13 @@ interface NoteDisplayProps {
 
 export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps }) => {
     return (
-        <div className='px-8 rounded bg-zinc-200 w-full'>
-            <Accordion type="single" collapsible className="w-full" defaultValue='ERROR'>
+        <div className='px-8 rounded bg-foreground w-full'>
+            {timestamps.length === 0 ? (
+                <div className='p-4 rounded bg-foreground text-text'>
+                    <p className="text-center">No timestamps available, click "Add Timestamp" to create one.</p>
+                </div>
+            ) : (
+                <Accordion type="single" collapsible className="w-full max-h-[400px] overflow-y-auto" defaultValue='ERROR'>
                 {timestamps.map((timestamp, index) => (
                     <AccordionItem key={index} value={`item-${index}`}>
                         <AccordionTrigger>
@@ -29,6 +34,7 @@ export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps }) => {
                     </AccordionItem>
                 ))}
             </Accordion>
+            )}
         </div>
     )
 }
