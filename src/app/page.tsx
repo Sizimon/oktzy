@@ -7,6 +7,8 @@ import { TimestampModal } from '@/components/TimestampModal';
 import { useTimestamps } from '@/hooks/useTimestamps';
 import { useVideoState } from '@/hooks/useVideoState';
 
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
 
@@ -29,12 +31,44 @@ export default function Home() {
   };
 
   const handleSaveTimestamp = (title: string, note: string) => {
+    const notify = (message: string) => toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+
+    if (!title || !note) {
+      notify('Please provide both a title and a note for the timestamp.');
+      return;
+    }
+
     addTimestamp(currentTime, title, note);
     setTimestampModalOpen(false);
   };
 
   return (
     <div className="font-sans grid grid-flow-col grid-cols-10 space-x-8 items-center justify-center h-lvh p-8">
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+
       <div className="col-span-6 flex flex-col items-center justify-center">
         <VideoInput clipUrl={clipUrl} onInputChange={handleInputChange} />
         <div className="mt-8 w-full flex justify-center">
@@ -43,14 +77,14 @@ export default function Home() {
               <p className="text-gray-500">No video URL provided</p>
             </div>
           ) : (
-          <VideoDisplay
-            clipUrl={clipUrl}
-            modalOpen={timestampModalOpen}
-            retainedVolume={retainedVolume}
-            setRetainedVolume={setRetainedVolume}
-            setCurrentTime={setCurrentTime}
-          />
-        )}
+            <VideoDisplay
+              clipUrl={clipUrl}
+              modalOpen={timestampModalOpen}
+              retainedVolume={retainedVolume}
+              setRetainedVolume={setRetainedVolume}
+              setCurrentTime={setCurrentTime}
+            />
+          )}
 
         </div>
       </div>
