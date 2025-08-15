@@ -7,17 +7,21 @@ interface timestamp {
   title: string;
   note: string;
   time: number;
+  timeStringConverted: string;
 }
 
 export default function Home() {
   const [clipUrl, setClipUrl] = useState<string>('');
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
+
+  const [retainedVolume, setRetainedVolume] = useState<number>(1); // Helps store the volume value to prevent reset on rerenders.
+  const [currentTime, setCurrentTime] = useState<number>(0); // Grabs the currentTime
+
   const [timestampTitle, setTimestampTitle] = useState<string>('');
   const [timestampNote, setTimestampNote] = useState<string>('');
   const [timestamps, setTimestamps] = useState<Array<timestamp>>([]);
   // console.log('Clip URL:', clipUrl);
-  // console.log('Current Time:', currentTime);
+  console.log('Current Time:', currentTime);
 
   // Function to handle saving a timestamp
   // This function creates a new timestamp object and adds it to the timestamps state
@@ -27,7 +31,8 @@ export default function Home() {
     const newTimestamp: timestamp = {
       title: timestampTitle,
       note: timestampNote,
-      time: currentTime
+      time: currentTime,
+      timeStringConverted: formatCurrentTime(currentTime)
     }
     setTimestamps(prev => [...prev, newTimestamp]);
     setTimestampTitle('');
@@ -86,6 +91,8 @@ export default function Home() {
           <VideoDisplay
             clipUrl={clipUrl}
             modalOpen={timestampModalOpen}
+            retainedVolume={retainedVolume}
+            setRetainedVolume={setRetainedVolume}
             setCurrentTime={setCurrentTime}
           />
         </div>
@@ -99,7 +106,6 @@ export default function Home() {
         </button>
         <NoteDisplay
           timestamps={timestamps}
-          formatCurrentTime={formatCurrentTime}
         />
       </div>
       {timestampModalOpen && (

@@ -7,11 +7,11 @@ interface NoteDisplayProps {
         title: string;
         note: string;
         time: number;
+        timeStringConverted: string;
     }[];
-    formatCurrentTime: (time: number) => string;
 }
 
-export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, formatCurrentTime }) => {
+export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps }) => {
     return (
         <div className='px-8 rounded bg-zinc-200 w-full'>
             <Accordion type="single" collapsible className="w-full" defaultValue='ERROR'>
@@ -21,7 +21,7 @@ export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, formatCurr
                             <div className="flex justify-center items-center w-full cursor-pointer">
                                 <span className="font-medium uppercase">{timestamp.title}</span>
                                 <span className="text-sm text-gray-500 ml-2">
-                                    {formatCurrentTime(timestamp.time)}
+                                    {timestamp.timeStringConverted}
                                 </span>
                             </div>
                         </AccordionTrigger>
