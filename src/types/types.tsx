@@ -1,0 +1,27 @@
+export interface Timestamp { // Represents a single timestamp entry
+  title: string;
+  note: string;
+  time: number;
+  timeStringConverted: string;
+}
+
+export interface CuratorData { // Represents the data structure for a curator
+  source: string;
+  timestamps: Timestamp[];
+  [key: string]: any; // Allows for additional properties
+}
+
+export interface VideoDisplayProps { // Represents the props for the video display component
+  clipUrl: string;
+  modalOpen: boolean;
+  retainedVolume: number;
+  setRetainedVolume: (volume: number) => void;
+  setCurrentTime: (time: number) => void;
+}
+
+export interface TimestampModalProps { // Represents the props for the timestamp modal component
+  isOpen: boolean;
+  currentTime: number;
+  onSave: (title: string, note: string) => void;
+  onClose: () => void;
+}
