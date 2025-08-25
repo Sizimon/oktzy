@@ -17,6 +17,12 @@ export interface VideoDisplayProps { // Represents the props for the video displ
   retainedVolume: number;
   setRetainedVolume: (volume: number) => void;
   setCurrentTime: (time: number) => void;
+  ref: React.RefObject<any>;
+}
+
+export interface NoteDisplayProps {
+    timestamps: Timestamp[];
+    handleToTimestamp: (time: number) => void;
 }
 
 export interface TimestampModalProps { // Represents the props for the timestamp modal component

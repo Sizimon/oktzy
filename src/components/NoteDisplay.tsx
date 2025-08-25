@@ -1,13 +1,10 @@
 'use client';
 import React from 'react';
-import { Timestamp } from '@/types/types';
+import { NoteDisplayProps } from '@/types/types';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from './ui/accordion';
 
-interface NoteDisplayProps {
-    timestamps: Timestamp[];
-}
 
-export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps }) => {
+export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTimestamp }) => {
     return (
         <div className='p-4 rounded-2xl bg-slate-800 w-full'>
             {timestamps.length === 0 ? (
@@ -22,7 +19,9 @@ export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps }) => {
                             <div className="flex justify-start items-center w-full">
                                 <span className="font-medium uppercase">{timestamp.title}</span>
                             </div>
-                            <span className="text-sm text-gray-500 ml-2">
+                            <span 
+                            onClick={() => handleToTimestamp(timestamp.time)}
+                            className="text-sm text-gray-500 ml-2 hover:text-violet-700 cursor-pointer">
                                     {timestamp.timeStringConverted}
                                 </span>
                         </AccordionTrigger>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { VideoDisplay } from '@/components/VideoDisplay';
 import { VideoInput } from '@/components/VideoInput';
 import { NoteDisplay } from '@/components/NoteDisplay';
@@ -14,6 +14,7 @@ import Galaxy from '@/Galaxy/Galaxy';
 
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
+  const playerRef = useRef<any>(null);
 
   const {
     clipUrl,
@@ -69,6 +70,12 @@ export default function Home() {
     setTimestampModalOpen(false);
   };
 
+  const handleToTimestamp = (time: number) => {
+    if (playerRef.current) {
+      playerRef.current.currentTime = time;
+    }
+  }
+
   return (
     <div className='relative w-full h-lvh'>
       <div className='absolute inset-0 z-0'>
@@ -117,6 +124,7 @@ export default function Home() {
                   retainedVolume={retainedVolume}
                   setRetainedVolume={setRetainedVolume}
                   setCurrentTime={setCurrentTime}
+                  ref={playerRef}
                 />
               )}
 
@@ -137,7 +145,7 @@ export default function Home() {
                 Submit to Noto
               </button>
             </div>
-            <NoteDisplay timestamps={timestamps} />
+            <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} />
           </div>
 
           <TimestampModal
