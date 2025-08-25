@@ -1,14 +1,12 @@
 'use client';
 import React, { useEffect } from 'react';
 import { NoteDisplayProps } from '@/types/types';
-import { useVideoState } from '@/hooks/useVideoState';
-import { useTimestamps } from '@/hooks/useTimestamps';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from './ui/accordion';
 
 
 export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTimestamp, clipUrl, clearTimestamps }) => {
 
-    useEffect(() => {
+    useEffect(() => { // Clear timestamps when clipUrl changes
         clearTimestamps();
     }, [clipUrl]);
 
