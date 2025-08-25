@@ -15,6 +15,8 @@ export const VideoInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }
       } else {
         onInputChange(event);
       }
+    } else {
+      onInputChange(event);
     }
   }
 
