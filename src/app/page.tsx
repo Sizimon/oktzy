@@ -27,7 +27,8 @@ export default function Home() {
 
   const {
     timestamps,
-    addTimestamp
+    addTimestamp,
+    clearTimestamps
   } = useTimestamps();
 
   const handleAddTimestamp = () => {
@@ -57,7 +58,7 @@ export default function Home() {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "light",
+      theme: "dark",
       transition: Bounce,
     });
 
@@ -145,7 +146,7 @@ export default function Home() {
                 Submit to Noto
               </button>
             </div>
-            <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} />
+            <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
           </div>
 
           <TimestampModal

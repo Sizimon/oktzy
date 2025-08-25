@@ -23,6 +23,8 @@ export interface VideoDisplayProps { // Represents the props for the video displ
 export interface NoteDisplayProps {
     timestamps: Timestamp[];
     handleToTimestamp: (time: number) => void;
+    clipUrl: string;
+    clearTimestamps: () => void;
 }
 
 export interface TimestampModalProps { // Represents the props for the timestamp modal component

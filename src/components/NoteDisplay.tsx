@@ -1,10 +1,17 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NoteDisplayProps } from '@/types/types';
+import { useVideoState } from '@/hooks/useVideoState';
+import { useTimestamps } from '@/hooks/useTimestamps';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from './ui/accordion';
 
 
-export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTimestamp }) => {
+export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTimestamp, clipUrl, clearTimestamps }) => {
+
+    useEffect(() => {
+        clearTimestamps();
+    }, [clipUrl]);
+
     return (
         <div className='p-4 rounded-2xl bg-slate-800 w-full'>
             {timestamps.length === 0 ? (
