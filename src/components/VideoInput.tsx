@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface VideoInputProps {
-  clipUrl: string;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { VideoInputProps } from '@/types/types';
 
 export const VideoInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }) => {
 

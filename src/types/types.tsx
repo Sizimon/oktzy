@@ -11,6 +11,11 @@ export interface CuratorData { // Represents the data structure for a curator
   [key: string]: any; // Allows for additional properties
 }
 
+export interface VideoInputProps {
+  clipUrl: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 export interface VideoDisplayProps { // Represents the props for the video display component
   clipUrl: string;
   modalOpen: boolean;
