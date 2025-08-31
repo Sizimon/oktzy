@@ -6,6 +6,10 @@ import { formatCurrentTime } from '@/utils/formatTime';
 export const useTimestamps = () => {
   const [timestamps, setTimestamps] = useState<Timestamp[]>([]);
 
+  const clearTimestamps = () => {
+    setTimestamps([]);
+  }
+
   const addTimestamp = (currentTime: number, title: string, note: string) => {
     const newTimestamp: Timestamp = {
       title: title,
@@ -19,6 +23,7 @@ export const useTimestamps = () => {
 
   return {
     timestamps,
-    addTimestamp
+    addTimestamp,
+    clearTimestamps
   };
 };

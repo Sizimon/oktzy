@@ -1,19 +1,14 @@
-import React, {useRef, useCallback, useEffect} from 'react';
+import React, {useRef, useCallback, useEffect, forwardRef} from 'react';
+import { VideoDisplayProps } from '@/types/types';
 import ReactPlayer from 'react-player';
 
-export const VideoDisplay = ({
+export const VideoDisplay = forwardRef<any, VideoDisplayProps>(({
     clipUrl,
     modalOpen,
     setCurrentTime,
     retainedVolume,
-    setRetainedVolume
-}: {
-    clipUrl: string,
-    modalOpen: boolean,
-    setCurrentTime: (time: number) => void,
-    retainedVolume: number,
-    setRetainedVolume: (volume: number) => void
-}) => {
+    setRetainedVolume,
+}, ref) => {
     const currentTimeRef = useRef<number>(0);
     const currentVolumeRef = useRef<number>(1);
 
@@ -35,4 +30,4 @@ export const VideoDisplay = ({
             <ReactPlayer src={clipUrl} width="100%" height="100%" playing={!modalOpen} volume={retainedVolume} controls onTimeUpdate={handleProgress} />
         </div>
     );
-}
+});
