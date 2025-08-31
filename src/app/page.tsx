@@ -102,8 +102,8 @@ export default function Home() {
           theme="dark"
           transition={Bounce}
         />
-        <div className="font-sans grid grid-flow-col grid-cols-10 space-x-4 items-center justify-center px-4 text-text z-50">
-          <div className="relative col-span-7 flex flex-col items-center justify-center p-4 rounded-2xl h-[80lvh] bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10">
+        <div className="font-sans grid grid-flow-row md:grid-flow-col grid-cols-10 space-y-4 md:space-x-4 items-center justify-center md:px-4 text-text z-50">
+          <div className="relative col-span-10 w-full md:col-span-7 flex flex-col items-center justify-center md:p-4 md:rounded-2xl md:h-[80lvh] bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10">
             <div className="w-full justify-start">
               {!clipUrl ? (
                 <div className="text-center p-4 rounded space-y-4">
@@ -123,7 +123,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col w-full space-y-4 col-span-3 justify-start items-center p-4 rounded-2xl bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 h-[80lvh]">
+          <div className="flex flex-col w-full space-y-4 col-span-10 md:col-span-3 justify-start items-center p-4 md:rounded-2xl bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 h-[80lvh]">
             <div className='flex flex-row space-x-4 justify-center items-center w-full'>
               <button
                 className="p-2 bg-blue-500 text-white rounded cursor-pointer"

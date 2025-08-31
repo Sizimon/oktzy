@@ -31,8 +31,8 @@ export const VideoDisplay = ({
     }, [modalOpen, setCurrentTime, setRetainedVolume]);
 
     return (
-        <div className="w-full flex justify-center">
-            <ReactPlayer src={clipUrl} width="100%" height="500px" playing={!modalOpen} volume={retainedVolume} controls onTimeUpdate={handleProgress} />
+        <div className="w-full flex justify-center h-[33lvh] md:h-[70lvh]">
+            <ReactPlayer src={clipUrl} width="100%" height="100%" playing={!modalOpen} volume={retainedVolume} controls onTimeUpdate={handleProgress} />
         </div>
     );
 }
