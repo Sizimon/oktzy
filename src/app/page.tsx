@@ -27,6 +27,7 @@ export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
   const [exportModalOpen, setExportModalOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
 
   const {
@@ -112,26 +113,6 @@ export default function Home() {
       return;
     }
     setIsExporting(true);    
-
-    try {
-      const response = await fetch('/api/export-to-noto', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(dataToExport),
-      });
-
-      if (response.ok) {
-        toast.success('Data successfully exported to Noto!');
-        setExportModalOpen(false);
-      } else {
-        throw new Error('Export failed');
-      }
-    } catch (error) {
-      toast.error(`Failed to export to Noto`);
-      console.error('Export error:', error);
-    } finally {
-      setIsExporting(false);
-    }
   }
 
   return (
@@ -226,6 +207,7 @@ export default function Home() {
             onExport={handleExport}
             curatorData={curatorData}
             isExporting={isExporting}
+            isCheckingAuth={isCheckingAuth}
           />
         </div>
       </div>

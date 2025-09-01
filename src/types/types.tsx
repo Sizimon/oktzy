@@ -45,4 +45,5 @@ export interface ExportModalProps {
   onClose: () => void;
   curatorData: CuratorData | null;
   isExporting: boolean;
+  isCheckingAuth: boolean;
 }
