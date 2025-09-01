@@ -112,7 +112,13 @@ export default function Home() {
       toast.error('No curator data to export');
       return;
     }
-    setIsExporting(true);    
+    setIsExporting(true);   
+    
+    // check if user authenticated
+
+    // if no auth, toast & call login (login created in useNotoAuth)
+
+    // if auth, create the task (createTask created in useNotoAuth)
   }
 
   return (
