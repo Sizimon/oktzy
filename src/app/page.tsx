@@ -1,19 +1,32 @@
 'use client';
 import React, { useState, useRef } from 'react';
+
+// Component Imports
 import { VideoDisplay } from '@/components/VideoDisplay';
 import { VideoInput } from '@/components/VideoInput';
 import { NoteDisplay } from '@/components/NoteDisplay';
+
+// Modal Imports
 import { TimestampModal } from '@/components/TimestampModal';
+import { ExportModal } from '@/components/ExportModal';
+
+// Hook Imports
 import { useTimestamps } from '@/hooks/useTimestamps';
 import { useVideoState } from '@/hooks/useVideoState';
+import { useCuratorData } from '@/hooks/useCuratorData';
 
-
+// Misc Imports
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import Galaxy from '@/Galaxy/Galaxy';
 
+// Type Imports
+import { CuratorData } from '@/types/types';
+
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
+  const [exportModalOpen, setExportModalOpen] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
 
   const {
@@ -31,6 +44,9 @@ export default function Home() {
     clearTimestamps
   } = useTimestamps();
 
+  const { curatorData, generateCuratorData } = useCuratorData();
+
+  // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
     if (!clipUrl) {
       toast.warning('Please provide a video URL before adding a timestamp.', {
@@ -49,6 +65,7 @@ export default function Home() {
     setTimestampModalOpen(true);
   };
 
+  // Handler which saves the timestamp data
   const handleSaveTimestamp = (title: string, note: string) => {
     const notify = (message: string) => toast.error(message, {
       position: "top-right",
@@ -71,14 +88,67 @@ export default function Home() {
     setTimestampModalOpen(false);
   };
 
+
+  // Handler which seeks the video to the specified timestamp
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
       playerRef.current.currentTime = time;
+    }
+  };
+
+  // Handler which saves the data in a 'CuratorData' object, ready for export.
+  const handleExportModal = () => {
+    if (!clipUrl) {
+      toast.error('No clip URL/timestamp data provided');
+      return;
+    }
+    generateCuratorData(clipUrl, timestamps);
+    setExportModalOpen(true);
+  }
+
+  const handleExport = async (dataToExport: CuratorData) => {
+    if (!curatorData) {
+      toast.error('No curator data to export');
+      return;
+    }
+    setIsExporting(true);    
+
+    try {
+      const response = await fetch('/api/export-to-noto', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(dataToExport),
+      });
+
+      if (response.ok) {
+        toast.success('Data successfully exported to Noto!');
+        setExportModalOpen(false);
+      } else {
+        throw new Error('Export failed');
+      }
+    } catch (error) {
+      toast.error(`Failed to export to Noto`);
+      console.error('Export error:', error);
+    } finally {
+      setIsExporting(false);
     }
   }
 
   return (
     <div className='relative w-full h-lvh'>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
       <div className='absolute inset-0 z-0'>
         <Galaxy
           mouseInteraction={true}
@@ -96,22 +166,15 @@ export default function Home() {
       <div className='flex h-[10lvh] justify-center items-center'>
         <VideoInput clipUrl={clipUrl} onInputChange={handleInputChange} />
       </div>
-      <div className='grid z-50'>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-          transition={Bounce}
-        />
-        <div className="font-sans grid grid-flow-row md:grid-flow-col grid-cols-10 space-y-4 md:space-x-4 items-center justify-center md:px-4 text-text z-50">
-          <div className="relative col-span-10 w-full md:col-span-7 flex flex-col items-center justify-center md:p-4 md:rounded-2xl md:h-[80lvh] bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10">
+      <div className='grid z-50 h-[90lvh]'>
+        <div className="
+          font-sans grid grid-flow-row grid-cols-10 gap-4 items-center justify-center text-text z-50
+          md:grid-flow-col md:gap-4 md:px-4"
+        >
+          <div className="
+            relative col-span-10 w-full flex flex-col items-center justify-center bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10
+            md:col-span-7 md:p-4 md:rounded-2xl md:h-[80lvh]
+            ">
             <div className="w-full justify-start">
               {!clipUrl ? (
                 <div className="text-center p-4 rounded space-y-4">
@@ -141,6 +204,7 @@ export default function Home() {
                 Add Timestamp
               </button>
               <button
+                onClick={handleExportModal}
                 className="p-2 bg-green-500 text-white rounded cursor-pointer"
               >
                 Submit to Noto
@@ -148,7 +212,6 @@ export default function Home() {
             </div>
             <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
           </div>
-
           <TimestampModal
             isOpen={timestampModalOpen}
             currentTime={currentTime}
@@ -156,6 +219,13 @@ export default function Home() {
               handleSaveTimestamp(title, note);
             }}
             onClose={() => setTimestampModalOpen(false)}
+          />
+          <ExportModal
+            isOpen={exportModalOpen}
+            onClose={() => setExportModalOpen(false)}
+            onExport={handleExport}
+            curatorData={curatorData}
+            isExporting={isExporting}
           />
         </div>
       </div>

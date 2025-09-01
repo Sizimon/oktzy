@@ -6,7 +6,7 @@ export interface Timestamp { // Represents a single timestamp entry
 }
 
 export interface CuratorData { // Represents the data structure for a curator
-  source: string;
+  clipUrl: string;
   timestamps: Timestamp[];
   [key: string]: any; // Allows for additional properties
 }
@@ -37,4 +37,12 @@ export interface TimestampModalProps { // Represents the props for the timestamp
   currentTime: number;
   onSave: (title: string, note: string) => void;
   onClose: () => void;
+}
+
+export interface ExportModalProps {
+  isOpen: boolean;
+  onExport: (data: CuratorData) => void;
+  onClose: () => void;
+  curatorData: CuratorData | null;
+  isExporting: boolean;
 }
