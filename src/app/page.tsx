@@ -14,6 +14,10 @@ import { ExportModal } from '@/components/ExportModal';
 import { useTimestamps } from '@/hooks/useTimestamps';
 import { useVideoState } from '@/hooks/useVideoState';
 import { useCuratorData } from '@/hooks/useCuratorData';
+import { useNotoAuth } from '@/hooks/useNotoAuth';
+
+// Utility Imports
+import formatContentAsHTML from '@/utils/formatHTML';
 
 // Misc Imports
 import { Bounce, ToastContainer, toast } from 'react-toastify';
@@ -46,6 +50,14 @@ export default function Home() {
   } = useTimestamps();
 
   const { curatorData, generateCuratorData } = useCuratorData();
+
+  const {
+    checkAuthStatus,
+    login,
+    createTask,
+    isAuthenticated,
+    isLoading,
+  } = useNotoAuth();
 
   // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
@@ -112,13 +124,36 @@ export default function Home() {
       toast.error('No curator data to export');
       return;
     }
-    setIsExporting(true);   
-    
-    // check if user authenticated
 
-    // if no auth, toast & call login (login created in useNotoAuth)
+    try {
+      // Check authentication status
+      setIsCheckingAuth(true);
+      await checkAuthStatus();
+      setIsCheckingAuth(false);
 
-    // if auth, create the task (createTask created in useNotoAuth)
+      if (!isAuthenticated) {
+        toast.info('Redirecting to Noto...')
+        login(dataToExport);
+        return;
+      }
+
+      setIsExporting(true);
+
+      const taskData = {
+        title: dataToExport.title || 'Untitled Export',
+        content: formatContentAsHTML(dataToExport)
+      };
+
+      await createTask(taskData);
+
+      toast.success('Successfully exported to Noto!')
+      setExportModalOpen(false);
+    } catch (error: any) {
+      toast.error(`Export failed: ${error.message}`)
+
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   return (
