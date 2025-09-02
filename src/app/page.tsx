@@ -193,7 +193,7 @@ export default function Home() {
                 onClick={handleExportModal}
                 className="p-2 bg-green-500 text-white rounded cursor-pointer"
               >
-                Submit to Noto
+                Save
               </button>
             </div>
             <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
