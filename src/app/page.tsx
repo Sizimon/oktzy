@@ -8,16 +8,12 @@ import { NoteDisplay } from '@/components/NoteDisplay';
 
 // Modal Imports
 import { TimestampModal } from '@/components/TimestampModal';
-import { ExportModal } from '@/components/ExportModal';
+import { SaveModal } from '@/components/SaveModal';
 
 // Hook Imports
 import { useTimestamps } from '@/hooks/useTimestamps';
 import { useVideoState } from '@/hooks/useVideoState';
 import { useCuratorData } from '@/hooks/useCuratorData';
-import { useNotoAuth } from '@/hooks/useNotoAuth';
-
-// Utility Imports
-import formatContentAsHTML from '@/utils/formatHTML';
 
 // Misc Imports
 import { Bounce, ToastContainer, toast } from 'react-toastify';
@@ -30,8 +26,7 @@ import { CuratorData } from '@/types/types';
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
   const [exportModalOpen, setExportModalOpen] = useState<boolean>(false);
-  const [isExporting, setIsExporting] = useState<boolean>(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
 
   const {
@@ -50,14 +45,6 @@ export default function Home() {
   } = useTimestamps();
 
   const { curatorData, generateCuratorData } = useCuratorData();
-
-  const {
-    checkAuthStatus,
-    login,
-    createTask,
-    isAuthenticated,
-    isLoading,
-  } = useNotoAuth();
 
   // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
@@ -119,40 +106,17 @@ export default function Home() {
     setExportModalOpen(true);
   }
 
-  const handleExport = async (dataToExport: CuratorData) => {
+  const handleSave = async (dataToSave: CuratorData) => {
     if (!curatorData) {
       toast.error('No curator data to export');
       return;
     }
 
     try {
-      // Check authentication status
-      setIsCheckingAuth(true);
-      await checkAuthStatus();
-      setIsCheckingAuth(false);
-
-      if (!isAuthenticated) {
-        toast.info('Redirecting to Noto...')
-        login(dataToExport);
-        return;
-      }
-
-      setIsExporting(true);
-
-      const taskData = {
-        title: dataToExport.title || 'Untitled Export',
-        content: formatContentAsHTML(dataToExport)
-      };
-
-      await createTask(taskData);
-
-      toast.success('Successfully exported to Noto!')
-      setExportModalOpen(false);
     } catch (error: any) {
-      toast.error(`Export failed: ${error.message}`)
-
+      toast.error(`Export failed: ${error.message}`);
     } finally {
-      setIsExporting(false);
+      setIsSaving(false);
     }
   }
 
@@ -242,13 +206,12 @@ export default function Home() {
             }}
             onClose={() => setTimestampModalOpen(false)}
           />
-          <ExportModal
+          <SaveModal
             isOpen={exportModalOpen}
             onClose={() => setExportModalOpen(false)}
-            onExport={handleExport}
+            onSave={handleSave}
+            isSaving={isSaving}
             curatorData={curatorData}
-            isExporting={isExporting}
-            isCheckingAuth={isCheckingAuth}
           />
         </div>
       </div>

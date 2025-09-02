@@ -15,7 +15,7 @@ export const VideoDisplay = forwardRef<any, VideoDisplayProps>(({
     const handleProgress = useCallback((progress: any) => {
         currentVolumeRef.current = progress.srcElement ? progress.srcElement.volume : 1;
         currentTimeRef.current = progress.srcElement ? progress.srcElement.currentTime : 0;
-        console.log('Current Time:', currentTimeRef.current);
+        // console.log('Current Time:', currentTimeRef.current);
     }, []);
 
     useEffect(() => {
