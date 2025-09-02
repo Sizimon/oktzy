@@ -1,3 +1,5 @@
+import { CuratorData } from "@/types/types";
+
 const API_BASE_URL = 'http://localhost:5007/api'
 
 
@@ -67,11 +69,17 @@ export const authAPI = {
 }
 
 export const clipsAPI = {
-    create: (data: any) =>
+    create: (title: string, curatorData: CuratorData) => {
+        const { clipUrl, timestamps } = curatorData;
         apiRequest('/clips/create', {
             method: 'POST',
-            body: JSON.stringify(data),
-        }),
+            body: JSON.stringify({ 
+                title: title, 
+                clipUrl,
+                timestamps
+            }),
+        });
+    },
 
     getAll: () =>
         apiRequest('/clips/fetch', {

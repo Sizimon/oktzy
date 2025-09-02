@@ -41,7 +41,7 @@ export interface TimestampModalProps { // Represents the props for the timestamp
 
 export interface SaveModalProps {
   isOpen: boolean;
-  onSave: (data: CuratorData) => void;
+  onSave: (title:string, data: CuratorData) => void;
   onClose: () => void;
   curatorData: CuratorData | null;
   isSaving: boolean;

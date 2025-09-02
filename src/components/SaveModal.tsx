@@ -12,10 +12,11 @@ export const SaveModal: React.FC<SaveModalProps> = ({
     const [curatorTitle, setCuratorTitle] = useState<string>('');
 
     const handleSave = () => {
-        // Implement export functionality
         if (curatorData) {
+            onSave(curatorTitle, { ...curatorData });
         }
     };
+
     const handleClose = () => {
         onClose();
     };
@@ -27,7 +28,8 @@ export const SaveModal: React.FC<SaveModalProps> = ({
             <div className="flex flex-col justify-center items-center text-text bg-slate-800/60 border-[1px] border-white/10 backdrop-blur-md p-6 rounded-2xl shadow-lg w-2/6">
                 <input
                     type="text"
-                    placeholder="Name your export"
+                    placeholder="Name your save..."
+                    required
                     value={curatorTitle}
                     maxLength={24}
                     onChange={(e) => setCuratorTitle(e.target.value)}

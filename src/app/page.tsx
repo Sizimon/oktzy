@@ -20,14 +20,21 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import Galaxy from '@/Galaxy/Galaxy';
 
+// Context Imports
+import { useAuth } from '@/context/authProvider';
+
+// API Imports
+import { clipsAPI } from '@/connections/api';
+
 // Type Imports
 import { CuratorData } from '@/types/types';
 
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
-  const [exportModalOpen, setExportModalOpen] = useState<boolean>(false);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
+  const { isAuthenticated } = useAuth();
 
   const {
     clipUrl,
@@ -75,27 +82,27 @@ export default function Home() {
   };
 
   // Handler which saves the data in a 'CuratorData' object, ready for export.
-  const handleExportModal = () => {
+  const handleSaveModal = () => {
     if (!clipUrl) {
       toast.error('No clip URL/timestamp data provided');
       return;
     }
     generateCuratorData(clipUrl, timestamps);
-    setExportModalOpen(true);
+    setSaveModalOpen(true);
   }
 
-  const handleSave = async (dataToSave: CuratorData) => {
+  const handleSave = async (title: string, dataToSave: CuratorData) => {
     if (!curatorData) {
-      toast.error('No curator data to export');
+      toast.error('No curator data to save');
       return;
     }
 
-    try {
-    } catch (error: any) {
-      toast.error(`Export failed: ${error.message}`);
-    } finally {
-      setIsSaving(false);
+    if (!isAuthenticated) {
+      toast.error('You must be logged in to save clips');
+      return;
     }
+
+    setIsSaving(true);
   }
 
   return (
@@ -168,7 +175,7 @@ export default function Home() {
                 Add Timestamp
               </button>
               <button
-                onClick={handleExportModal}
+                onClick={handleSaveModal}
                 className="p-2 bg-green-500 text-white rounded cursor-pointer"
               >
                 Save
@@ -185,8 +192,8 @@ export default function Home() {
             onClose={() => setTimestampModalOpen(false)}
           />
           <SaveModal
-            isOpen={exportModalOpen}
-            onClose={() => setExportModalOpen(false)}
+            isOpen={saveModalOpen}
+            onClose={() => setSaveModalOpen(false)}
             onSave={handleSave}
             isSaving={isSaving}
             curatorData={curatorData}
