@@ -49,17 +49,7 @@ export default function Home() {
   // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
     if (!clipUrl) {
-      toast.warning('Please provide a video URL before adding a timestamp.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-      });
+      toast.warning('Please provide a video URL before adding a timestamp.');
       return;
     }
     setTimestampModalOpen(true);
@@ -67,20 +57,8 @@ export default function Home() {
 
   // Handler which saves the timestamp data
   const handleSaveTimestamp = (title: string, note: string) => {
-    const notify = (message: string) => toast.error(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-
     if (!title || !note) {
-      notify('Please provide both a title and a note for the timestamp.');
+      toast.error('Please provide both a title and a note for the timestamp.');
       return;
     }
 
