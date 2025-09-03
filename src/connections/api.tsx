@@ -71,7 +71,7 @@ export const authAPI = {
 export const clipsAPI = {
     create: (title: string, curatorData: CuratorData) => {
         const { clipUrl, timestamps } = curatorData;
-        apiRequest('/clips/create', {
+        return apiRequest('/clips/create', {
             method: 'POST',
             body: JSON.stringify({ 
                 title: title, 

@@ -105,10 +105,21 @@ export default function Home() {
       setSignInModalOpen(true);
       return;
     }
-
-
-
     setIsSaving(true);
+
+    try {
+      const response = await clipsAPI.create(title, dataToSave);
+      if (response.message) {
+        toast.success('Clip saved successfully');
+      } else if (response.error) {
+        toast.error(response.error || 'Failed to save clip');
+      }
+    } catch (error) {
+      console.error('Error saving clip:', error);
+      toast.error('Network error - please try again');
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   // Add this custom toast function at the top of your component
