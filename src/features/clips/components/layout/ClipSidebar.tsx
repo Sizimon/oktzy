@@ -11,8 +11,11 @@ export function ClipSidebar({
     clearTimestamps
 }: ClipSidebarProps) {
     return (
-        <div className="flex flex-col w-full space-y-4 col-span-10 md:col-span-3 justify-start items-center p-4 md:rounded-2xl bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 h-[80lvh]">
-            <div className='flex flex-row space-x-4 justify-center items-center w-full'>
+        <div className="
+        flex flex-col w-9/10 rounded-2xl space-y-4 justify-start items-center p-4 bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 h-[50lvh]
+        lg:min-h-[80lvh] lg:w-1/2
+        ">
+            <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
                 <button
                     className="p-2 bg-blue-500 text-white rounded cursor-pointer"
                     onClick={handleTimestampModal}
@@ -26,7 +29,16 @@ export function ClipSidebar({
                     Save
                 </button>
             </div>
-            <ClipNoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} handleSaveModal={handleSaveModal} handleTimestampModal={handleTimestampModal} />
+            <div className="flex-1 w-full min-h-0">
+                <ClipNoteDisplay 
+                    timestamps={timestamps} 
+                    handleToTimestamp={handleToTimestamp} 
+                    clipUrl={clipUrl} 
+                    clearTimestamps={clearTimestamps} 
+                    handleSaveModal={handleSaveModal} 
+                    handleTimestampModal={handleTimestampModal} 
+                />
+            </div>
         </div>
     )
 }

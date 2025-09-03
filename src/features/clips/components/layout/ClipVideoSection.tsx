@@ -12,8 +12,8 @@ export function ClipVideoSection({
 }: ClipDisplayProps) {
     return (
         <div className="
-            relative col-span-10 w-full flex flex-col items-center justify-center bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10
-            md:col-span-7 md:p-4 md:rounded-2xl md:h-[80lvh]
+            relative w-full flex flex-col items-center justify-center bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 min-h-[33lvh]
+            lg:p-4 lg:rounded-2xl lg:min-h-[80lvh]
             ">
             <div className="w-full justify-start">
               {!clipUrl ? (

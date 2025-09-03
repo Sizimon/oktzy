@@ -7,7 +7,7 @@ export function ClipHeader({
     user
 }: ClipInputProps & { user: any }) {
     return (
-        <div className='flex h-[10lvh] justify-center items-center'>
+        <div className='flex h-1/10 justify-center items-center'>
             <ClipInput clipUrl={clipUrl} onInputChange={onInputChange} />
             {user ? (
                 <p className='text-text'>{`Welcome back, ${user.username}!`}</p>

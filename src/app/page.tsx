@@ -151,10 +151,11 @@ export default function Home() {
         />
       </div>
       <ClipHeader clipUrl={clipUrl} onInputChange={setClipUrl} user={user} />
-      <div className='grid z-50 h-[90lvh]'>
+      <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
-          font-sans grid grid-flow-row grid-cols-10 gap-4 items-center justify-center text-text z-50
-          md:grid-flow-col md:gap-4 md:px-4"
+          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
+          lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4
+          "
         >
           <ClipVideoSection
             clipUrl={clipUrl}
