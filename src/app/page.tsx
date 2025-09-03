@@ -22,9 +22,7 @@ import Galaxy from '@/Galaxy/Galaxy';
 
 // Context Imports
 import { useAuth } from '@/context/authProvider';
-
-// API Imports
-import { clipsAPI } from '@/connections/api';
+import { useClip } from '@/context/clipProvider';
 
 // Type Imports
 import { CuratorData } from '@/types/types';
@@ -54,7 +52,10 @@ export default function Home() {
 
   const { curatorData, generateCuratorData } = useCuratorData();
 
-    const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { createClip, clips } = useClip();
+
+  console.log('Current Clips:', clips);
 
   // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
@@ -108,8 +109,8 @@ export default function Home() {
     setIsSaving(true);
 
     try {
-      const response = await clipsAPI.create(title, dataToSave);
-      if (response.message) {
+      const response = await createClip(title, dataToSave);
+      if (response.success) {
         toast.success('Clip saved successfully');
       } else if (response.error) {
         toast.error(response.error || 'Failed to save clip');
@@ -122,27 +123,7 @@ export default function Home() {
     }
   }
 
-  // Add this custom toast function at the top of your component
-const showLoginToast = () => {
-  toast.error(
-    <div className="flex flex-col space-y-2">
-      <span>You must be logged in to save clips</span>
-      <button 
-        onClick={() => {
-          setSignInModalOpen(true);
-          toast.dismiss(); // Close the toast
-        }}
-        className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-      >
-        Sign In
-      </button>
-    </div>,
-    {
-      autoClose: false, // Keep it open until user interacts
-      closeOnClick: false, // Prevent closing when clicking the toast
-    }
-  );
-};
+// BEGINNING OF JSX RETURN
 
   return (
     <div className='relative w-full h-lvh'>

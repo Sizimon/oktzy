@@ -5,6 +5,15 @@ export interface Timestamp { // Represents a single timestamp entry
   timeStringConverted: string;
 }
 
+export interface Clip {
+    id: string;
+    title: string;
+    clipUrl: string;
+    timestamps: Timestamp[];
+    created_at?: string;
+    updated_at?: string;
+}
+
 export interface CuratorData { // Represents the data structure for a curator
   clipUrl: string;
   timestamps: Timestamp[];
