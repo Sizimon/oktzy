@@ -25,7 +25,10 @@ export const NoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTi
                                 <span className="font-medium uppercase">{timestamp.title}</span>
                             </div>
                             <span 
-                            onClick={() => handleToTimestamp(timestamp.time)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleToTimestamp(timestamp.time);
+                            }}
                             className="text-sm text-gray-500 ml-2 hover:text-violet-700 cursor-pointer">
                                     {timestamp.timeStringConverted}
                                 </span>

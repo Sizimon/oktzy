@@ -7,55 +7,76 @@ import { toast } from 'react-toastify';
 import { authAPI } from '@/connections/api';
 import { SignInModalProps } from '@/types/types';
 
+import { useAuth } from '@/context/authProvider';
+
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [formType, setFormType] = useState<'login' | 'register'>('login');
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { login, register } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+
         if (formType === 'login') {
             if (!email || !password) {
                 toast.error('Please enter your email and password');
+                setIsLoading(false);
                 return;
             }
             try {
-                const response = await authAPI.login(email, password);
-                if (response.ok) {
+                const result = await login(email, password);
+
+                if (result.success) {
                     toast.success('Login successful');
+                    onClose();
                 } else {
-                    toast.error('Login failed');
+                    toast.error(result.error || 'Login failed');
                 }
+
             } catch (error) {
-                toast.error('Error logging in');
+                console.error('Login error:', error);
+                toast.error('Network error - please try again');
             }
             // Handle login logic here
         } else if (formType === 'register') {
             if (!email || !password || !confirmPassword || !username) {
                 toast.error('Please fill in all fields');
+                setIsLoading(false);
                 return;
             }
             if (password !== confirmPassword) {
                 toast.error('Passwords do not match');
+                setIsLoading(false);
                 return;
             }
             try {
-                const response = await authAPI.register(username, email, password);
-                if (response.ok) {
+                const result = await register(username, email, password);
+
+                if (result.success) {
                     toast.success('Registration successful');
+                    onClose();
                 } else {
-                    toast.error('Registration failed');
+                    toast.error(result.error || 'Registration failed');
                 }
             } catch (error) {
-                toast.error('Error registering');
+                console.error('Registration error:', error);
+                toast.error('Network error - please try again');
             }
         }
+
+        setIsLoading(false);
     };
+
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70">
+            <button onClick={onClose} className="absolute top-4 right-4 text-white text-2xl font-bold">&times;</button>
             {formType === 'login' ? (
                 <SignInForm
                     email={email}

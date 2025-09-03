@@ -36,7 +36,6 @@ export default function Home() {
   const [signInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
-  const { isAuthenticated } = useAuth();
 
   const {
     clipUrl,
@@ -54,6 +53,8 @@ export default function Home() {
   } = useTimestamps();
 
   const { curatorData, generateCuratorData } = useCuratorData();
+
+    const { user, isAuthenticated } = useAuth();
 
   // Handler which opens the timestamp creation modal
   const handleAddTimestamp = () => {
@@ -101,8 +102,11 @@ export default function Home() {
 
     if (!isAuthenticated) {
       toast.error('You must be logged in to save clips');
+      setSignInModalOpen(true);
       return;
     }
+
+
 
     setIsSaving(true);
   }
@@ -160,6 +164,13 @@ const showLoginToast = () => {
       </div>
       <div className='flex h-[10lvh] justify-center items-center'>
         <VideoInput clipUrl={clipUrl} onInputChange={handleInputChange} />
+        {user ? (
+          <p className='text-text'>{`Welcome back, ${user.username}!`}</p>
+        ) : (
+          <p className='text-text'>
+            Please sign in to access all features.
+          </p>
+        )}
       </div>
       <div className='grid z-50 h-[90lvh]'>
         <div className="
