@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import { toast } from 'react-toastify';
-import { authAPI } from '@/connections/api';
+import { authAPI } from '@/features/auth/api/api';
 import { SignInModalProps } from '@/types/types';
 
-import { useAuth } from '@/context/authProvider';
+import { useAuth } from '@/features/auth/context/authProvider';
 
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [formType, setFormType] = useState<'login' | 'register'>('login');

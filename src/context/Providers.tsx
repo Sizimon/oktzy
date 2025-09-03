@@ -1,7 +1,7 @@
 'use client';
 
-import { AuthProvider } from '@/context/authProvider';
-import { ClipProvider } from '@/context/clipProvider';
+import { AuthProvider } from '@/features/auth/context/authProvider';
+import { ClipProvider } from '@/features/clips/context/clipProvider';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

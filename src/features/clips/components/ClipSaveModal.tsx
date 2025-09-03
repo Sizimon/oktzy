@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { SaveModalProps } from '@/types/types';
 
-export const SaveModal: React.FC<SaveModalProps> = ({
+export const ClipSaveModal: React.FC<SaveModalProps> = ({
     isOpen,
     onClose,
     onSave,

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { TimestampModalProps } from '@/types/types';
 import { formatCurrentTime } from '@/utils/formatTime';
 
-export const TimestampModal: React.FC<TimestampModalProps> = ({
+export const ClipNoteModal: React.FC<TimestampModalProps> = ({
   isOpen,
   currentTime,
   onSave,

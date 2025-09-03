@@ -1,7 +1,4 @@
-import { CuratorData } from "@/types/types";
-
 const API_BASE_URL = 'http://localhost:5007/api'
-
 
 const apiRequest = async (endpoint: string, options: RequestInit) => {
     const config: RequestInit = {
@@ -42,58 +39,4 @@ const apiRequest = async (endpoint: string, options: RequestInit) => {
     }
 }
 
-export const authAPI = {
-    register: (username: string, email: string, password: string) => 
-        apiRequest('/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({ username, email, password }),
-        }),
-
-    login: (email: string, password: string) =>
-        apiRequest('/auth/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password }),
-        }),
-
-    me: () =>
-        apiRequest('/auth/me', {
-            method: 'GET',
-            credentials: 'include',
-        }),
-
-    logout: () =>
-        apiRequest('/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-        }),
-}
-
-export const clipsAPI = {
-    create: (title: string, curatorData: CuratorData) => {
-        const { clipUrl, timestamps } = curatorData;
-        return apiRequest('/clips/create', {
-            method: 'POST',
-            body: JSON.stringify({ 
-                title: title, 
-                clipUrl,
-                timestamps
-            }),
-        });
-    },
-
-    getAll: () =>
-        apiRequest('/clips/fetch', {
-            method: 'GET',
-        }),
-
-    update: (id: string, data: any) =>
-        apiRequest(`/clips/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(data),
-        }),
-
-    delete: (id: string) =>
-        apiRequest(`/clips/${id}`, {
-            method: 'DELETE',
-        }),
-}
+export default apiRequest;

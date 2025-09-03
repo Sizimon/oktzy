@@ -2,31 +2,31 @@
 import React, { useState, useRef } from 'react';
 
 // Component Imports
-import { VideoDisplay } from '@/components/VideoDisplay';
-import { VideoInput } from '@/components/VideoInput';
-import { NoteDisplay } from '@/components/NoteDisplay';
+import { ClipDisplay } from '@/features/clips/components/ClipDisplay';
+import { ClipInput } from '@/features/clips/components/ClipInput';
+import { ClipNoteDisplay } from '@/features/clips/components/ClipNoteDisplay';
 
 // Modal Imports
-import { TimestampModal } from '@/components/TimestampModal';
-import { SaveModal } from '@/components/SaveModal';
+import { ClipNoteModal } from '@/features/clips/components/ClipNoteModal';
+import { ClipSaveModal } from '@/features/clips/components/ClipSaveModal';
+import SignInModal from '@/features/auth/components/SignInModal';
 
 // Hook Imports
-import { useTimestamps } from '@/hooks/useTimestamps';
-import { useVideoState } from '@/hooks/useVideoState';
-import { useCuratorData } from '@/hooks/useCuratorData';
+import { useTimestamps } from '@/features/clips/hooks/useTimestamps';
+import { useVideoState } from '@/features/clips/hooks/useVideoState';
+import { useCuratorData } from '@/features/clips/hooks/useCuratorData';
 
 // Misc Imports
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
-import Galaxy from '@/Galaxy/Galaxy';
+import Galaxy from '@/components/Galaxy';
 
 // Context Imports
-import { useAuth } from '@/context/authProvider';
-import { useClip } from '@/context/clipProvider';
+import { useAuth } from '@/features/auth/context/authProvider';
+import { useClip } from '@/features/clips/context/clipProvider';
 
 // Type Imports
 import { CuratorData } from '@/types/types';
-import SignInModal from '@/components/LoginComponents/SignInModal';
 
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
@@ -123,7 +123,7 @@ export default function Home() {
     }
   }
 
-// BEGINNING OF JSX RETURN
+  // BEGINNING OF JSX RETURN
 
   return (
     <div className='relative w-full h-lvh'>
@@ -155,7 +155,7 @@ export default function Home() {
         />
       </div>
       <div className='flex h-[10lvh] justify-center items-center'>
-        <VideoInput clipUrl={clipUrl} onInputChange={handleInputChange} />
+        <ClipInput clipUrl={clipUrl} onInputChange={handleInputChange} />
         {user ? (
           <p className='text-text'>{`Welcome back, ${user.username}!`}</p>
         ) : (
@@ -180,7 +180,7 @@ export default function Home() {
                   <ClipLoader color='#FFFFFF' />
                 </div>
               ) : (
-                <VideoDisplay
+                <ClipDisplay
                   clipUrl={clipUrl}
                   modalOpen={timestampModalOpen}
                   retainedVolume={retainedVolume}
@@ -208,9 +208,9 @@ export default function Home() {
                 Save
               </button>
             </div>
-            <NoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
+            <ClipNoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
           </div>
-          <TimestampModal
+          <ClipNoteModal
             isOpen={timestampModalOpen}
             currentTime={currentTime}
             onSave={(title, note) => {
@@ -218,7 +218,7 @@ export default function Home() {
             }}
             onClose={() => setTimestampModalOpen(false)}
           />
-          <SaveModal
+          <ClipSaveModal
             isOpen={saveModalOpen}
             onClose={() => setSaveModalOpen(false)}
             onSave={handleSave}

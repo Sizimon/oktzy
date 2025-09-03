@@ -34,7 +34,7 @@ export interface VideoDisplayProps { // Represents the props for the video displ
   ref: React.RefObject<any>;
 }
 
-export interface NoteDisplayProps {
+export interface NoteDisplayProps { // Represents the props for the note display component
     timestamps: Timestamp[];
     handleToTimestamp: (time: number) => void;
     clipUrl: string;
@@ -48,7 +48,7 @@ export interface TimestampModalProps { // Represents the props for the timestamp
   onClose: () => void;
 }
 
-export interface SaveModalProps {
+export interface SaveModalProps { // Represents the props for the save modal component
   isOpen: boolean;
   onSave: (title:string, data: CuratorData) => void;
   onClose: () => void;
@@ -56,7 +56,7 @@ export interface SaveModalProps {
   isSaving: boolean;
 }
 
-export interface SignInModalProps {
+export interface SignInModalProps { // Represents the props for the sign-in modal component
   isOpen: boolean;
   onClose: () => void;
 }

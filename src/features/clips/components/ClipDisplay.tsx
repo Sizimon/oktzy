@@ -2,7 +2,7 @@ import React, {useRef, useCallback, useEffect, forwardRef} from 'react';
 import { VideoDisplayProps } from '@/types/types';
 import ReactPlayer from 'react-player';
 
-export const VideoDisplay = forwardRef<any, VideoDisplayProps>(({
+export const ClipDisplay = forwardRef<any, VideoDisplayProps>(({
     clipUrl,
     modalOpen,
     setCurrentTime,

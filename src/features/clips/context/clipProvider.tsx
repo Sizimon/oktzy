@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Clip, CuratorData } from '@/types/types';
-import { clipsAPI } from '@/connections/api'
-import { useAuth } from '@/context/authProvider';
+import { clipsAPI } from '@/features/clips/api/api';
+import { useAuth } from '@/features/auth/context/authProvider';
 
 interface ClipContextType {
     // state

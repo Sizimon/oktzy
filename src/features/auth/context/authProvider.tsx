@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authAPI } from '@/connections/api'
+import { authAPI } from '@/features/auth/api/api';
 
 interface AuthContextType {
     isAuthenticated: boolean;

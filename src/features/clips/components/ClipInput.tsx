@@ -1,7 +1,7 @@
 import React from 'react';
 import { VideoInputProps } from '@/types/types';
 
-export const VideoInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }) => {
+export const ClipInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => { // Checks if clip url is empty, if not then if the user attempts to change the value they will recieve a warning prompt.
     if (clipUrl !== '') {
