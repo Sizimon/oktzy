@@ -20,12 +20,12 @@ export interface CuratorData { // Represents the data structure for a curator
   [key: string]: any; // Allows for additional properties
 }
 
-export interface VideoInputProps {
+export interface ClipInputProps {
   clipUrl: string;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (value: string) => void;
 }
 
-export interface VideoDisplayProps { // Represents the props for the video display component
+export interface ClipDisplayProps { // Represents the props for the video display component
   clipUrl: string;
   modalOpen: boolean;
   retainedVolume: number;
@@ -34,11 +34,13 @@ export interface VideoDisplayProps { // Represents the props for the video displ
   ref: React.RefObject<any>;
 }
 
-export interface NoteDisplayProps { // Represents the props for the note display component
+export interface ClipSidebarProps { // Represents the props for the note display component
     timestamps: Timestamp[];
     handleToTimestamp: (time: number) => void;
     clipUrl: string;
     clearTimestamps: () => void;
+    handleTimestampModal: () => void;
+    handleSaveModal: () => void;
 }
 
 export interface TimestampModalProps { // Represents the props for the timestamp modal component

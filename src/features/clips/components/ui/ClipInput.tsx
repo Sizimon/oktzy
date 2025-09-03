@@ -1,18 +1,19 @@
 import React from 'react';
-import { VideoInputProps } from '@/types/types';
+import { ClipInputProps } from '@/types/types';
 
-export const ClipInput: React.FC<VideoInputProps> = ({ clipUrl, onInputChange }) => {
+export const ClipInput: React.FC<ClipInputProps> = ({ clipUrl, onInputChange }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => { // Checks if clip url is empty, if not then if the user attempts to change the value they will recieve a warning prompt.
+    const newValue = event.target.value;
     if (clipUrl !== '') {
       let userInput = prompt('Changing video URL will result in the loss of current timestamps. If you wish to continue, enter your desired video url.', clipUrl);
       if (userInput === clipUrl) {
         return; // No change, do nothing
       } else {
-        onInputChange(event);
+        onInputChange(newValue);
       }
     } else {
-      onInputChange(event);
+      onInputChange(newValue);
     }
   }
 

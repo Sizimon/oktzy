@@ -1,10 +1,10 @@
 'use client';
 import React, { useEffect } from 'react';
-import { NoteDisplayProps } from '@/types/types';
-import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from '../../../components/ui/accordion';
+import { ClipSidebarProps } from '@/types/types';
+import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from '@/components/ui/accordion';
 
 
-export const ClipNoteDisplay: React.FC<NoteDisplayProps> = ({ timestamps, handleToTimestamp, clipUrl, clearTimestamps }) => {
+export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handleToTimestamp, clipUrl, clearTimestamps }) => {
 
     useEffect(() => { // Clear timestamps when clipUrl changes
         clearTimestamps();

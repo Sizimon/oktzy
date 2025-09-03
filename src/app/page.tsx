@@ -2,23 +2,21 @@
 import React, { useState, useRef } from 'react';
 
 // Component Imports
-import { ClipDisplay } from '@/features/clips/components/ClipDisplay';
-import { ClipInput } from '@/features/clips/components/ClipInput';
-import { ClipNoteDisplay } from '@/features/clips/components/ClipNoteDisplay';
+import { ClipHeader } from '@/features/clips/components/layout/ClipHeader';
+import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
+import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
 
 // Modal Imports
-import { ClipNoteModal } from '@/features/clips/components/ClipNoteModal';
-import { ClipSaveModal } from '@/features/clips/components/ClipSaveModal';
+import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal';
+import { ClipSaveModal } from '@/features/clips/components/modals/ClipSaveModal';
 import SignInModal from '@/features/auth/components/SignInModal';
 
 // Hook Imports
 import { useTimestamps } from '@/features/clips/hooks/useTimestamps';
-import { useVideoState } from '@/features/clips/hooks/useVideoState';
 import { useCuratorData } from '@/features/clips/hooks/useCuratorData';
 
 // Misc Imports
 import { Bounce, ToastContainer, toast } from 'react-toastify';
-import { ClipLoader } from 'react-spinners';
 import Galaxy from '@/components/Galaxy';
 
 // Context Imports
@@ -29,20 +27,18 @@ import { useClip } from '@/features/clips/context/clipProvider';
 import { CuratorData } from '@/types/types';
 
 export default function Home() {
+
+  // Video States
+  const [clipUrl, setClipUrl] = useState<string>('');
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [retainedVolume, setRetainedVolume] = useState<number>(1);
+
+  // Modal States
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [signInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
-
-  const {
-    clipUrl,
-    currentTime,
-    retainedVolume,
-    setCurrentTime,
-    setRetainedVolume,
-    handleInputChange
-  } = useVideoState();
 
   const {
     timestamps,
@@ -55,10 +51,8 @@ export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const { createClip, clips } = useClip();
 
-  console.log('Current Clips:', clips);
-
   // Handler which opens the timestamp creation modal
-  const handleAddTimestamp = () => {
+  const handleTimestampModal = () => {
     if (!clipUrl) {
       toast.warning('Please provide a video URL before adding a timestamp.');
       return;
@@ -66,8 +60,8 @@ export default function Home() {
     setTimestampModalOpen(true);
   };
 
-  // Handler which saves the timestamp data
-  const handleSaveTimestamp = (title: string, note: string) => {
+  // Handler which adds a new timestamp
+  const handleAddTimestamp = (title: string, note: string) => {
     if (!title || !note) {
       toast.error('Please provide both a title and a note for the timestamp.');
       return;
@@ -78,14 +72,14 @@ export default function Home() {
   };
 
 
-  // Handler which seeks the video to the specified timestamp
+  // Handler which seeks the video to the specified timestamp (BROKEN: NEEDS TO BE FIXED)
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
       playerRef.current.currentTime = time;
     }
   };
 
-  // Handler which saves the data in a 'CuratorData' object, ready for export.
+  // Handler which triggers the save modal & generates curator data from the current video
   const handleSaveModal = () => {
     if (!clipUrl) {
       toast.error('No clip URL/timestamp data provided');
@@ -95,6 +89,7 @@ export default function Home() {
     setSaveModalOpen(true);
   }
 
+  // Handler which saves the clip data to the database
   const handleSave = async (title: string, dataToSave: CuratorData) => {
     if (!curatorData) {
       toast.error('No curator data to save');
@@ -154,67 +149,34 @@ export default function Home() {
           speed={0.1}
         />
       </div>
-      <div className='flex h-[10lvh] justify-center items-center'>
-        <ClipInput clipUrl={clipUrl} onInputChange={handleInputChange} />
-        {user ? (
-          <p className='text-text'>{`Welcome back, ${user.username}!`}</p>
-        ) : (
-          <p className='text-text'>
-            Please sign in to access all features.
-          </p>
-        )}
-      </div>
+      <ClipHeader clipUrl={clipUrl} onInputChange={setClipUrl} user={user} />
       <div className='grid z-50 h-[90lvh]'>
         <div className="
           font-sans grid grid-flow-row grid-cols-10 gap-4 items-center justify-center text-text z-50
           md:grid-flow-col md:gap-4 md:px-4"
         >
-          <div className="
-            relative col-span-10 w-full flex flex-col items-center justify-center bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10
-            md:col-span-7 md:p-4 md:rounded-2xl md:h-[80lvh]
-            ">
-            <div className="w-full justify-start">
-              {!clipUrl ? (
-                <div className="text-center p-4 rounded space-y-4">
-                  <p className="text-3xl text-text">No video URL provided.</p>
-                  <ClipLoader color='#FFFFFF' />
-                </div>
-              ) : (
-                <ClipDisplay
-                  clipUrl={clipUrl}
-                  modalOpen={timestampModalOpen}
-                  retainedVolume={retainedVolume}
-                  setRetainedVolume={setRetainedVolume}
-                  setCurrentTime={setCurrentTime}
-                  ref={playerRef}
-                />
-              )}
-
-            </div>
-          </div>
-
-          <div className="flex flex-col w-full space-y-4 col-span-10 md:col-span-3 justify-start items-center p-4 md:rounded-2xl bg-slate-800/30 backdrop-blur-sm border-[1px] border-white/10 h-[80lvh]">
-            <div className='flex flex-row space-x-4 justify-center items-center w-full'>
-              <button
-                className="p-2 bg-blue-500 text-white rounded cursor-pointer"
-                onClick={handleAddTimestamp}
-              >
-                Add Timestamp
-              </button>
-              <button
-                onClick={handleSaveModal}
-                className="p-2 bg-green-500 text-white rounded cursor-pointer"
-              >
-                Save
-              </button>
-            </div>
-            <ClipNoteDisplay timestamps={timestamps} handleToTimestamp={handleToTimestamp} clipUrl={clipUrl} clearTimestamps={clearTimestamps} />
-          </div>
+          <ClipVideoSection
+            clipUrl={clipUrl}
+            modalOpen={timestampModalOpen}
+            retainedVolume={retainedVolume}
+            setRetainedVolume={setRetainedVolume}
+            setCurrentTime={setCurrentTime}
+            ref={playerRef}
+          />
+          <ClipSidebar
+            timestamps={timestamps}
+            handleToTimestamp={handleToTimestamp}
+            clipUrl={clipUrl}
+            clearTimestamps={clearTimestamps}
+            handleTimestampModal={handleTimestampModal}
+            handleSaveModal={handleSaveModal}
+          />
+          {/** MODALS **/}
           <ClipNoteModal
             isOpen={timestampModalOpen}
             currentTime={currentTime}
             onSave={(title, note) => {
-              handleSaveTimestamp(title, note);
+              handleAddTimestamp(title, note);
             }}
             onClose={() => setTimestampModalOpen(false)}
           />
@@ -228,6 +190,7 @@ export default function Home() {
           <SignInModal
             isOpen={signInModalOpen}
             onClose={() => setSignInModalOpen(false)} />
+          {/** MODALS **/}
         </div>
       </div>
     </div>

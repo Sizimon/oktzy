@@ -1,8 +1,8 @@
 import React, {useRef, useCallback, useEffect, forwardRef} from 'react';
-import { VideoDisplayProps } from '@/types/types';
+import { ClipDisplayProps } from '@/types/types';
 import ReactPlayer from 'react-player';
 
-export const ClipDisplay = forwardRef<any, VideoDisplayProps>(({
+export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
     clipUrl,
     modalOpen,
     setCurrentTime,
@@ -15,7 +15,6 @@ export const ClipDisplay = forwardRef<any, VideoDisplayProps>(({
     const handleProgress = useCallback((progress: any) => {
         currentVolumeRef.current = progress.srcElement ? progress.srcElement.volume : 1;
         currentTimeRef.current = progress.srcElement ? progress.srcElement.currentTime : 0;
-        // console.log('Current Time:', currentTimeRef.current);
     }, []);
 
     useEffect(() => {
