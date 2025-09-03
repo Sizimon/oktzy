@@ -28,10 +28,12 @@ import { clipsAPI } from '@/connections/api';
 
 // Type Imports
 import { CuratorData } from '@/types/types';
+import SignInModal from '@/components/LoginComponents/SignInModal';
 
 export default function Home() {
   const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [signInModalOpen, setSignInModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const playerRef = useRef<any>(null);
   const { isAuthenticated } = useAuth();
@@ -104,6 +106,28 @@ export default function Home() {
 
     setIsSaving(true);
   }
+
+  // Add this custom toast function at the top of your component
+const showLoginToast = () => {
+  toast.error(
+    <div className="flex flex-col space-y-2">
+      <span>You must be logged in to save clips</span>
+      <button 
+        onClick={() => {
+          setSignInModalOpen(true);
+          toast.dismiss(); // Close the toast
+        }}
+        className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+      >
+        Sign In
+      </button>
+    </div>,
+    {
+      autoClose: false, // Keep it open until user interacts
+      closeOnClick: false, // Prevent closing when clicking the toast
+    }
+  );
+};
 
   return (
     <div className='relative w-full h-lvh'>
@@ -198,6 +222,9 @@ export default function Home() {
             isSaving={isSaving}
             curatorData={curatorData}
           />
+          <SignInModal
+            isOpen={signInModalOpen}
+            onClose={() => setSignInModalOpen(false)} />
         </div>
       </div>
     </div>

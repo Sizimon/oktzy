@@ -46,3 +46,8 @@ export interface SaveModalProps {
   curatorData: CuratorData | null;
   isSaving: boolean;
 }
+
+export interface SignInModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
