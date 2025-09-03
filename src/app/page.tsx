@@ -115,6 +115,7 @@ export default function Home() {
       toast.error('Network error - please try again');
     } finally {
       setIsSaving(false);
+      setSaveModalOpen(false);
     }
   }
 

@@ -55,7 +55,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         try {
             const response = await clipsAPI.create(title, data);
-            if (response.ok) {
+            if (response.data) {
                 // Add the new clip to the list
                 setClips((prevClips) => [...prevClips, response.data]);
                 return { success: true };
