@@ -1,31 +1,51 @@
 import React from 'react';
 import { ClipInputProps } from '@/types/types';
+import { toast } from 'react-toastify';
 
 export const ClipInput: React.FC<ClipInputProps> = ({ clipUrl, onInputChange }) => {
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => { // Checks if clip url is empty, if not then if the user attempts to change the value they will recieve a warning prompt.
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => { // Checks if clip url is empty, if not then if the user attempts to change the value they will recieve a warning prompt.
     const newValue = event.target.value;
     if (clipUrl !== '') {
-      let userInput = prompt('Changing video URL will result in the loss of current timestamps. If you wish to continue, enter your desired video url.', clipUrl);
-      if (userInput === clipUrl) {
-        return; // No change, do nothing
-      } else {
-        onInputChange(newValue);
-      }
-    } else {
-      onInputChange(newValue);
+      toast.warning(
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div>
+            <p>Changing the video URL without saving will result in the loss of current timestamps.</p><br /> 
+            <p>Please clear timestamps or save your clip before changing the URL.</p>
+          </div>
+          <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => {
+                toast.dismiss();
+                onInputChange(newValue);
+              }}
+              style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+            >
+              Continue
+            </button>
+            <button
+              onClick={() => toast.dismiss()}
+              style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      );
+      return;
     }
+    onInputChange(newValue);
   }
 
-  return (
-    <div className="flex justify-center w-full z-50">
-      <input
-        type="text"
-        value={clipUrl}
-        placeholder="Enter clip URL..."
-        onChange={handleInputChange}
-        className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-slate-800/30 text-text rounded-full w-2/3 lg:w-1/3"
-      />
-    </div>
-  );
-};
+return (
+  <div className="flex justify-center w-full z-50">
+    <input
+      type="text"
+      value={clipUrl}
+      placeholder="Enter clip URL..."
+      onChange={handleInputChange}
+      className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-slate-800/30 text-text rounded-full w-2/3 lg:w-1/3"
+    />
+  </div>
+);
+}

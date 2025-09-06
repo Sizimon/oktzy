@@ -150,7 +150,7 @@ export default function Home() {
           speed={0.1}
         />
       </div>
-      <ClipHeader clipUrl={clipUrl} onInputChange={setClipUrl} user={user} />
+      <ClipHeader clipUrl={clipUrl} onInputChange={setClipUrl} />
       <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
           flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
