@@ -49,7 +49,7 @@ export default function Home() {
   const { curatorData, generateCuratorData } = useCuratorData();
 
   const { user, isAuthenticated } = useAuth();
-  const { createClip, clips } = useClip();
+  const { createClip } = useClip();
 
   // Handler which opens the timestamp creation modal
   const handleTimestampModal = () => {

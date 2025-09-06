@@ -26,7 +26,7 @@ export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
 
     return (
         <div className="w-full flex justify-center h-[33lvh] md:h-[40lvh] lg:h-[70lvh]">
-            <ReactPlayer src={clipUrl} width="100%" height="100%" playing={!modalOpen} volume={retainedVolume} controls onTimeUpdate={handleProgress} />
+            <ReactPlayer ref={ref} src={clipUrl} width="100%" height="100%" playing={!modalOpen} volume={retainedVolume} controls onTimeUpdate={handleProgress} />
         </div>
     );
 });
