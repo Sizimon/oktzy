@@ -27,7 +27,7 @@ export function useClipPageState(initialClip?: Clip) {
 
   // Auth
   const { isAuthenticated } = useAuth()
-  const { createClip } = useClip()
+  const { createClip, updateClip } = useClip()
 
   // Sync state whenever initialClip changes.
   useEffect(() => {
@@ -64,7 +64,7 @@ export function useClipPageState(initialClip?: Clip) {
 
   // Handler which saves the clip data to the database
   const handleSave = async (title: string, dataToSave: CuratorData) => {
-    if (!curatorData) {
+    if (!initialClip && !curatorData) {
       toast.error('No curator data to save');
       return;
     }
@@ -77,11 +77,20 @@ export function useClipPageState(initialClip?: Clip) {
     setIsSaving(true);
 
     try {
-      const response = await createClip(title, dataToSave);
-      if (response.success) {
-        toast.success('Clip saved successfully');
-      } else if (response.error) {
-        toast.error(response.error || 'Failed to save clip');
+      if (!initialClip) {
+        const response = await createClip(title, dataToSave);
+        if (response.success) {
+          toast.success('Clip saved successfully');
+        } else if (response.error) {
+          toast.error(response.error || 'Failed to save clip');
+        }
+      } else {
+        const response = await updateClip(Number(initialClip.id), title, dataToSave);
+        if (response.success) {
+          toast.success('Clip updated successfully');
+        } else if (response.error) {
+          toast.error(response.error || 'Failed to update clip');
+        }
       }
     } catch (error) {
       console.error('Error saving clip:', error);

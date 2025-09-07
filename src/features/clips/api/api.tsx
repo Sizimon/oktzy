@@ -19,10 +19,13 @@ export const clipsAPI = {
             method: 'GET',
         }),
 
-    update: (id: string, data: any) =>
-        apiRequest(`/clips/${id}`, {
+    update: (id: number, title: string, data: CuratorData) =>
+        apiRequest(`/clips/update/${id}`, {
             method: 'PUT',
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+                title: title,
+                timestamps: data.timestamps
+            }),
         }),
 
     delete: (id: string) =>

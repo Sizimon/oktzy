@@ -14,6 +14,7 @@ interface ClipContextType {
     // Actions
     fetchClips: () => Promise<void>;
     createClip: (title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
+    updateClip: (id: number, title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
 }
 
 const ClipContext = createContext<ClipContextType | undefined>(undefined);
@@ -74,6 +75,28 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    const updateClip = async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string}> => {
+        if (!user) {
+            return {success: false, error: 'User Not Authenticated'}
+        }
+
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const response = await clipsAPI.update(id, title, data)
+            if (response.data) {
+                const filteredClips = clips.filter(clip => Number(id) !== Number(clip.id))
+                setClips([...filteredClips, response.data])
+            }
+            return {success: true}
+        } catch (error: any) {
+             console.error('Error updating clip:', error);
+            setError(error.message || 'Failed to update clip');
+            return { success: false, error: error.message || 'Failed to update clip'}
+        }
+    }
+
     useEffect(() => {
         if (isAuthenticated && user) {
             fetchClips();
@@ -88,7 +111,8 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         error,
         fetchClips,
-        createClip
+        createClip,
+        updateClip
     }
 
     return (
