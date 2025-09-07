@@ -28,10 +28,6 @@ import { useClip } from '@/features/clips/context/clipProvider';
 import { CuratorData } from '@/types/types';
 
 export default function Home() {
-  // Nav State
-  const [navOpen, setNavOpen] = useState<boolean>(false);
-  const navRef = useRef<HTMLDivElement>(null);
-  console.log('NAV OPEN:', navOpen);
 
   // Video States
   const [clipUrl, setClipUrl] = useState<string>('');
@@ -55,22 +51,6 @@ export default function Home() {
 
   const { user, isAuthenticated } = useAuth();
   const { createClip } = useClip();
-
-  useEffect(() => {
-    if (!navOpen) return;
-    const handleClickOutsideNav = () => {
-      if (navRef.current && !navRef.current.contains(event?.target as Node)) {
-        setNavOpen(false);
-      }
-    }
-
-    document.addEventListener('click', handleClickOutsideNav);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutsideNav);
-    }
-
-  }, [navOpen]);
 
   // Handler which opens the timestamp creation modal
   const handleTimestampModal = () => {
@@ -143,12 +123,9 @@ export default function Home() {
   // BEGINNING OF JSX RETURN
 
   return (
-    <div className='relative w-full h-lvh'>
+    <div className='relative w-full h-lvh lg:px-16'>
       <Navigation
-        navRef={navRef}
         user={user}
-        navOpen={navOpen}
-        setNavOpen={setNavOpen}
       />
       <ToastContainer
         position="top-right"
@@ -165,14 +142,14 @@ export default function Home() {
       />
       <div className='absolute inset-0 z-0'>
         <Galaxy
-          mouseInteraction={true}
+          mouseInteraction={false}
           mouseRepulsion={false}
           density={0.8}
-          glowIntensity={0.3}
-          saturation={1}
+          glowIntensity={0.15}
+          saturation={0.5}
           hueShift={140}
           twinkleIntensity={0.2}
-          rotationSpeed={0}
+          rotationSpeed={0.03}
           starSpeed={0.1}
           speed={0.1}
         />

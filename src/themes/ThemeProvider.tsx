@@ -11,7 +11,7 @@ export default function CustomThemeProvider({
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem={false}
+            enableSystem={true}
             themes={['dark']}
             disableTransitionOnChange={false}
         >

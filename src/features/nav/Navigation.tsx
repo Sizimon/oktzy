@@ -1,17 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 export function Navigation({
-    navOpen,
-    setNavOpen,
     user,
-    navRef
 }: {
-    user: any
-    navOpen: boolean
-    setNavOpen: (open: boolean) => void
-    navRef: React.RefObject<HTMLDivElement | null>
+    user: { username: string } | null;
 }) {
+
+    // Nav State
+      const [navOpen, setNavOpen] = useState<boolean>(false);
+      const navRef = useRef<HTMLDivElement>(null);
+      console.log('NAV OPEN:', navOpen);
+
+    useEffect(() => {
+        if (!navOpen) return;
+        const handleClickOutsideNav = () => {
+          if (navRef.current && !navRef.current.contains(event?.target as Node)) {
+            setNavOpen(false);
+          }
+        }
+    
+        document.addEventListener('click', handleClickOutsideNav);
+    
+        return () => {
+          document.removeEventListener('click', handleClickOutsideNav);
+        }
+    
+      }, [navOpen]);
 
     // Set initial hidden state once
     useEffect(() => {
