@@ -1,7 +1,8 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // Component Imports
+import { Navigation } from '@/features/nav/Navigation';
 import { ClipHeader } from '@/features/clips/components/layout/ClipHeader';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
 import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
@@ -27,6 +28,10 @@ import { useClip } from '@/features/clips/context/clipProvider';
 import { CuratorData } from '@/types/types';
 
 export default function Home() {
+  // Nav State
+  const [navOpen, setNavOpen] = useState<boolean>(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  console.log('NAV OPEN:', navOpen);
 
   // Video States
   const [clipUrl, setClipUrl] = useState<string>('');
@@ -50,6 +55,22 @@ export default function Home() {
 
   const { user, isAuthenticated } = useAuth();
   const { createClip } = useClip();
+
+  useEffect(() => {
+    if (!navOpen) return;
+    const handleClickOutsideNav = () => {
+      if (navRef.current && !navRef.current.contains(event?.target as Node)) {
+        setNavOpen(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutsideNav);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutsideNav);
+    }
+
+  }, [navOpen]);
 
   // Handler which opens the timestamp creation modal
   const handleTimestampModal = () => {
@@ -123,6 +144,12 @@ export default function Home() {
 
   return (
     <div className='relative w-full h-lvh'>
+      <Navigation
+        ref={navRef}
+        user={user}
+        navOpen={navOpen}
+        setNavOpen={setNavOpen}
+      />
       <ToastContainer
         position="top-right"
         autoClose={5000}
