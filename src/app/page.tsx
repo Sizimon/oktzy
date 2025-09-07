@@ -145,7 +145,7 @@ export default function Home() {
   return (
     <div className='relative w-full h-lvh'>
       <Navigation
-        ref={navRef}
+        navRef={navRef}
         user={user}
         navOpen={navOpen}
         setNavOpen={setNavOpen}
