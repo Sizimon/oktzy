@@ -1,32 +1,38 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { useClip } from '../clips/context/clipProvider';
+import { Clip } from '@/types/types'
+import { useRouter } from 'next/navigation'
 
 export function Navigation({
     user,
 }: {
     user: { username: string } | null;
 }) {
+    const router = useRouter();    
+    const { clips } = useClip();
 
     // Nav State
-      const [navOpen, setNavOpen] = useState<boolean>(false);
-      const navRef = useRef<HTMLDivElement>(null);
-      console.log('NAV OPEN:', navOpen);
+    const [navOpen, setNavOpen] = useState<boolean>(false);
+    const navRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!navOpen) return;
         const handleClickOutsideNav = () => {
-          if (navRef.current && !navRef.current.contains(event?.target as Node)) {
-            setNavOpen(false);
-          }
+            if (navRef.current && !navRef.current.contains(event?.target as Node)) {
+                setNavOpen(false);
+            }
         }
-    
+
         document.addEventListener('click', handleClickOutsideNav);
-    
+
         return () => {
-          document.removeEventListener('click', handleClickOutsideNav);
+            document.removeEventListener('click', handleClickOutsideNav);
         }
-    
-      }, [navOpen]);
+
+    }, [navOpen]);
 
     // Set initial hidden state once
     useEffect(() => {
@@ -51,6 +57,14 @@ export function Navigation({
         });
     }, [navOpen, navRef]);
 
+
+    function handleClipClick(
+        clip: Clip,
+        router: any
+    ) {
+        router.push(`/clips/${clip.id}`)
+    }
+
     return (
         <div>
             {!navOpen ? (
@@ -63,10 +77,21 @@ export function Navigation({
             ) : null}
             <nav
                 ref={navRef}
-                className="fixed top-0 left-0 flex flex-col justify-start items-center h-full bg-slate-800/40 backdrop-blur-sm z-60 w-1/5 p-4"
+                className="fixed top-0 left-0 flex flex-col justify-start items-center h-full bg-slate-800/40 backdrop-blur-sm z-60 w-1/5 p-4 space-y-4"
             >
                 <div className="text-white border-b border-white/10 w-full p-4">
                     {user ? `Welcome, ${user.username}` : 'Not logged in'}
+                </div>
+                <div className='flex flex-col w-full space-y-4 justify-start items-start px-4'>
+                    {clips.length > 0 ? (
+                        clips.map((clip: Clip) => (
+                            <h3 className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
+                                {clip.title}
+                            </h3>
+                        ))
+                    ) : (
+                        <span>Could not find any clips...</span>
+                    )}
                 </div>
             </nav>
         </div>
