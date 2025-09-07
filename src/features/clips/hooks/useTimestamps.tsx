@@ -10,6 +10,8 @@ export const useTimestamps = () => {
     setTimestamps([]);
   }
 
+  const loadTimestamps = (newTimestamps: Timestamp[]) => setTimestamps(newTimestamps);
+
   const addTimestamp = (currentTime: number, title: string, note: string) => {
     const newTimestamp: Timestamp = {
       title: title,
@@ -23,6 +25,7 @@ export const useTimestamps = () => {
 
   return {
     timestamps,
+    loadTimestamps,
     addTimestamp,
     clearTimestamps
   };

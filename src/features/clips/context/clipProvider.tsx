@@ -3,6 +3,8 @@ import { Clip, CuratorData } from '@/types/types';
 import { clipsAPI } from '@/features/clips/api/api';
 import { useAuth } from '@/features/auth/context/authProvider';
 
+import { normalizeClip } from '@/utils/normalizeClip';
+
 interface ClipContextType {
     // state
     clips: Clip[];
@@ -35,7 +37,8 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         try {
             const result = await clipsAPI.getAll();
-            setClips(result.data || []);
+            const normalizedClips = result.data.map(normalizeClip)
+            setClips(normalizedClips || []);
         } catch (err: any) {
             console.error('Error fetching clips:', err);
             setError(err.message || 'Failed to fetch clips');

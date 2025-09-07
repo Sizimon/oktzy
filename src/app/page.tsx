@@ -1,7 +1,8 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 
 // Component Imports
+import Galaxy from '@/components/Galaxy';
 import { Navigation } from '@/features/nav/Navigation';
 import { ClipHeader } from '@/features/clips/components/layout/ClipHeader';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
@@ -12,113 +13,16 @@ import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal'
 import { ClipSaveModal } from '@/features/clips/components/modals/ClipSaveModal';
 import SignInModal from '@/features/auth/components/SignInModal';
 
-// Hook Imports
-import { useTimestamps } from '@/features/clips/hooks/useTimestamps';
-import { useCuratorData } from '@/features/clips/hooks/useCuratorData';
-
 // Misc Imports
-import { Bounce, ToastContainer, toast } from 'react-toastify';
-import Galaxy from '@/components/Galaxy';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 // Context Imports
 import { useAuth } from '@/features/auth/context/authProvider';
-import { useClip } from '@/features/clips/context/clipProvider';
-
-// Type Imports
-import { CuratorData } from '@/types/types';
+import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 
 export default function Home() {
-
-  // Video States
-  const [clipUrl, setClipUrl] = useState<string>('');
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [retainedVolume, setRetainedVolume] = useState<number>(1);
-
-  // Modal States
-  const [timestampModalOpen, setTimestampModalOpen] = useState<boolean>(false);
-  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
-  const [signInModalOpen, setSignInModalOpen] = useState<boolean>(false);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const playerRef = useRef<any>(null);
-
-  const {
-    timestamps,
-    addTimestamp,
-    clearTimestamps
-  } = useTimestamps();
-
-  const { curatorData, generateCuratorData } = useCuratorData();
-
-  const { user, isAuthenticated } = useAuth();
-  const { createClip } = useClip();
-
-  // Handler which opens the timestamp creation modal
-  const handleTimestampModal = () => {
-    if (!clipUrl) {
-      toast.warning('Please provide a video URL before adding a timestamp.');
-      return;
-    }
-    setTimestampModalOpen(true);
-  };
-
-  // Handler which adds a new timestamp
-  const handleAddTimestamp = (title: string, note: string) => {
-    if (!title || !note) {
-      toast.error('Please provide both a title and a note for the timestamp.');
-      return;
-    }
-
-    addTimestamp(currentTime, title, note);
-    setTimestampModalOpen(false);
-  };
-
-
-  // Handler which seeks the video to the specified timestamp (BROKEN: NEEDS TO BE FIXED)
-  const handleToTimestamp = (time: number) => {
-    if (playerRef.current) {
-      playerRef.current.currentTime = time;
-    }
-  };
-
-  // Handler which triggers the save modal & generates curator data from the current video
-  const handleSaveModal = () => {
-    if (!clipUrl) {
-      toast.error('No clip URL/timestamp data provided');
-      return;
-    }
-    generateCuratorData(clipUrl, timestamps);
-    setSaveModalOpen(true);
-  }
-
-  // Handler which saves the clip data to the database
-  const handleSave = async (title: string, dataToSave: CuratorData) => {
-    if (!curatorData) {
-      toast.error('No curator data to save');
-      return;
-    }
-
-    if (!isAuthenticated) {
-      toast.error('You must be logged in to save clips');
-      setSignInModalOpen(true);
-      return;
-    }
-    setIsSaving(true);
-
-    try {
-      const response = await createClip(title, dataToSave);
-      if (response.success) {
-        toast.success('Clip saved successfully');
-      } else if (response.error) {
-        toast.error(response.error || 'Failed to save clip');
-      }
-    } catch (error) {
-      console.error('Error saving clip:', error);
-      toast.error('Network error - please try again');
-    } finally {
-      setIsSaving(false);
-      setSaveModalOpen(false);
-    }
-  }
+  const { user } = useAuth()
+  const clipPage = useClipPageState();
 
   // BEGINNING OF JSX RETURN
 
@@ -154,7 +58,7 @@ export default function Home() {
           speed={0.1}
         />
       </div>
-      <ClipHeader clipUrl={clipUrl} onInputChange={setClipUrl} />
+      <ClipHeader clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
       <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
           flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
@@ -162,40 +66,40 @@ export default function Home() {
           "
         >
           <ClipVideoSection
-            clipUrl={clipUrl}
-            modalOpen={timestampModalOpen}
-            retainedVolume={retainedVolume}
-            setRetainedVolume={setRetainedVolume}
-            setCurrentTime={setCurrentTime}
-            ref={playerRef}
+            clipUrl={clipPage.clipUrl}
+            modalOpen={clipPage.timestampModalOpen}
+            retainedVolume={clipPage.retainedVolume}
+            setRetainedVolume={clipPage.setRetainedVolume}
+            setCurrentTime={clipPage.setCurrentTime}
+            ref={clipPage.playerRef}
           />
           <ClipSidebar
-            timestamps={timestamps}
-            handleToTimestamp={handleToTimestamp}
-            clipUrl={clipUrl}
-            clearTimestamps={clearTimestamps}
-            handleTimestampModal={handleTimestampModal}
-            handleSaveModal={handleSaveModal}
+            timestamps={clipPage.timestamps}
+            handleToTimestamp={clipPage.handleToTimestamp}
+            clipUrl={clipPage.clipUrl}
+            clearTimestamps={clipPage.clearTimestamps}
+            handleTimestampModal={clipPage.handleTimestampModal}
+            handleSaveModal={clipPage.handleSaveModal}
           />
           {/** MODALS **/}
           <ClipNoteModal
-            isOpen={timestampModalOpen}
-            currentTime={currentTime}
+            isOpen={clipPage.timestampModalOpen}
+            currentTime={clipPage.currentTime}
             onSave={(title, note) => {
-              handleAddTimestamp(title, note);
+              clipPage.handleAddTimestamp(title, note);
             }}
-            onClose={() => setTimestampModalOpen(false)}
+            onClose={() => clipPage.setTimestampModalOpen(false)}
           />
           <ClipSaveModal
-            isOpen={saveModalOpen}
-            onClose={() => setSaveModalOpen(false)}
-            onSave={handleSave}
-            isSaving={isSaving}
-            curatorData={curatorData}
+            isOpen={clipPage.saveModalOpen}
+            onClose={() => clipPage.setSaveModalOpen(false)}
+            onSave={clipPage.handleSave}
+            isSaving={clipPage.isSaving}
+            curatorData={clipPage.curatorData}
           />
           <SignInModal
-            isOpen={signInModalOpen}
-            onClose={() => setSignInModalOpen(false)} />
+            isOpen={clipPage.signInModalOpen}
+            onClose={() => clipPage.setSignInModalOpen(false)} />
           {/** MODALS **/}
         </div>
       </div>
