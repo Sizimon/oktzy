@@ -25,7 +25,7 @@ export const ClipSaveModal: React.FC<SaveModalProps> = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-            <div className="flex flex-col justify-center items-center text-text bg-slate-800/60 border-[1px] border-white/10 backdrop-blur-md p-6 rounded-2xl shadow-lg w-2/6">
+            <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border-[1px] border-white/10 backdrop-blur-md p-6 rounded-2xl shadow-lg w-2/6">
                 <input
                     type="text"
                     placeholder="Name your save..."

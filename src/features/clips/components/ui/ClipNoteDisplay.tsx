@@ -11,7 +11,7 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
     }, [clipUrl]);
 
     return (
-        <div className='p-4 rounded-2xl bg-slate-800 w-full h-full flex flex-col'>
+        <div className='p-4 rounded-2xl w-full h-full flex flex-col'>
             {timestamps.length === 0 ? (
                 <div className='p-4 rounded text-text'>
                     <p className="text-center">No timestamps available, click "Add Timestamp" to create one.</p>
@@ -34,7 +34,7 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
                                     </span>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                    <div className="pt-2 justify-center items-center w-full bg-slate-700 p-2 rounded">
+                                    <div className="pt-2 justify-center items-center w-full bg-foreground p-2 rounded">
                                         <p className="whitespace-pre-wrap text-center">{timestamp.note}</p>
                                     </div>
                                 </AccordionContent>

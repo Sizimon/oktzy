@@ -13,6 +13,8 @@
   }
 }
 
+/* Option 6: Crosshatch Pattern */
+
 .dark {
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(27.478% 0.00918 285.739);

@@ -44,7 +44,7 @@ return (
       value={clipUrl}
       placeholder="Enter clip URL..."
       onChange={handleInputChange}
-      className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-slate-800/30 text-text rounded-full w-2/3 lg:w-1/3"
+      className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-foreground/30 text-text rounded-full w-2/3 lg:w-1/3"
     />
   </div>
 );

@@ -2,7 +2,6 @@
 import React from 'react';
 
 // Component Imports
-import Galaxy from '@/components/Galaxy';
 import { Navigation } from '@/features/nav/Navigation';
 import { ClipHeader } from '@/features/clips/components/layout/ClipHeader';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
@@ -43,24 +42,7 @@ export default function Home() {
         theme="dark"
         transition={Bounce}
       />
-      <div className='absolute inset-0 -z-10'>
-        <Galaxy
-          mouseInteraction={false}
-          mouseRepulsion={false}
-          density={0.8}
-          glowIntensity={0.15}
-          saturation={0.5}
-          hueShift={140}
-          twinkleIntensity={0.2}
-          rotationSpeed={0}
-          starSpeed={0.1}
-          speed={0.1}
-        />
-      </div>
       <ClipHeader clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
-      <div>
-        <input className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-slate-800/30 text-text rounded-full w-2/3 lg:w-1/3" value={clipPage.clipTitle || ''} onChange={(e) => clipPage.setClipTitle(e.target.value)} />
-      </div>
       <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
           flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
@@ -76,6 +58,8 @@ export default function Home() {
             ref={clipPage.playerRef}
           />
           <ClipSidebar
+            clipTitle={clipPage.clipTitle}
+            setClipTitle={clipPage.setClipTitle}
             timestamps={clipPage.timestamps}
             handleToTimestamp={clipPage.handleToTimestamp}
             clipUrl={clipPage.clipUrl}
