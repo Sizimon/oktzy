@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { authAPI } from '@/features/auth/api/api';
 
 interface AuthContextType {
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
 
-    const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         try {
             await authAPI.login(email, password);
 
@@ -37,9 +37,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.error('Error logging in:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Login failed') };
         }
-    };
+    }, []);
 
-    const register = async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const register = useCallback(async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         try {
             await authAPI.register(username, email, password);
 
@@ -55,13 +55,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.error('Error registering:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Registration failed') };
         }
-    };
+    }, []);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         await authAPI.logout();
         setUser(null);
         setIsAuthenticated(false);
-    };
+    }, []);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -84,18 +84,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         checkAuth();
     }, []);
 
+    // Memoize context value
+    const contextValue = useMemo(() => ({
+        isAuthenticated,
+        setIsAuthenticated,
+        isLoading,
+        user,
+        setUser,
+        login,
+        register,
+        logout,
+    }), [isAuthenticated, isLoading, user, login, register, logout]);
+
     return (
         <AuthContext.Provider
-            value={{
-                isAuthenticated,
-                setIsAuthenticated,
-                isLoading,
-                user,
-                setUser,
-                login,
-                register,
-                logout,
-            }}
+            value={contextValue}
         >
             {children}
         </AuthContext.Provider>

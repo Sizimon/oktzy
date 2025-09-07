@@ -1,14 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTimestamps } from './useTimestamps';
-import { useCuratorData } from './useCuratorData';
 import { Clip, CuratorData } from '@/types/types'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClip } from '@/features/clips/context/clipProvider'
 
 export function useClipPageState(initialClip?: Clip) {
+  const [clipTitle, setClipTitle] = useState(initialClip?.title || '');
+
   // Video States
-  const [clipUrl, setClipUrl] = useState(initialClip?.clipUrl ?? '');
+  const [clipUrl, setClipUrl] = useState(initialClip?.clipUrl || '');
   const [currentTime, setCurrentTime] = useState(0);
   const [retainedVolume, setRetainedVolume] = useState(1);
 
@@ -22,30 +23,33 @@ export function useClipPageState(initialClip?: Clip) {
   // Timestamps
   const { timestamps, addTimestamp, clearTimestamps, loadTimestamps } = useTimestamps();
 
-  // Curator Data
-  const { curatorData, generateCuratorData } = useCuratorData();
-
   // Auth
   const { isAuthenticated } = useAuth()
   const { createClip, updateClip } = useClip()
 
   // Sync state whenever initialClip changes.
   useEffect(() => {
-    if (initialClip?.timestamps) {
-      console.log(initialClip.clipUrl)
-      setClipUrl(initialClip.clipUrl ?? '')
-      loadTimestamps(initialClip.timestamps);
+    if (initialClip) {
+      setClipTitle(initialClip.title || ''); // Use || consistently
+      setClipUrl(initialClip.clipUrl || ''); // Use || consistently
+      loadTimestamps(initialClip.timestamps || []);
     }
   }, [initialClip, loadTimestamps]);
 
   // Handlers (copy from your main page)
   const handleTimestampModal = () => {
-    if (!clipUrl) return;
+    if (!clipUrl) {
+      toast.error('Please enter a valid clip URL before adding timestamps');
+      return;
+    };
     setTimestampModalOpen(true);
   };
 
   const handleAddTimestamp = (title: string, note: string) => {
-    if (!title || !note) return;
+    if (!title || !note) {
+      toast.error('Please provide both a title and a note for the timestamp');
+      return;
+    };
     addTimestamp(currentTime, title, note);
     setTimestampModalOpen(false);
   };
@@ -56,15 +60,19 @@ export function useClipPageState(initialClip?: Clip) {
     }
   };
 
-  const handleSaveModal = () => {
-    if (!clipUrl) return;
-    generateCuratorData(clipUrl, timestamps);
-    setSaveModalOpen(true);
-  };
-
   // Handler which saves the clip data to the database
   const handleSave = async (title: string, dataToSave: CuratorData) => {
-    if (!initialClip && !curatorData) {
+    if (!clipUrl && !timestamps.length) {
+      toast.error('Cannot save an empty clip. Please add a clip URL and at least one timestamp.');
+      return;
+    }
+
+    const clipData = {
+      clipUrl: clipUrl,
+      timestamps: timestamps
+    }
+
+    if (!initialClip && !clipData) {
       toast.error('No curator data to save');
       return;
     }
@@ -102,6 +110,7 @@ export function useClipPageState(initialClip?: Clip) {
   }
 
   return {
+    clipTitle, setClipTitle,
     clipUrl, setClipUrl,
     currentTime, setCurrentTime,
     retainedVolume, setRetainedVolume,
@@ -111,11 +120,9 @@ export function useClipPageState(initialClip?: Clip) {
     isSaving, setIsSaving,
     playerRef,
     timestamps, addTimestamp, clearTimestamps, loadTimestamps,
-    curatorData, generateCuratorData,
     handleTimestampModal,
     handleAddTimestamp,
     handleToTimestamp,
-    handleSaveModal,
     handleSave
   };
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { Clip, CuratorData } from '@/types/types';
 import { clipsAPI } from '@/features/clips/api/api';
 import { useAuth } from '@/features/auth/context/authProvider';
@@ -27,7 +27,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { user, isAuthenticated } = useAuth();
 
     // Fetch all clips when user is authenticated
-    const fetchClips = async () => {
+    const fetchClips = useCallback(async () => {
         if (!isAuthenticated) {
             setClips([]);
             return;
@@ -47,9 +47,9 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [isAuthenticated]);
 
-    const createClip = async (title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
+    const createClip = useCallback(async (title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
         if (!user) {
             return { success: false, error: 'User not authenticated' };
         }
@@ -73,9 +73,9 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [user]);
 
-    const updateClip = async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string}> => {
+    const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string}> => {
         if (!user) {
             return {success: false, error: 'User Not Authenticated'}
         }
@@ -95,7 +95,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setError(error.message || 'Failed to update clip');
             return { success: false, error: error.message || 'Failed to update clip'}
         }
-    }
+    }, [user, clips])
 
     useEffect(() => {
         if (isAuthenticated && user) {
@@ -104,19 +104,20 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setClips([]);
             setError(null);
         }
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, fetchClips]);
 
-    const values: ClipContextType = {
+     // Memoize context value
+    const contextValue = useMemo(() => ({
         clips,
         isLoading,
         error,
         fetchClips,
         createClip,
         updateClip
-    }
+    }), [clips, isLoading, error, fetchClips, createClip, updateClip]);
 
     return (
-        <ClipContext.Provider value={values}>
+        <ClipContext.Provider value={contextValue}>
             {children}
         </ClipContext.Provider>
     );

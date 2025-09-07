@@ -10,7 +10,6 @@ import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
 
 // Modal Imports
 import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal';
-import { ClipSaveModal } from '@/features/clips/components/modals/ClipSaveModal';
 import SignInModal from '@/features/auth/components/SignInModal';
 
 // Misc Imports
@@ -44,7 +43,7 @@ export default function Home() {
         theme="dark"
         transition={Bounce}
       />
-      <div className='absolute inset-0 z-0'>
+      <div className='absolute inset-0 -z-10'>
         <Galaxy
           mouseInteraction={false}
           mouseRepulsion={false}
@@ -53,12 +52,15 @@ export default function Home() {
           saturation={0.5}
           hueShift={140}
           twinkleIntensity={0.2}
-          rotationSpeed={0.03}
+          rotationSpeed={0}
           starSpeed={0.1}
           speed={0.1}
         />
       </div>
       <ClipHeader clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
+      <div>
+        <input className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-slate-800/30 text-text rounded-full w-2/3 lg:w-1/3" value={clipPage.clipTitle || ''} onChange={(e) => clipPage.setClipTitle(e.target.value)} />
+      </div>
       <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
           flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
@@ -79,7 +81,7 @@ export default function Home() {
             clipUrl={clipPage.clipUrl}
             clearTimestamps={clipPage.clearTimestamps}
             handleTimestampModal={clipPage.handleTimestampModal}
-            handleSaveModal={clipPage.handleSaveModal}
+            handleSave={clipPage.handleSave}
           />
           {/** MODALS **/}
           <ClipNoteModal
@@ -89,13 +91,6 @@ export default function Home() {
               clipPage.handleAddTimestamp(title, note);
             }}
             onClose={() => clipPage.setTimestampModalOpen(false)}
-          />
-          <ClipSaveModal
-            isOpen={clipPage.saveModalOpen}
-            onClose={() => clipPage.setSaveModalOpen(false)}
-            onSave={clipPage.handleSave}
-            isSaving={clipPage.isSaving}
-            curatorData={clipPage.curatorData}
           />
           <SignInModal
             isOpen={clipPage.signInModalOpen}

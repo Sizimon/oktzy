@@ -112,7 +112,7 @@ const ClipPage = () => {
                         clipUrl={clipPage.clipUrl}
                         clearTimestamps={clipPage.clearTimestamps}
                         handleTimestampModal={clipPage.handleTimestampModal}
-                        handleSaveModal={clipPage.handleSaveModal}
+                        handleSave={clipPage.handleSave}
                     />
                     {/** MODALS **/}
                     <ClipNoteModal
@@ -123,13 +123,13 @@ const ClipPage = () => {
                         }}
                         onClose={() => clipPage.setTimestampModalOpen(false)}
                     />
-                    <ClipSaveModal
+                    {/* <ClipSaveModal
                         isOpen={clipPage.saveModalOpen}
                         onClose={() => clipPage.setSaveModalOpen(false)}
                         onSave={clipPage.handleSave}
                         isSaving={clipPage.isSaving}
                         curatorData={clipPage.curatorData}
-                    />
+                    /> */}
                     <SignInModal
                         isOpen={clipPage.signInModalOpen}
                         onClose={() => clipPage.setSignInModalOpen(false)} />
