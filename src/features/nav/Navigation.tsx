@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { CiMenuBurger } from "react-icons/ci";
 import { useClip } from '../clips/context/clipProvider';
 import { Clip } from '@/types/types'
 import { useRouter } from 'next/navigation'
@@ -68,11 +69,13 @@ export function Navigation({
     return (
         <div>
             {!navOpen ? (
-                <button className='absolute top-0 left-0 z-60'
+                <button className='absolute top-6 left-6 z-50'
+                    aria-label="Open navigation menu"
+                    title="Open navigation menu"
                     onClick={() => setNavOpen(true)}
                 >
                     {/* Hamburger icon */}
-                    <p>open</p>
+                    <CiMenuBurger size={30} color='white' />
                 </button>
             ) : null}
             <nav
