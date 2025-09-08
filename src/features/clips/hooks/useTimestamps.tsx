@@ -1,16 +1,28 @@
 // useTimestamp hook which collects all timestamps in state and provides a function to add more.
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Timestamp } from '@/types/types';
 import { formatCurrentTime } from '@/utils/formatTime';
 
 export const useTimestamps = () => {
   const [timestamps, setTimestamps] = useState<Timestamp[]>([]);
 
-  const clearTimestamps = () => {
+  const clearTimestamps = useCallback(() => {
+    console.log('🔴 clearTimestamps called');
+    console.trace('clearTimestamps call stack'); // This shows you WHERE it's called from
     setTimestamps([]);
-  }
+  }, []);
 
-  const loadTimestamps = (newTimestamps: Timestamp[]) => setTimestamps(newTimestamps);
+
+  const loadTimestamps = useCallback((newTimestamps: Timestamp[]) => {
+    console.log('📥 loadTimestamps called with:', newTimestamps);
+    if (newTimestamps.length === 0) {
+      console.log('🔴 WARNING: Loading empty timestamps array');
+      console.trace('Empty loadTimestamps call stack');
+    }
+    setTimestamps(newTimestamps);
+  }, []);
+
+  console.log('useTimestamps current state:', timestamps);
 
   const addTimestamp = (currentTime: number, title: string, note: string) => {
     const newTimestamp: Timestamp = {
@@ -19,7 +31,7 @@ export const useTimestamps = () => {
       time: currentTime,
       timeStringConverted: formatCurrentTime(currentTime)
     };
-    
+
     setTimestamps(prev => {
       const updated = [...prev, newTimestamp];
       return updated;

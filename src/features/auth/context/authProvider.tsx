@@ -22,6 +22,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
     const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+        setIsLoading(true);
         try {
             await authAPI.login(email, password);
 
@@ -36,10 +37,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } catch (error) {
             console.error('Error logging in:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Login failed') };
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
     const register = useCallback(async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+        setIsLoading(true);
         try {
             await authAPI.register(username, email, password);
 
@@ -54,6 +58,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } catch (error) {
             console.error('Error registering:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Registration failed') };
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 

@@ -80,7 +80,7 @@ export function Navigation({
             ) : null}
             <nav
                 ref={navRef}
-                className="fixed top-0 left-0 flex flex-col justify-start items-center h-full bg-foreground/40 backdrop-blur-sm z-60 w-1/5 p-4 space-y-4"
+                className="fixed top-0 left-0 flex flex-col justify-start items-center h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 p-4 space-y-4"
             >
                 <div className="text-white border-b border-white/10 w-full p-4">
                     {user ? `Welcome, ${user.username}` : 'Not logged in'}

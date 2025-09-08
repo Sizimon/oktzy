@@ -94,6 +94,8 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
              console.error('Error updating clip:', error);
             setError(error.message || 'Failed to update clip');
             return { success: false, error: error.message || 'Failed to update clip'}
+        } finally {
+            setIsLoading(false)
         }
     }, [user, clips])
 

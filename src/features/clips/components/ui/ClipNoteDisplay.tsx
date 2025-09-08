@@ -1,15 +1,10 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ClipSidebarProps } from '@/types/types';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from '@/components/ui/accordion';
 
 
-export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handleToTimestamp, clipUrl, clearTimestamps }) => {
-
-    useEffect(() => {
-        clearTimestamps();
-    }, [clipUrl]);
-
+export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handleToTimestamp }) => {
     return (
         <div className='p-4 rounded-2xl w-full h-full flex flex-col'>
             {timestamps.length === 0 ? (

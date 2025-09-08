@@ -26,8 +26,8 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, clearTimestamps, loadTimestamps } = useTimestamps();
-  const { isAuthenticated } = useAuth()
-  const { createClip, updateClip, clips } = useClip()
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -39,13 +39,36 @@ export function useClipPageState(clipId?: number) {
 
   // Single effect to handle all clip loading logic
   useEffect(() => {
-    if (!clipId || !isAuthenticated) {
+    // Early return if still loading
+    if (authLoading || clipsLoading) {
+      console.log('⏳ Still loading auth or clips, skipping...');
+      return;
+    }
+
+    // Early return if not authenticated (after auth has loaded)
+    if (!authLoading && !isAuthenticated) {
+      console.log('🔴 Not authenticated (after loading), clearing...');
       setCurrentClip(null);
       setHasLoadedClipData(false);
       return;
     }
 
+    // Early return if no clipId
+    if (!clipId) {
+      console.log('🔴 No clipId provided');
+      setCurrentClip(null);
+      setHasLoadedClipData(false);
+      return;
+    }
+
+    // Early return if clips haven't loaded yet
+    if (!clipsLoading && clips.length === 0) {
+      console.log('📭 No clips available yet');
+      return;
+    }
+
     if (!foundClip) {
+      console.log('🔴 Clip not found in loaded clips');
       setCurrentClip(null);
       setHasLoadedClipData(false);
       return;
@@ -53,13 +76,34 @@ export function useClipPageState(clipId?: number) {
 
     // Only load if we haven't loaded this clip's data yet
     if (!hasLoadedClipData || !currentClip || currentClip.id !== foundClip.id) {
+      console.log('✅ Loading clip data for:', foundClip.id);
+      console.log('Found clip timestamps:', foundClip.timestamps);
       setCurrentClip(foundClip);
       setClipTitle(foundClip.title || '');
       setClipUrl(foundClip.clipUrl || '');
-      loadTimestamps(foundClip.timestamps || []);
+
+      console.log('About to load timestamps:', foundClip.timestamps);
+      // To this:
+      if (foundClip.timestamps && foundClip.timestamps.length > 0) {
+        loadTimestamps(foundClip.timestamps);
+      } else {
+        console.log('⚠️ Not loading empty timestamps array');
+      }
       setHasLoadedClipData(true);
+    } else {
+      console.log('⏭️ Skipping load - already loaded');
     }
-  }, [clipId, isAuthenticated, foundClip, hasLoadedClipData, currentClip, loadTimestamps]);
+  }, [
+    clipId, 
+    isAuthenticated,
+    authLoading,
+    clipsLoading,
+    foundClip, 
+    hasLoadedClipData, 
+    currentClip, 
+    loadTimestamps,
+    clips.length
+  ]);
 
   // Handlers (copy from your main page)
   const handleTimestampModal = () => {
