@@ -1,9 +1,8 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/context/authProvider';
-import { useClip } from '@/features/clips/context/clipProvider'
 import { Bounce, ToastContainer } from 'react-toastify';
 
 // Types
@@ -14,43 +13,31 @@ import { Navigation } from '@/features/nav/Navigation';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
 import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
 import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal';
-import SignInModal from '@/features/auth/components/SignInModal';
 
 // Hooks
 import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 
 const ClipPage = () => {
-    const [currentClip, setCurrentClip] = useState<Clip | null>(null);
     const { id } = useParams();
     const { user, isAuthenticated } = useAuth();
-    const { clips } = useClip();
     const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState<string>('');
 
     const idAsNum = Number(id);
 
-    // Set error for invalid id in an effect
+    // Just pass the ID to the hook
+    const clipPage = useClipPageState(isNaN(idAsNum) ? undefined : idAsNum);
+
     useEffect(() => {
         if (isNaN(idAsNum)) {
             setError('Invalid clipId');
         }
     }, [idAsNum]);
 
-    // Find and set currentClip in an effect
-    useEffect(() => {
-        if (!isAuthenticated || isNaN(idAsNum)) return;
-        const loadedClip = clips.find(clip => Number(clip.id) === idAsNum);
-        setCurrentClip(loadedClip ?? null);
-    }, [idAsNum, isAuthenticated, clips]);
-
-    console.log(currentClip)
-    const clipPage = useClipPageState(currentClip ?? undefined);
-
     if (error) {
         return <div>{error}</div>;
     }
 
-    if (!user || !isAuthenticated || !currentClip) {
+    if (!user || !isAuthenticated || !clipPage.currentClip) {
         return <div>Loading...</div>;
     }
 
@@ -72,11 +59,7 @@ const ClipPage = () => {
                 theme="dark"
                 transition={Bounce}
             />
-            <div className='absolute inset-0 z-0 background'/>
-            <div className='flex h-1/10 justify-center items-center text-text z-50'>
-                <h1>{currentClip?.title}</h1>
-            </div>
-            <div className='flex flex-col lg:flex-row w-full z-50'>
+            <div className='flex flex-col lg:flex-row w-full z-50 justify-center h-full'>
                 <div className="
                       flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
                       lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4
@@ -91,6 +74,8 @@ const ClipPage = () => {
                         ref={clipPage.playerRef}
                     />
                     <ClipSidebar
+                        clipTitle={clipPage.clipTitle}
+                        setClipTitle={clipPage.setClipTitle}
                         timestamps={clipPage.timestamps}
                         handleToTimestamp={clipPage.handleToTimestamp}
                         clipUrl={clipPage.clipUrl}
@@ -102,21 +87,14 @@ const ClipPage = () => {
                     <ClipNoteModal
                         isOpen={clipPage.timestampModalOpen}
                         currentTime={clipPage.currentTime}
-                        onSave={(title: any, note: any) => {
+                        onSave={(title: string, note: string) => {
                             clipPage.handleAddTimestamp(title, note);
                         }}
                         onClose={() => clipPage.setTimestampModalOpen(false)}
                     />
-                    {/* <ClipSaveModal
-                        isOpen={clipPage.saveModalOpen}
-                        onClose={() => clipPage.setSaveModalOpen(false)}
-                        onSave={clipPage.handleSave}
-                        isSaving={clipPage.isSaving}
-                        curatorData={clipPage.curatorData}
-                    /> */}
-                    <SignInModal
+                    {/* <SignInModal
                         isOpen={clipPage.signInModalOpen}
-                        onClose={() => clipPage.setSignInModalOpen(false)} />
+                        onClose={() => clipPage.setSignInModalOpen(false)} /> */}
                     {/** MODALS **/}
                 </div>
             </div>

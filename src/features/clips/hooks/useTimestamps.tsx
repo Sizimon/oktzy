@@ -20,7 +20,10 @@ export const useTimestamps = () => {
       timeStringConverted: formatCurrentTime(currentTime)
     };
     
-    setTimestamps(prev => [...prev, newTimestamp]);
+    setTimestamps(prev => {
+      const updated = [...prev, newTimestamp];
+      return updated;
+    });
   };
 
   return {

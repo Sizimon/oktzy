@@ -6,12 +6,14 @@ import { useAuth } from '@/features/auth/context/authProvider';
 import { useClip } from '@/features/clips/context/clipProvider';
 import { useRouter } from 'next/navigation';
 
-export function useClipPageState(initialClip?: Clip) {
+export function useClipPageState(clipId?: number) {
+
   const router = useRouter();
-  const [clipTitle, setClipTitle] = useState(initialClip?.title || '');
+  const [currentClip, setCurrentClip] = useState<Clip | null>(null);
+  const [clipTitle, setClipTitle] = useState('');
 
   // Video States
-  const [clipUrl, setClipUrl] = useState(initialClip?.clipUrl || '');
+  const [clipUrl, setClipUrl] = useState('');
   const [currentTime, setCurrentTime] = useState(0);
   const [retainedVolume, setRetainedVolume] = useState(1);
 
@@ -27,16 +29,29 @@ export function useClipPageState(initialClip?: Clip) {
 
   // Auth
   const { isAuthenticated } = useAuth()
-  const { createClip, updateClip } = useClip()
+  const { createClip, updateClip, clips } = useClip()
 
-  // Sync state whenever initialClip changes.
+  // Load clip when clipId changes
   useEffect(() => {
-    if (initialClip) {
-      setClipTitle(initialClip.title || ''); // Use || consistently
-      setClipUrl(initialClip.clipUrl || ''); // Use || consistently
-      loadTimestamps(initialClip.timestamps || []);
+    if (!clipId || !isAuthenticated) {
+      setCurrentClip(null);
+      return;
     }
-  }, [initialClip, loadTimestamps]);
+
+    const loadedClip = clips.find(clip => Number(clip.id) === clipId);
+    if (loadedClip) {
+      setCurrentClip(loadedClip);
+      setClipTitle(loadedClip.title || '');
+      setClipUrl(loadedClip.clipUrl || '');
+
+      // Only load timestamps if we don't have any yet
+      if (timestamps.length === 0) {
+        loadTimestamps(loadedClip.timestamps || []);
+      }
+    } else {
+      setCurrentClip(null);
+    }
+  }, [clipId, clips, isAuthenticated, loadTimestamps]);
 
   // Handlers (copy from your main page)
   const handleTimestampModal = () => {
@@ -79,7 +94,7 @@ export function useClipPageState(initialClip?: Clip) {
       timestamps: timestamps
     }
 
-    if (!initialClip && !clipData) {
+    if (!currentClip && !clipData) {
       toast.error('No curator data to save');
       return;
     }
@@ -92,7 +107,7 @@ export function useClipPageState(initialClip?: Clip) {
     setIsSaving(true);
 
     try {
-      if (!initialClip) {
+      if (!currentClip) {
         const response = await createClip(title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip saved successfully');
@@ -101,7 +116,7 @@ export function useClipPageState(initialClip?: Clip) {
           toast.error(response.error || 'Failed to save clip');
         }
       } else {
-        const response = await updateClip(Number(initialClip.id), title, clipData as CuratorData);
+        const response = await updateClip(Number(currentClip.id), title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip updated successfully');
         } else if (response.error) {
@@ -118,6 +133,7 @@ export function useClipPageState(initialClip?: Clip) {
   }
 
   return {
+    currentClip, setCurrentClip,
     clipTitle, setClipTitle,
     clipUrl, setClipUrl,
     currentTime, setCurrentTime,
