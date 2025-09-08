@@ -13,7 +13,7 @@ interface ClipContextType {
 
     // Actions
     fetchClips: () => Promise<void>;
-    createClip: (title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
+    createClip: (title: string, data: CuratorData) => Promise<{ success: boolean; error?: string, id?: number }>;
     updateClip: (id: number, title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
 }
 
@@ -49,7 +49,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [isAuthenticated]);
 
-    const createClip = useCallback(async (title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
+    const createClip = useCallback(async (title: string, data: CuratorData): Promise<{ success: boolean; error?: string, id?: number }> => {
         if (!user) {
             return { success: false, error: 'User not authenticated' };
         }
@@ -62,7 +62,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (response.data) {
                 // Add the new clip to the list
                 setClips((prevClips) => [...prevClips, response.data]);
-                return { success: true };
+                return { success: true, id: response.data.id };
             } else {
                 return { success: false, error: 'Failed to create clip' };
             }

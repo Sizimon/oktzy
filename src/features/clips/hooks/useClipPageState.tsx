@@ -3,9 +3,11 @@ import { useTimestamps } from './useTimestamps';
 import { Clip, CuratorData } from '@/types/types'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/features/auth/context/authProvider';
-import { useClip } from '@/features/clips/context/clipProvider'
+import { useClip } from '@/features/clips/context/clipProvider';
+import { useRouter } from 'next/navigation';
 
 export function useClipPageState(initialClip?: Clip) {
+  const router = useRouter();
   const [clipTitle, setClipTitle] = useState(initialClip?.title || '');
 
   // Video States
@@ -61,7 +63,12 @@ export function useClipPageState(initialClip?: Clip) {
   };
 
   // Handler which saves the clip data to the database
-  const handleSave = async (title: string, dataToSave: CuratorData) => {
+  const handleSave = async (title: string) => {
+    if (!title) {
+      toast.error('Please provide a title for the clip before saving');
+      return;
+    }
+
     if (!clipUrl && !timestamps.length) {
       toast.error('Cannot save an empty clip. Please add a clip URL and at least one timestamp.');
       return;
@@ -86,14 +93,15 @@ export function useClipPageState(initialClip?: Clip) {
 
     try {
       if (!initialClip) {
-        const response = await createClip(title, dataToSave);
+        const response = await createClip(title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip saved successfully');
+          router.push(`/clips/${response.id}`);
         } else if (response.error) {
           toast.error(response.error || 'Failed to save clip');
         }
       } else {
-        const response = await updateClip(Number(initialClip.id), title, dataToSave);
+        const response = await updateClip(Number(initialClip.id), title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip updated successfully');
         } else if (response.error) {

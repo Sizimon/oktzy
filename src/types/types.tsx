@@ -42,7 +42,7 @@ export interface ClipSidebarProps { // Represents the props for the note display
     clipUrl: string;
     clearTimestamps: () => void;
     handleTimestampModal: () => void;
-    handleSave: (title: string, data: CuratorData) => void;
+    handleSave: (title: string) => void;
 }
 
 export interface TimestampModalProps { // Represents the props for the timestamp modal component

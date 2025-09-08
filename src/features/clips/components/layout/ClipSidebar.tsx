@@ -28,7 +28,7 @@ export function ClipSidebar({
                     Add Timestamp
                 </button>
                 <button
-                    // onClick={() => handleSave(title, data)} // WIP: In process of being implemented
+                    onClick={() => handleSave(clipTitle || '')}
                     className="p-2 bg-green-500 text-white rounded cursor-pointer"
                 >
                     Save
