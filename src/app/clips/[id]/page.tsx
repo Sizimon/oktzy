@@ -5,9 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/context/authProvider';
 import { Bounce, ToastContainer } from 'react-toastify';
 
-// Types
-import { Clip } from '@/types/types'
-
 // Components
 import { Navigation } from '@/features/nav/Navigation';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
@@ -41,6 +38,8 @@ const ClipPage = () => {
         return <div>Loading...</div>;
     }
 
+    console.log('Rendering ClipPage with clip:', clipPage.currentClip);
+
     return (
         <div className='relative w-full h-lvh lg:px-16'>
             <Navigation
@@ -58,6 +57,7 @@ const ClipPage = () => {
                 pauseOnHover
                 theme="dark"
                 transition={Bounce}
+                className={'z-50'}
             />
             <div className='flex flex-col lg:flex-row w-full z-50 justify-center h-full'>
                 <div className="
@@ -75,7 +75,7 @@ const ClipPage = () => {
                     />
                     <ClipSidebar
                         clipTitle={clipPage.clipTitle}
-                        setClipTitle={clipPage.setClipTitle}
+                        handleChangeClipTitle={clipPage.handleChangeClipTitle}
                         timestamps={clipPage.timestamps}
                         handleToTimestamp={clipPage.handleToTimestamp}
                         clipUrl={clipPage.clipUrl}

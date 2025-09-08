@@ -11,7 +11,7 @@ export function ClipSidebar({
     clipUrl,
     clearTimestamps,
     clipTitle,
-    setClipTitle
+    handleChangeClipTitle,
 }: ClipSidebarProps) {
     return (
         <div className="
@@ -20,13 +20,7 @@ export function ClipSidebar({
         ">
             <div>
                 <input type="text" placeholder="Clip Title" required className="p-2 border-[1px] border-white/10 focus:outline-none text-lg bg-foreground/30 text-text rounded-full w-full text-center" value={clipTitle || ''} 
-                onChange={(e) => {
-                    if (clipUrl.length > 0) {
-                        setClipTitle?.(e.target.value);
-                    } else {
-                        toast.error('Please enter a valid clip URL before setting a title');
-                    }
-                }} />
+                onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
                 <button

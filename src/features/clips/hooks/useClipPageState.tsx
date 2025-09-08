@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTimestamps } from './useTimestamps';
 import { Clip, CuratorData } from '@/types/types'
 import { toast } from 'react-toastify'
@@ -26,32 +26,40 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, clearTimestamps, loadTimestamps } = useTimestamps();
-
-  // Auth
   const { isAuthenticated } = useAuth()
   const { createClip, updateClip, clips } = useClip()
 
-  // Load clip when clipId changes
+  const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
+
+  // Memoize the current clip to prevent unnecessary lookups
+  const foundClip = useMemo(() => {
+    if (!clipId || !clips.length) return null;
+    return clips.find(clip => Number(clip.id) === clipId) || null;
+  }, [clipId, clips.length]); // Use clips.length instead of clips array
+
+  // Single effect to handle all clip loading logic
   useEffect(() => {
     if (!clipId || !isAuthenticated) {
       setCurrentClip(null);
+      setHasLoadedClipData(false);
       return;
     }
 
-    const loadedClip = clips.find(clip => Number(clip.id) === clipId);
-    if (loadedClip) {
-      setCurrentClip(loadedClip);
-      setClipTitle(loadedClip.title || '');
-      setClipUrl(loadedClip.clipUrl || '');
-
-      // Only load timestamps if we don't have any yet
-      if (timestamps.length === 0) {
-        loadTimestamps(loadedClip.timestamps || []);
-      }
-    } else {
+    if (!foundClip) {
       setCurrentClip(null);
+      setHasLoadedClipData(false);
+      return;
     }
-  }, [clipId, clips, isAuthenticated, loadTimestamps]);
+
+    // Only load if we haven't loaded this clip's data yet
+    if (!hasLoadedClipData || !currentClip || currentClip.id !== foundClip.id) {
+      setCurrentClip(foundClip);
+      setClipTitle(foundClip.title || '');
+      setClipUrl(foundClip.clipUrl || '');
+      loadTimestamps(foundClip.timestamps || []);
+      setHasLoadedClipData(true);
+    }
+  }, [clipId, isAuthenticated, foundClip, hasLoadedClipData, currentClip, loadTimestamps]);
 
   // Handlers (copy from your main page)
   const handleTimestampModal = () => {
@@ -61,6 +69,14 @@ export function useClipPageState(clipId?: number) {
     };
     setTimestampModalOpen(true);
   };
+
+  const handleChangeClipTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (clipUrl.length > 0) {
+      setClipTitle?.(e.target.value);
+    } else {
+      toast.error('Please enter a valid clip URL before setting a title');
+    }
+  }
 
   const handleAddTimestamp = (title: string, note: string) => {
     if (!title || !note) {
@@ -147,6 +163,7 @@ export function useClipPageState(clipId?: number) {
     handleTimestampModal,
     handleAddTimestamp,
     handleToTimestamp,
-    handleSave
+    handleSave,
+    handleChangeClipTitle
   };
 }

@@ -41,6 +41,7 @@ export default function Home() {
         pauseOnHover
         theme="dark"
         transition={Bounce}
+        className={'z-50'}
       />
       <ClipHeader clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
       <div className='flex flex-col lg:flex-row w-full z-50'>
@@ -59,7 +60,7 @@ export default function Home() {
           />
           <ClipSidebar
             clipTitle={clipPage.clipTitle}
-            setClipTitle={clipPage.setClipTitle}
+            handleChangeClipTitle={clipPage.handleChangeClipTitle}
             timestamps={clipPage.timestamps}
             handleToTimestamp={clipPage.handleToTimestamp}
             clipUrl={clipPage.clipUrl}

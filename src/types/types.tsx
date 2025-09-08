@@ -36,7 +36,7 @@ export interface ClipDisplayProps { // Represents the props for the video displa
 
 export interface ClipSidebarProps { // Represents the props for the note display component
     clipTitle?: string;
-    setClipTitle?: (title: string) => void;
+    handleChangeClipTitle?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     timestamps: Timestamp[];
     handleToTimestamp: (time: number) => void;
     clipUrl: string;
