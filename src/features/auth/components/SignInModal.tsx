@@ -76,8 +76,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-            <button onClick={onClose} className="absolute top-4 right-4 text-white text-2xl font-bold">&times;</button>
-            {formType === 'login' ? (
+            <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border-[1px] border-white/10 backdrop-blur-md px-6 py-12 rounded-2xl shadow-lg w-2/6">
+                <button onClick={onClose} className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer hover:text-red-500">&times;</button>
+                {formType === 'login' ? (
                 <SignInForm
                     email={email}
                     setEmail={setEmail}
@@ -102,6 +103,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                     setFormType={setFormType}
                 />
             )}
+            </div>
         </div>
     )
 }

@@ -9,10 +9,12 @@ import { useRouter } from 'next/navigation'
 
 export function Navigation({
     user,
+    setSignInModalOpen
 }: {
     user: { username: string } | null;
+    setSignInModalOpen: (open: boolean) => void;
 }) {
-    const router = useRouter();    
+    const router = useRouter();
     const { clips } = useClip();
 
     // Nav State
@@ -80,21 +82,31 @@ export function Navigation({
             ) : null}
             <nav
                 ref={navRef}
-                className="fixed top-0 left-0 flex flex-col justify-start items-center h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 p-4 space-y-4"
+                className="fixed top-0 left-0 flex flex-col justify-between items-center h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 p-4 space-y-4"
             >
-                <div className="text-white border-b border-white/10 w-full p-4">
-                    {user ? `Welcome, ${user.username}` : 'Not logged in'}
+                <div>
+                    <div className="text-white border-b border-white/10 w-full p-4">
+                        {user ? `Welcome, ${user.username}` : 'Not logged in'}
+                    </div>
+                    <div className='flex flex-col w-full space-y-4 justify-start items-start px-4'>
+                        {clips.length > 0 ? (
+                            clips.map((clip: Clip) => (
+                                <h3 className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
+                                    {clip.title}
+                                </h3>
+                            ))
+                        ) : (
+                            <span>Could not find any clips...</span>
+                        )}
+                    </div>
                 </div>
-                <div className='flex flex-col w-full space-y-4 justify-start items-start px-4'>
-                    {clips.length > 0 ? (
-                        clips.map((clip: Clip) => (
-                            <h3 className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
-                                {clip.title}
-                            </h3>
-                        ))
-                    ) : (
-                        <span>Could not find any clips...</span>
-                    )}
+                <div>
+                    <button
+                        className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase"
+                        onClick={() => setSignInModalOpen(true)}
+                    >
+                        Login
+                    </button>
                 </div>
             </nav>
         </div>

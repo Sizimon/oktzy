@@ -28,6 +28,7 @@ export default function Home() {
     <div className='relative w-full h-lvh lg:px-16'>
       <Navigation
         user={user}
+        setSignInModalOpen={clipPage.setSignInModalOpen}
       />
       <ToastContainer
         position="top-right"

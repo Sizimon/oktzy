@@ -1,6 +1,5 @@
 import { ClipNoteDisplay } from "@/features/clips/components/ui/ClipNoteDisplay"
 import { ClipSidebarProps } from "@/types/types"
-import { toast } from "react-toastify";
 
 export function ClipSidebar({
     // Modal Handlers
