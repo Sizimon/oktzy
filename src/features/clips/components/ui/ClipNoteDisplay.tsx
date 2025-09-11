@@ -29,8 +29,8 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
                                     </span>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                    <div className="pt-2 justify-center items-center w-full bg-foreground p-2 rounded">
-                                        <p className="whitespace-pre-wrap text-center">{timestamp.note}</p>
+                                    <div className="justify-center items-center w-full bg-foreground p-4 rounded">
+                                        <p className="whitespace-pre-wrap text-start">{timestamp.note}</p>
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>

@@ -70,16 +70,22 @@ export function Navigation({
         router.push(`/clips/${clip.id}`)
     }
 
+    function handleHomeClick() {
+        router.push(`/`)
+    }
+
     return (
         <div>
             {!navOpen ? (
-                <button className='absolute top-6 left-6 z-50'
+                <button className='absolute top-6 left-6 z-50 cursor-pointer'
                     aria-label="Open navigation menu"
                     title="Open navigation menu"
                     onClick={() => setNavOpen(true)}
                 >
                     {/* Hamburger icon */}
-                    <CiMenuBurger size={30} color='white' />
+                    <p className='text-text hover:text-violet-600'>
+                        <CiMenuBurger size={30} />
+                    </p>
                 </button>
             ) : null}
             <nav
@@ -87,13 +93,18 @@ export function Navigation({
                 className="fixed top-0 left-0 flex flex-col justify-between items-start h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 xl:w-1/6 p-4 space-y-4"
             >
                 <div className='space-y-4 w-full'>
-                    <div className="text-white border-b border-white/10 w-full p-4">
-                        {user ? `Welcome, ${user.username}` : 'Not logged in'}
+                    <div className="text-text border-b border-white/10 w-full p-4">
+                        <h2 
+                        className='text-2xl uppercase hover:text-violet-600 cursor-pointer'
+                        onClick={handleHomeClick}
+                        >
+                            Home
+                        </h2>
                     </div>
                     <div className='flex flex-col w-full space-y-4 justify-start items-start px-4'>
                         {clips.length > 0 ? (
-                            clips.map((clip: Clip) => (
-                                <h3 className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
+                            clips.map((clip: Clip, i: number) => (
+                                <h3 id={`clip-${i}`} className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
                                     {clip.title}
                                 </h3>
                             ))
@@ -104,15 +115,15 @@ export function Navigation({
                 </div>
                 <div className='w-full'>
                     {isAuthenticated ? (
-                        <>
-                            <p>Logged in as {user?.username}</p>
+                        <div className='flex flex-col space-y-4'>
+                            <p className='text-text text-center'>Logged in as <span className='text-violet-600'>{user?.username}</span></p>
                             <button
-                                className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase w-full"
+                                className="px-4 py-2 border-[1px] border-violet-600/40 text-text rounded-full cursor-pointer uppercase w-full"
                                 onClick={logout}
                             >
                                 Logout
                             </button>
-                        </>
+                        </div>
                     ) : (
                         <button
                             className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase w-full"
