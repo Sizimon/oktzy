@@ -4,7 +4,8 @@ import { ClipLoader } from "react-spinners";
 
 export function ClipVideoSection({
     clipUrl,
-    modalOpen,
+    timestampModalOpen,
+    signInModalOpen,
     retainedVolume,
     setRetainedVolume,
     setCurrentTime,
@@ -24,7 +25,8 @@ export function ClipVideoSection({
               ) : (
                 <ClipDisplay
                   clipUrl={clipUrl}
-                  modalOpen={modalOpen}
+                  timestampModalOpen={timestampModalOpen}
+                  signInModalOpen={signInModalOpen}
                   retainedVolume={retainedVolume}
                   setRetainedVolume={setRetainedVolume}
                   setCurrentTime={setCurrentTime}

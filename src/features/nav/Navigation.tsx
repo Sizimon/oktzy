@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { CiMenuBurger } from "react-icons/ci";
 import { useClip } from '../clips/context/clipProvider';
+import { useAuth } from '../auth/context/authProvider';
 import { Clip } from '@/types/types'
 import { useRouter } from 'next/navigation'
 
@@ -16,6 +17,7 @@ export function Navigation({
 }) {
     const router = useRouter();
     const { clips } = useClip();
+    const { isAuthenticated, logout } = useAuth();
 
     // Nav State
     const [navOpen, setNavOpen] = useState<boolean>(false);
@@ -82,9 +84,9 @@ export function Navigation({
             ) : null}
             <nav
                 ref={navRef}
-                className="fixed top-0 left-0 flex flex-col justify-between items-center h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 p-4 space-y-4"
+                className="fixed top-0 left-0 flex flex-col justify-between items-start h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 xl:w-1/6 p-4 space-y-4"
             >
-                <div>
+                <div className='space-y-4 w-full'>
                     <div className="text-white border-b border-white/10 w-full p-4">
                         {user ? `Welcome, ${user.username}` : 'Not logged in'}
                     </div>
@@ -96,17 +98,29 @@ export function Navigation({
                                 </h3>
                             ))
                         ) : (
-                            <span>Could not find any clips...</span>
+                            <span className='text-text/60'>Could not find any clips...</span>
                         )}
                     </div>
                 </div>
-                <div>
-                    <button
-                        className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase"
-                        onClick={() => setSignInModalOpen(true)}
-                    >
-                        Login
-                    </button>
+                <div className='w-full'>
+                    {isAuthenticated ? (
+                        <>
+                            <p>Logged in as {user?.username}</p>
+                            <button
+                                className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase w-full"
+                                onClick={logout}
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase w-full"
+                            onClick={() => setSignInModalOpen(true)}
+                        >
+                            Login
+                        </button>
+                    )}
                 </div>
             </nav>
         </div>

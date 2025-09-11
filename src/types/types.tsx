@@ -27,7 +27,8 @@ export interface ClipInputProps {
 
 export interface ClipDisplayProps { // Represents the props for the video display component
   clipUrl: string;
-  modalOpen: boolean;
+  timestampModalOpen: boolean;
+  signInModalOpen: boolean;
   retainedVolume: number;
   setRetainedVolume: (volume: number) => void;
   setCurrentTime: (time: number) => void;
