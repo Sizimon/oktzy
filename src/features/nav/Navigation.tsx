@@ -5,6 +5,9 @@ import { gsap } from 'gsap';
 import { useClip } from '../clips/context/clipProvider';
 import { useAuth } from '../auth/context/authProvider';
 import { Clip } from '@/types/types'
+
+import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
+
 import { useRouter } from 'next/navigation'
 
 export function Navigation({
@@ -107,20 +110,10 @@ export function Navigation({
                     {isAuthenticated ? (
                         <div className='flex flex-col space-y-4'>
                             <p className='text-text text-center'>Logged in as <span className='text-violet-600'>{user?.username}</span></p>
-                            <button
-                                className="px-4 py-2 border-[1px] border-violet-600/40 text-text rounded-full cursor-pointer uppercase w-full"
-                                onClick={logout}
-                            >
-                                Logout
-                            </button>
+                            <BtnSecondary onClick={logout}>Logout</BtnSecondary>
                         </div>
                     ) : (
-                        <button
-                            className="px-4 py-2 border-[1px] border-violet-600/40 text-white rounded-full cursor-pointer uppercase w-full"
-                            onClick={() => setSignInModalOpen(true)}
-                        >
-                            Login
-                        </button>
+                        <BtnPrimary onClick={() => setSignInModalOpen(true)}>Sign In</BtnPrimary>
                     )}
                 </div>
             </nav>

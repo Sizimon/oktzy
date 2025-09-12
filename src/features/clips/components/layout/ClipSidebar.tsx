@@ -1,4 +1,5 @@
 import { ClipNoteDisplay } from "@/features/clips/components/ui/ClipNoteDisplay"
+import { BtnPrimary, BtnSecondary } from "@/components/ui/buttonVariants";
 import { ClipSidebarProps } from "@/types/types"
 
 export function ClipSidebar({
@@ -24,18 +25,8 @@ export function ClipSidebar({
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
-                <button
-                    className="p-2 bg-blue-500 text-white rounded cursor-pointer"
-                    onClick={handleTimestampModal}
-                >
-                    Add Timestamp
-                </button>
-                <button
-                    onClick={() => handleSave(clipTitle || '')}
-                    className="p-2 bg-green-500 text-white rounded cursor-pointer"
-                >
-                    Save
-                </button>
+                <BtnPrimary onClick={handleTimestampModal}>Save Clip</BtnPrimary>
+                <BtnSecondary onClick={clearTimestamps}>Add Timestamp</BtnSecondary>
             </div>
             <div className="flex-1 w-full min-h-0">
                 <ClipNoteDisplay
