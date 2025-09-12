@@ -71,25 +71,25 @@ const ClipPage = () => {
                 pauseOnHover
                 theme="dark"
                 transition={Bounce}
-                className={'z-40'}
+                className={'z-50'}
             />
             {/* HEADER */}
-            <div className='flex h-1/10 justify-start'>
-                <button className='z-50 cursor-pointer'
+            <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-40'>
+                <button className='cursor-pointer'
                     aria-label="Open navigation menu"
                     title="Open navigation menu"
                     onClick={() => clipPage.setNavOpen(true)}
                 >
                     {/* Hamburger icon */}
                     <p className='text-text hover:text-violet-600'>
-                        <CiMenuBurger size={32} />
+                        <CiMenuBurger className='h-6 w-6 lg:h-8 lg:w-8' />
                     </p>
                 </button>
             </div>
 
-            <div className='flex flex-col lg:flex-row w-full z-50'>
+            <div className='flex-1 flex-col justify-start items-center lg:flex-row lg:justify-center w-full z-40'>
                 <div className="
-                      flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
+                      flex flex-col lg:flex-row font-sans items-center justify-center text-text z-40 space-y-4 w-full
                       lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4
                       "
                 >
@@ -121,10 +121,6 @@ const ClipPage = () => {
                         }}
                         onClose={() => clipPage.setTimestampModalOpen(false)}
                     />
-                    {/* <SignInModal
-                        isOpen={clipPage.signInModalOpen}
-                        onClose={() => clipPage.setSignInModalOpen(false)} /> */}
-                    {/** MODALS **/}
                 </div>
             </div>
         </div>

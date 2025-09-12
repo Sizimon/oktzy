@@ -6,7 +6,7 @@ export interface Timestamp { // Represents a single timestamp entry
 }
 
 export interface Clip {
-    id: string;
+    id: number;
     title: string;
     clipUrl: string;
     timestamps: Timestamp[];

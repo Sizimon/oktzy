@@ -54,15 +54,16 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return { success: false, error: 'User not authenticated' };
         }
 
-        setIsLoading(true);
         setError(null);
 
         try {
             const response = await clipsAPI.create(title, data);
             if (response.data) {
+                // Normalize the clip data
+                const normalizedClip = normalizeClip(response.data);
                 // Add the new clip to the list
-                setClips((prevClips) => [...prevClips, response.data]);
-                return { success: true, id: response.data.id };
+                setClips((prevClips) => [normalizedClip, ...prevClips]);
+                return { success: true, id: normalizedClip.id };
             } else {
                 return { success: false, error: 'Failed to create clip' };
             }
@@ -70,32 +71,31 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error('Error creating clip:', error);
             setError(error.message || 'Failed to create clip');
             return { success: false, error: error.message || 'Failed to create clip' };
-        } finally {
-            setIsLoading(false);
         }
     }, [user]);
 
-    const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string}> => {
+    const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
         if (!user) {
-            return {success: false, error: 'User Not Authenticated'}
+            return { success: false, error: 'User Not Authenticated' }
         }
 
-        setIsLoading(true)
         setError(null)
 
         try {
             const response = await clipsAPI.update(id, title, data)
+
             if (response.data) {
-                const filteredClips = clips.filter(clip => Number(id) !== Number(clip.id))
-                setClips([...filteredClips, response.data])
+                const normalizedClip = normalizeClip(response.data)
+                setClips(prevClips => {
+                    const filteredClips = prevClips.filter(clip => Number(id) !== Number(clip.id))
+                    return [normalizedClip, ...filteredClips]
+                })
             }
-            return {success: true}
+            return { success: true }
         } catch (error: any) {
-             console.error('Error updating clip:', error);
+            console.error('Error updating clip:', error);
             setError(error.message || 'Failed to update clip');
-            return { success: false, error: error.message || 'Failed to update clip'}
-        } finally {
-            setIsLoading(false)
+            return { success: false, error: error.message || 'Failed to update clip' }
         }
     }, [user, clips])
 
@@ -108,7 +108,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [isAuthenticated, user, fetchClips]);
 
-     // Memoize context value
+    // Memoize context value
     const contextValue = useMemo(() => ({
         clips,
         isLoading,

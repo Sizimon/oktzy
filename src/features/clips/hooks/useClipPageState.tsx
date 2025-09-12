@@ -7,7 +7,6 @@ import { useClip } from '@/features/clips/context/clipProvider';
 import { useRouter } from 'next/navigation';
 
 export function useClipPageState(clipId?: number) {
-
   const router = useRouter();
   const [currentClip, setCurrentClip] = useState<Clip | null>(null);
   const [clipTitle, setClipTitle] = useState('');
@@ -132,6 +131,7 @@ export function useClipPageState(clipId?: number) {
     };
     addTimestamp(currentTime, title, note);
     setTimestampModalOpen(false);
+    toast.success('Timestamp added');
   };
 
   const handleToTimestamp = (time: number) => {
@@ -180,8 +180,11 @@ export function useClipPageState(clipId?: number) {
         }
       } else {
         const response = await updateClip(Number(currentClip.id), title, clipData as CuratorData);
+        console.log('Update response:', response); // Add this
         if (response.success) {
+          console.log('About to show success toast'); // Add this
           toast.success('Clip updated successfully');
+          console.log('Toast shown'); // Add this
         } else if (response.error) {
           toast.error(response.error || 'Failed to update clip');
         }

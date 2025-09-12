@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { authAPI } from '@/features/auth/api/api';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -18,8 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<any>(null);
-
-
+    const router = useRouter();
 
     const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         setIsLoading(true);
@@ -67,6 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         await authAPI.logout();
         setUser(null);
         setIsAuthenticated(false);
+        router.push('/');
     }, []);
 
     useEffect(() => {

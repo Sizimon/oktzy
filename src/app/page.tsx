@@ -49,8 +49,8 @@ export default function Home() {
       />
 
       {/* HEADER */}
-      <div className='flex h-1/10 justify-between items-center px-4 lg:px-0'>
-        <button className='z-50 cursor-pointer'
+      <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-40'>
+        <button className='cursor-pointer'
           aria-label="Open navigation menu"
           title="Open navigation menu"
           onClick={() => clipPage.setNavOpen(true)}
@@ -65,9 +65,9 @@ export default function Home() {
         <div className='w-8'></div>
       </div>
 
-      <div className='flex flex-col lg:flex-row w-full z-50'>
+      <div className='flex flex-col lg:flex-row w-full z-40'>
         <div className="
-          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
+          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 space-y-4 w-full
           lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4
           "
         >
