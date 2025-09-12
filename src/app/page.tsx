@@ -62,7 +62,7 @@ export default function Home() {
         </button>
 
         <ClipInput clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
-        <div className='w-8'></div>
+        <div className='w-8'/>
       </div>
 
       <div className='flex flex-col lg:flex-row w-full z-40'>
