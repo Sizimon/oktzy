@@ -23,8 +23,6 @@ export default function Home() {
   const { user } = useAuth()
   const clipPage = useClipPageState();
 
-  // BEGINNING OF JSX RETURN
-
   return (
     <div className='relative w-full h-lvh lg:px-16'>
       <Navigation

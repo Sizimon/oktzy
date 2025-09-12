@@ -25,8 +25,8 @@ export function ClipSidebar({
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
-                <BtnPrimary onClick={handleTimestampModal}>Save Clip</BtnPrimary>
-                <BtnSecondary onClick={clearTimestamps}>Add Timestamp</BtnSecondary>
+                <BtnPrimary onClick={() => handleSave(clipTitle || '')}>Save Clip</BtnPrimary>
+                <BtnSecondary onClick={handleTimestampModal}>Add Timestamp</BtnSecondary>
             </div>
             <div className="flex-1 w-full min-h-0">
                 <ClipNoteDisplay
