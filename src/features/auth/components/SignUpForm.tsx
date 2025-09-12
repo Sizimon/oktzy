@@ -55,7 +55,7 @@ const SignUpForm = ({
                     Register
                 </button>
                 <p
-                    className="text-sm cursor-pointer hover:text-violet-600"
+                    className="text-sm cursor-pointer hover:text-violet-500"
                     onClick={() => setFormType(formType === 'login' ? 'register' : 'login')}
                 >
                     {formType === 'login' ? 'No account? Register here.' : 'Already a member? Login'}

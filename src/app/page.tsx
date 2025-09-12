@@ -45,6 +45,7 @@ export default function Home() {
         transition={Bounce}
         className={'z-50'}
       />
+      <div className='absolute inset-0 gradient-bg-subtle -z-10' />
 
       {/* HEADER */}
       <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-40'>
@@ -54,7 +55,7 @@ export default function Home() {
           onClick={() => clipPage.setNavOpen(true)}
         >
           {/* Hamburger icon */}
-          <p className='text-text hover:text-violet-600'>
+          <p className='text-text hover:text-violet-500'>
             <CiMenuBurger size={32} />
           </p>
         </button>

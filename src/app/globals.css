@@ -11,6 +11,17 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .gradient-bg-subtle {
+    background: 
+      linear-gradient(135deg, 
+        oklch(0.141 0.005 285.823) 0%, 
+        oklch(0.16 0.03 280) 25%,
+        oklch(0.141 0.005 285.823) 50%,
+        oklch(0.15 0.02 285) 75%,
+        oklch(0.141 0.005 285.823) 100%
+      );
+  }
 }
 
 /* Option 6: Crosshatch Pattern */

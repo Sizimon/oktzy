@@ -21,7 +21,7 @@ export function ClipSidebar({
         lg:min-h-[80lvh] lg:w-1/2
         ">
             <div>
-                <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-600 focus:outline-none text-lg text-text w-full text-center" value={clipTitle || ''}
+                <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-500 focus:outline-none text-lg text-text w-full text-center" value={clipTitle || ''}
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>

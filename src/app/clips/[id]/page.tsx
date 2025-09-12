@@ -73,6 +73,8 @@ const ClipPage = () => {
                 transition={Bounce}
                 className={'z-50'}
             />
+
+            <div className='absolute inset-0 gradient-bg-subtle -z-10' />
             {/* HEADER */}
             <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-40'>
                 <button className='cursor-pointer'
@@ -81,7 +83,7 @@ const ClipPage = () => {
                     onClick={() => clipPage.setNavOpen(true)}
                 >
                     {/* Hamburger icon */}
-                    <p className='text-text hover:text-violet-600'>
+                    <p className='text-text hover:text-violet-500'>
                         <CiMenuBurger className='h-6 w-6 lg:h-8 lg:w-8' />
                     </p>
                 </button>

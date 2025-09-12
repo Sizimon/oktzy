@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { TimestampModalProps } from '@/types/types';
 import { formatCurrentTime } from '@/utils/formatTime';
+import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
 
 export const ClipNoteModal: React.FC<TimestampModalProps> = ({
   isOpen,
@@ -37,27 +38,17 @@ export const ClipNoteModal: React.FC<TimestampModalProps> = ({
           value={title}
           maxLength={24}
           onChange={(e) => setTitle(e.target.value)}
-          className="my-4 p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-xl focus:outline-none"
+          className="my-4 p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl outline-1 focus:outline-violet-500"
         />
         <textarea
           placeholder="Timestamp note..."
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="mb-4 p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-xl focus:outline-none w-full"
+          className="mb-4 p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl outline-1 focus:outline-violet-500 w-full"
         />
         <div className="flex flex-row justify-center w-full space-x-4">
-          <button
-            className="ml-2 p-2 bg-green-500 rounded cursor-pointer"
-            onClick={handleSave}
-          >
-            Save Timestamp
-          </button>
-          <button
-            className="p-2 bg-red-500 rounded cursor-pointer"
-            onClick={handleClose}
-          >
-            Cancel
-          </button>
+          <BtnPrimary onClick={handleSave}>Save Timestamp</BtnPrimary>
+          <BtnSecondary onClick={handleClose}>Cancel</BtnSecondary>
         </div>
       </div>
     </div>

@@ -88,7 +88,7 @@ export function Navigation({
                 <div className='space-y-4 w-full'>
                     <div className="text-text border-b border-white/10 w-full p-4">
                         <h2 
-                        className='text-2xl hover:text-violet-600 cursor-pointer'
+                        className='text-2xl hover:text-violet-500 cursor-pointer'
                         onClick={handleHomeClick}
                         >
                             Home
@@ -109,7 +109,7 @@ export function Navigation({
                 <div className='w-full'>
                     {isAuthenticated ? (
                         <div className='flex flex-col space-y-4'>
-                            <p className='text-text text-center'>Logged in as <span className='text-violet-600'>{user?.username}</span></p>
+                            <p className='text-text text-center'>Logged in as <span className='text-violet-500'>{user?.username}</span></p>
                             <BtnSecondary onClick={logout}>Logout</BtnSecondary>
                         </div>
                     ) : (
