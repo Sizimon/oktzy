@@ -85,13 +85,13 @@ export function Navigation({
                 <div className='space-y-4 w-full'>
                     <div className="text-text border-b border-white/10 w-full p-4">
                         <h2 
-                        className='text-2xl uppercase hover:text-violet-600 cursor-pointer'
+                        className='text-2xl hover:text-violet-600 cursor-pointer'
                         onClick={handleHomeClick}
                         >
                             Home
                         </h2>
                     </div>
-                    <div className='flex flex-col w-full space-y-4 justify-start items-start px-4'>
+                    <div className='flex flex-col w-full space-y-4 justify-start items-start px-4 overflow-y-auto no-scrollbar max-h-[80lvh]'>
                         {clips.length > 0 ? (
                             clips.map((clip: Clip, i: number) => (
                                 <h3 id={`clip-${i}`} className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>

@@ -97,8 +97,6 @@ const ClipPage = () => {
                         clipUrl={clipPage.clipUrl}
                         timestampModalOpen={clipPage.timestampModalOpen}
                         signInModalOpen={clipPage.signInModalOpen}
-                        retainedVolume={clipPage.retainedVolume}
-                        setRetainedVolume={clipPage.setRetainedVolume}
                         setCurrentTime={clipPage.setCurrentTime}
                         ref={clipPage.playerRef}
                     />

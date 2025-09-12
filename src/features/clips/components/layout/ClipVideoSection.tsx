@@ -6,8 +6,6 @@ export function ClipVideoSection({
     clipUrl,
     timestampModalOpen,
     signInModalOpen,
-    retainedVolume,
-    setRetainedVolume,
     setCurrentTime,
     ref
 }: ClipDisplayProps) {
@@ -27,8 +25,6 @@ export function ClipVideoSection({
                   clipUrl={clipUrl}
                   timestampModalOpen={timestampModalOpen}
                   signInModalOpen={signInModalOpen}
-                  retainedVolume={retainedVolume}
-                  setRetainedVolume={setRetainedVolume}
                   setCurrentTime={setCurrentTime}
                   ref={ref}
                 />

@@ -26,7 +26,7 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
                                             e.stopPropagation();
                                             handleToTimestamp(st.time);
                                         }}
-                                        className="text-sm text-gray-500 ml-2 hover:text-violet-700 cursor-pointer">
+                                        className="text-sm text-gray-500 ml-2 hover:text-violet-600 cursor-pointer">
                                         {st.timeStringConverted}
                                     </span>
                                 </AccordionTrigger>
