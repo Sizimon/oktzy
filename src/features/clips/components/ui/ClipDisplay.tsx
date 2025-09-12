@@ -1,7 +1,6 @@
 import React, {useRef, useCallback, useEffect, forwardRef} from 'react';
 import { ClipDisplayProps } from '@/types/types';
 import ReactPlayer from 'react-player';
-import { time } from 'console';
 
 export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
     clipUrl,

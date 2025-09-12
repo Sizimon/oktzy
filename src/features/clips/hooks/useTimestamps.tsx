@@ -22,8 +22,6 @@ export const useTimestamps = () => {
     setTimestamps(newTimestamps);
   }, []);
 
-  console.log('useTimestamps current state:', timestamps);
-
   const addTimestamp = (currentTime: number, title: string, note: string) => {
     const newTimestamp: Timestamp = {
       title: title,

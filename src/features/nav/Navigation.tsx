@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { CiMenuBurger } from "react-icons/ci";
 import { useClip } from '../clips/context/clipProvider';
 import { useAuth } from '../auth/context/authProvider';
 import { Clip } from '@/types/types'
@@ -10,22 +9,25 @@ import { useRouter } from 'next/navigation'
 
 export function Navigation({
     user,
-    setSignInModalOpen
+    setSignInModalOpen,
+    navOpen,
+    setNavOpen
 }: {
     user: { username: string } | null;
     setSignInModalOpen: (open: boolean) => void;
+    navOpen: boolean;
+    setNavOpen: (open: boolean) => void;
 }) {
     const router = useRouter();
     const { clips } = useClip();
     const { isAuthenticated, logout } = useAuth();
 
-    // Nav State
-    const [navOpen, setNavOpen] = useState<boolean>(false);
+    // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!navOpen) return;
-        const handleClickOutsideNav = () => {
+        const handleClickOutsideNav = (event: MouseEvent) => {
             if (navRef.current && !navRef.current.contains(event?.target as Node)) {
                 setNavOpen(false);
             }
@@ -76,18 +78,6 @@ export function Navigation({
 
     return (
         <div>
-            {!navOpen ? (
-                <button className='absolute top-6 left-6 z-50 cursor-pointer'
-                    aria-label="Open navigation menu"
-                    title="Open navigation menu"
-                    onClick={() => setNavOpen(true)}
-                >
-                    {/* Hamburger icon */}
-                    <p className='text-text hover:text-violet-600'>
-                        <CiMenuBurger size={30} />
-                    </p>
-                </button>
-            ) : null}
             <nav
                 ref={navRef}
                 className="fixed top-0 left-0 flex flex-col justify-between items-start h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 xl:w-1/6 p-4 space-y-4"

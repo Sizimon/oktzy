@@ -7,6 +7,7 @@ import { useClip } from '@/features/clips/context/clipProvider';
 
 import { ClipLoader } from 'react-spinners';
 import { Bounce, ToastContainer } from 'react-toastify';
+import { CiMenuBurger } from "react-icons/ci";
 
 // Components
 import { Navigation } from '@/features/nav/Navigation';
@@ -54,6 +55,9 @@ const ClipPage = () => {
         <div className='relative w-full h-lvh lg:px-16'>
             <Navigation
                 user={user}
+                setSignInModalOpen={clipPage.setSignInModalOpen}
+                navOpen={clipPage.navOpen}
+                setNavOpen={clipPage.setNavOpen}
             />
             <ToastContainer
                 position="top-right"
@@ -69,8 +73,21 @@ const ClipPage = () => {
                 transition={Bounce}
                 className={'z-40'}
             />
+            {/* HEADER */}
+            <div className='flex h-1/10 justify-start'>
+                <button className='z-50 cursor-pointer'
+                    aria-label="Open navigation menu"
+                    title="Open navigation menu"
+                    onClick={() => clipPage.setNavOpen(true)}
+                >
+                    {/* Hamburger icon */}
+                    <p className='text-text hover:text-violet-600'>
+                        <CiMenuBurger size={32} />
+                    </p>
+                </button>
+            </div>
 
-            <div className='flex flex-col lg:flex-row w-full z-40 justify-center h-full'>
+            <div className='flex flex-col lg:flex-row w-full z-50'>
                 <div className="
                       flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
                       lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4
@@ -78,7 +95,8 @@ const ClipPage = () => {
                 >
                     <ClipVideoSection
                         clipUrl={clipPage.clipUrl}
-                        modalOpen={clipPage.timestampModalOpen}
+                        timestampModalOpen={clipPage.timestampModalOpen}
+                        signInModalOpen={clipPage.signInModalOpen}
                         retainedVolume={clipPage.retainedVolume}
                         setRetainedVolume={clipPage.setRetainedVolume}
                         setCurrentTime={clipPage.setCurrentTime}

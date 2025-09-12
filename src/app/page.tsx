@@ -3,7 +3,7 @@ import React from 'react';
 
 // Component Imports
 import { Navigation } from '@/features/nav/Navigation';
-import { ClipHeader } from '@/features/clips/components/layout/ClipHeader';
+import { ClipInput } from '@/features/clips/components/ui/ClipInput';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
 import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
 
@@ -13,6 +13,7 @@ import SignInModal from '@/features/auth/components/SignInModal';
 
 // Misc Imports
 import { Bounce, ToastContainer } from 'react-toastify';
+import { CiMenuBurger } from "react-icons/ci";
 
 // Context Imports
 import { useAuth } from '@/features/auth/context/authProvider';
@@ -29,6 +30,8 @@ export default function Home() {
       <Navigation
         user={user}
         setSignInModalOpen={clipPage.setSignInModalOpen}
+        navOpen={clipPage.navOpen}
+        setNavOpen={clipPage.setNavOpen}
       />
       <ToastContainer
         position="top-right"
@@ -44,7 +47,24 @@ export default function Home() {
         transition={Bounce}
         className={'z-50'}
       />
-      <ClipHeader clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
+
+      {/* HEADER */}
+      <div className='flex h-1/10 justify-between items-center px-4 lg:px-0'>
+        <button className='z-50 cursor-pointer'
+          aria-label="Open navigation menu"
+          title="Open navigation menu"
+          onClick={() => clipPage.setNavOpen(true)}
+        >
+          {/* Hamburger icon */}
+          <p className='text-text hover:text-violet-600'>
+            <CiMenuBurger size={32} />
+          </p>
+        </button>
+
+        <ClipInput clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
+        <div className='w-8'></div>
+      </div>
+
       <div className='flex flex-col lg:flex-row w-full z-50'>
         <div className="
           flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 py-4 space-y-4 w-full
