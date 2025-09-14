@@ -83,10 +83,10 @@ export function Navigation({
         <div>
             <nav
                 ref={navRef}
-                className="fixed top-0 left-0 flex flex-col justify-between items-start h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 xl:w-1/6 p-4 space-y-4"
+                className="fixed top-0 left-0 flex flex-col justify-between items-start h-full bg-foreground/40 backdrop-blur-sm z-60 w-2/3 lg:w-1/5 xl:w-1/6 p-4 gap-4 max-h-[100lvh]"
             >
-                <div className='space-y-4 w-full'>
-                    <div className="text-text border-b border-white/10 w-full p-4">
+                <div className='flex flex-col gap-4 w-full h-9/10 p-4'>
+                    <div className="text-text border-b border-violet-500/50 w-full justify-center items-center py-4">
                         <h2
                             className='text-2xl hover:text-violet-500 cursor-pointer'
                             onClick={handleHomeClick}
@@ -94,7 +94,7 @@ export function Navigation({
                             Home
                         </h2>
                     </div>
-                    <div className='flex flex-col w-full space-y-4 justify-start items-start px-4 overflow-y-auto no-scrollbar max-h-[80lvh]'>
+                    <div className='w-full max-h-full space-y-4 justify-start items-start overflow-y-auto no-scrollbar'>
                         {clips.length > 0 ? (
                             clips.map((clip: Clip, i: number) => (
                                 <div
@@ -116,14 +116,14 @@ export function Navigation({
                         )}
                     </div>
                 </div>
-                <div className='w-full'>
+                <div className='flex flex-col w-full h-1/10 justify-end items-center'>
                     {isAuthenticated ? (
-                        <div className='flex flex-col space-y-4'>
-                            <p className='text-text text-center'>Logged in as <span className='text-violet-500'>{user?.username}</span></p>
+                            <div className='space-y-4 text-center w-full'>
+                            <p className='text-text'>Logged in as <span className='text-violet-500'>{user?.username}</span></p>
                             <BtnSecondary onClick={logout}>Logout</BtnSecondary>
                         </div>
                     ) : (
-                        <div className='flex flex-col space-y-4'>
+                        <div className='space-y-4'>
                             <BtnPrimary onClick={() => setSignInModalOpen(true)}>Sign In</BtnPrimary>
                         </div>
                     )}
