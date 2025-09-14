@@ -28,7 +28,7 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, clearTimestamps, loadTimestamps } = useTimestamps();
-  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
@@ -174,7 +174,7 @@ export function useClipPageState(clipId?: number) {
         const response = await createClip(title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip saved successfully');
-          router.push(`/clips/${response.id}`);
+          router.push(`/${user?.id}/clips/${response.id}`);
         } else if (response.error) {
           toast.error(response.error || 'Failed to save clip');
         }
