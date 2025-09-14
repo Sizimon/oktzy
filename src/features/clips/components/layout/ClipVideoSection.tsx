@@ -12,7 +12,7 @@ export function ClipVideoSection({
   return (
     <div className="
       relative w-full flex flex-col flex-[2] items-center justify-center
-      bg-foreground/30 backdrop-blur-sm border border-white/10
+      bg-foreground/5 backdrop-blur-sm border border-white/10
       lg:p-4 lg:rounded-2xl
     ">
       <div className="w-full h-full flex justify-center items-center">
