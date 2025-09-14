@@ -52,7 +52,7 @@ const ClipPage = () => {
     }
 
     return (
-        <div className='relative w-full h-lvh lg:px-16'>
+        <div className='relative w-full h-lvh lg:p-16'>
             <Navigation
                 user={user}
                 setSignInModalOpen={clipPage.setSignInModalOpen}
@@ -76,7 +76,7 @@ const ClipPage = () => {
 
             <div className='absolute inset-0 gradient-bg-subtle -z-10' />
             {/* HEADER */}
-            <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-40'>
+            <div className='flex h-1/10 justify-between items-center lg:items-start px-4 lg:px-0 z-40'>
                 <button className='cursor-pointer'
                     aria-label="Open navigation menu"
                     title="Open navigation menu"
@@ -89,11 +89,11 @@ const ClipPage = () => {
                 </button>
             </div>
 
-            <div className='flex-1 flex-col justify-start items-center lg:flex-row lg:justify-center w-full z-40'>
+            <div className='flex flex-col lg:flex-row w-full z-40 h-9/10'>
                 <div className="
-                      flex flex-col lg:flex-row font-sans items-center justify-center text-text z-40 space-y-4 w-full
-                      lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4 lg:items-start
-                      "
+                    flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 space-y-4 w-full
+                    lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4 lg:items-start
+                    "
                 >
                     <ClipVideoSection
                         clipUrl={clipPage.clipUrl}

@@ -17,7 +17,10 @@ export function Navigation({
     navOpen,
     setNavOpen
 }: {
-    user: { username: string } | null;
+    user: { 
+        username: string,
+        id: number
+    } | null;
     setSignInModalOpen: (open: boolean) => void;
     navOpen: boolean;
     setNavOpen: (open: boolean) => void;
@@ -72,11 +75,11 @@ export function Navigation({
         clip: Clip,
         router: any
     ) {
-        router.push(`/clips/${clip.id}`)
+        router.push(`/${user?.id}/clips/${clip.id}`)
     }
 
     function handleHomeClick() {
-        router.push(`/`)
+        router.push(`/${user?.id}`)
     }
 
     return (

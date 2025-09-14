@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             setUser(data.user);
             setIsAuthenticated(true);
+            router.push(`/${data.user.id}`);
             return { success: true };
         } catch (error) {
             console.error('Error logging in:', error);
@@ -54,6 +55,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             setUser(data.user);
             setIsAuthenticated(true);
+            router.push(`/${data.user.id}`);
             return { success: true };
         } catch (error) {
             console.error('Error registering:', error);

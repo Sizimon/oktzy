@@ -1,4 +1,3 @@
-import { CuratorData } from "@/types/types";
 import apiRequest from "@/lib/api/apiRequest";
 
 export const authAPI = {

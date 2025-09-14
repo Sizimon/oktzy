@@ -17,7 +17,7 @@ export function ClipSidebar({
     console.log('ClipSidebar timestamps length:', timestamps?.length);
     return (
         <div className="
-        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 max-h-[60lvh] lg:max-h-[80lvh]
+        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full
         ">
             <div>
                 <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-500 focus:outline-none text-lg text-text w-full text-center" value={clipTitle || ''}
