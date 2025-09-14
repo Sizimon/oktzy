@@ -8,13 +8,13 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
     const sortedTimestamps = [...timestamps].sort((a, b) => a.time - b.time);
 
     return (
-        <div className='p-4 rounded-2xl w-full h-full flex flex-col'>
+        <div className='flex flex-col p-4 rounded-2xl w-full h-full'>
             {timestamps.length === 0 ? (
                 <div className='p-4 rounded text-text'>
                     <p className="text-center">No timestamps available, click "Add Timestamp" to create one.</p>
                 </div>
             ) : (
-                    <Accordion type="single" collapsible className="w-full flex-1 overflow-y-auto no-scrollbar">
+                    <Accordion type="single" collapsible className="w-full flex-1 max-h-[40lvh] lg:max-h-[60lvh] overflow-y-auto no-scrollbar">
                         {sortedTimestamps.map((st, index) => (
                             <AccordionItem key={index} value={`item-${index}`}>
                                 <AccordionTrigger>

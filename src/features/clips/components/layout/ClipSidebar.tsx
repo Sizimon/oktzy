@@ -17,8 +17,7 @@ export function ClipSidebar({
     console.log('ClipSidebar timestamps length:', timestamps?.length);
     return (
         <div className="
-        flex flex-col w-9/10 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/30 backdrop-blur-sm border-[1px] border-white/10 h-[50lvh]
-        lg:min-h-[80lvh] lg:w-1/2
+        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/30 backdrop-blur-sm border-[1px] border-white/10 max-h-[60lvh] lg:max-h-[80lvh]
         ">
             <div>
                 <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-500 focus:outline-none text-lg text-text w-full text-center" value={clipTitle || ''}
@@ -28,16 +27,14 @@ export function ClipSidebar({
                 <BtnPrimary onClick={() => handleSave(clipTitle || '')}>Save Clip</BtnPrimary>
                 <BtnSecondary onClick={handleTimestampModal}>Add Timestamp</BtnSecondary>
             </div>
-            <div className="flex-1 w-full min-h-0">
-                <ClipNoteDisplay
-                    timestamps={timestamps}
-                    handleToTimestamp={handleToTimestamp}
-                    clipUrl={clipUrl}
-                    clearTimestamps={clearTimestamps}
-                    handleSave={handleSave}
-                    handleTimestampModal={handleTimestampModal}
-                />
-            </div>
+            <ClipNoteDisplay
+                timestamps={timestamps}
+                handleToTimestamp={handleToTimestamp}
+                clipUrl={clipUrl}
+                clearTimestamps={clearTimestamps}
+                handleSave={handleSave}
+                handleTimestampModal={handleTimestampModal}
+            />
         </div>
     )
 }
