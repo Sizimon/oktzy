@@ -112,7 +112,7 @@ export function Navigation({
                                 </div>
                             ))
                         ) : (
-                            <span className='text-text/60'>Could not find any clips...</span>
+                            <span className='text-text/60'>Login to view saved clips.</span>
                         )}
                     </div>
                 </div>
