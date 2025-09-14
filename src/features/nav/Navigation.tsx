@@ -7,6 +7,7 @@ import { useAuth } from '../auth/context/authProvider';
 import { Clip } from '@/types/types'
 
 import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
+import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
 import { useRouter } from 'next/navigation'
 
@@ -67,7 +68,6 @@ export function Navigation({
         });
     }, [navOpen, navRef]);
 
-
     function handleClipClick(
         clip: Clip,
         router: any
@@ -87,9 +87,9 @@ export function Navigation({
             >
                 <div className='space-y-4 w-full'>
                     <div className="text-text border-b border-white/10 w-full p-4">
-                        <h2 
-                        className='text-2xl hover:text-violet-500 cursor-pointer'
-                        onClick={handleHomeClick}
+                        <h2
+                            className='text-2xl hover:text-violet-500 cursor-pointer'
+                            onClick={handleHomeClick}
                         >
                             Home
                         </h2>
@@ -97,9 +97,19 @@ export function Navigation({
                     <div className='flex flex-col w-full space-y-4 justify-start items-start px-4 overflow-y-auto no-scrollbar max-h-[80lvh]'>
                         {clips.length > 0 ? (
                             clips.map((clip: Clip, i: number) => (
-                                <h3 id={`clip-${i}`} className='cursor-pointer text-text' key={clip.id} onClick={() => handleClipClick(clip, router)}>
-                                    {clip.title}
-                                </h3>
+                                <div
+                                    id={`clip-${i}`}
+                                    key={clip.id}
+                                    onClick={() => handleClipClick(clip, router)}
+                                    className='flex flex-row items-center w-full cursor-pointer group relative'
+                                >
+                                    <MdOutlineKeyboardDoubleArrowRight 
+                                        className="absolute -left-8 text-violet-500 h-6 w-6 opacity-0 group-hover:translate-x-8 group-hover:opacity-100 transition-all duration-200 ease-out"  
+                                    />
+                                    <h3 className="text-text group-hover:translate-x-8 transition-transform duration-200 ease-out">
+                                        {clip.title}
+                                    </h3>
+                                </div>
                             ))
                         ) : (
                             <span className='text-text/60'>Could not find any clips...</span>
@@ -113,7 +123,9 @@ export function Navigation({
                             <BtnSecondary onClick={logout}>Logout</BtnSecondary>
                         </div>
                     ) : (
-                        <BtnPrimary onClick={() => setSignInModalOpen(true)}>Sign In</BtnPrimary>
+                        <div className='flex flex-col space-y-4'>
+                            <BtnPrimary onClick={() => setSignInModalOpen(true)}>Sign In</BtnPrimary>
+                        </div>
                     )}
                 </div>
             </nav>
