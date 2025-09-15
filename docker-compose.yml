@@ -20,7 +20,7 @@ services:
       - oktzy-database
 
   oktzy-database:
-    image: shhmon/oktzy-database:latest
+    image: postgres:16
     container_name: oktzy-database
     ports:
       - "5432:5432"
