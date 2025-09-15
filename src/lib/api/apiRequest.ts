@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5007/api'
+const API_BASE_URL = process.env.API_BASE_URL;
 
 const apiRequest = async (endpoint: string, options: RequestInit) => {
     const config: RequestInit = {
