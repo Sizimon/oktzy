@@ -1,6 +1,7 @@
 import { ClipNoteDisplay } from "@/features/clips/components/ui/ClipNoteDisplay"
 import { BtnPrimary, BtnSecondary } from "@/components/ui/buttonVariants";
 import { ClipSidebarProps } from "@/types/types"
+import { useParams } from "next/navigation";
 
 export function ClipSidebar({
     // Modal Handlers
@@ -13,8 +14,10 @@ export function ClipSidebar({
     clipTitle,
     handleChangeClipTitle,
 }: ClipSidebarProps) {
-    console.log('ClipSidebar received timestamps:', timestamps);
-    console.log('ClipSidebar timestamps length:', timestamps?.length);
+    // console.log('ClipSidebar received timestamps:', timestamps);
+    // console.log('ClipSidebar timestamps length:', timestamps?.length);
+    const params = useParams();
+    const { id: clipId } = params;
     return (
         <div className="
         flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full
@@ -24,7 +27,7 @@ export function ClipSidebar({
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
-                <BtnPrimary onClick={() => handleSave(clipTitle || '')}>Save Clip</BtnPrimary>
+                <BtnPrimary onClick={() => handleSave(clipTitle || '')}>{params.id ? 'Update Clip' : 'Save Clip'}</BtnPrimary>
                 <BtnSecondary onClick={handleTimestampModal}>Add Timestamp</BtnSecondary>
             </div>
             <ClipNoteDisplay
