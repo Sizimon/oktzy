@@ -3,8 +3,8 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  basePath: '/oktzy',
-  assetPrefix: '/oktzy',
+  basePath: '',
+  assetPrefix: '',
   trailingSlash: true,
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname, 'src');
