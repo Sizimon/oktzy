@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Clip Curator",
-  description: "A tool for curating video clips with timestamps and notes.",
+  title: "Oktzy",
+  description: "Timestamp, clip, and annotate videos instantly with Oktzy — organize your content and never miss a moment",
 };
 
 export default function RootLayout({
