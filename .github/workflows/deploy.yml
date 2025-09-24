@@ -28,7 +28,7 @@ jobs:
       - name: Deploy services / setup .env file / clean up old images
         run: |
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "
-          cd /home/ec2-user/Oktzy &&
+          cd /home/ec2-user/oktzy &&
           echo 'NODE_ENV=production' > .env &&
           echo 'NEXT_PUBLIC_API_BASE_URL=/api' >> .env &&
           echo 'JWT_SECRET=${{ secrets.JWT_SECRET }}' >> .env &&
