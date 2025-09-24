@@ -37,4 +37,4 @@ services:
       timeout: 5s
       retries: 3
 volumes:
-  oktzy_db_volume:
+  db_volume:
