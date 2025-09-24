@@ -30,7 +30,7 @@ services:
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - oktzy_db_volume:/var/lib/postgresql/data
-      - /home/ec2-user/Oktzy/oktzy-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /home/ec2-user/oktzy/oktzy-init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
