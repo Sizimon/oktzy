@@ -86,6 +86,7 @@ export default function Home() {
             clearTimestamps={clipPage.clearTimestamps}
             handleTimestampModal={clipPage.handleTimestampModal}
             handleSave={clipPage.handleSave}
+            handleDeleteTimestamp={clipPage.handleDeleteTimestamp}
           />
           {/** MODALS **/}
           <ClipNoteModal
@@ -94,7 +95,12 @@ export default function Home() {
             onSave={(title, note) => {
               clipPage.handleAddTimestamp(title, note);
             }}
+            onUpdate={(editIndex, title, note) => {
+              clipPage.handleUpdateTimestamp(editIndex, title, note);
+            }}
             onClose={() => clipPage.setTimestampModalOpen(false)}
+            editIndex={clipPage.editIndex}
+            editData={clipPage.editData}
           />
           <SignInModal
             isOpen={clipPage.signInModalOpen}

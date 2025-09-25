@@ -27,7 +27,7 @@ export function useClipPageState(clipId?: number) {
   const playerRef = useRef<any>(null);
 
   // Timestamps
-  const { timestamps, addTimestamp, editTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
+  const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
 
@@ -150,6 +150,34 @@ export function useClipPageState(clipId?: number) {
     toast.success('Timestamp updated');
   }
 
+  const handleDeleteTimestamp = async(index: number) => {
+    toast.warning(
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div>
+                  <p>Confirm deletion of timestamp?</p><br />
+                  <p className='italic'>If deleted by mistake you can restore by not saving the changes.</p>
+                </div>
+                <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => {
+                      toast.dismiss();
+                      deleteTimestamp(index);
+                    }}
+                    style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => toast.dismiss()}
+                    style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+    )
+  };
+
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
       playerRef.current.currentTime = time;
@@ -196,11 +224,9 @@ export function useClipPageState(clipId?: number) {
         }
       } else {
         const response = await updateClip(Number(currentClip.id), title, clipData as CuratorData);
-        console.log('Update response:', response); // Add this
+        console.log('Update response:', response);
         if (response.success) {
-          console.log('About to show success toast'); // Add this
           toast.success('Clip updated successfully');
-          console.log('Toast shown'); // Add this
         } else if (response.error) {
           toast.error(response.error || 'Failed to update clip');
         }
@@ -230,6 +256,7 @@ export function useClipPageState(clipId?: number) {
     handleTimestampModal,
     handleAddTimestamp,
     handleUpdateTimestamp,
+    handleDeleteTimestamp,
     handleToTimestamp,
     handleSave,
     handleChangeClipTitle

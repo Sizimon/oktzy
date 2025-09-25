@@ -49,6 +49,16 @@ export const useTimestamps = () => {
     setTimestamps(updatedTimestamps);
   }
 
+  const deleteTimestamp = (index: number) => {
+    if (index < 0 || index >= timestamps.length) {
+      console.error('🔴 Invalid index for deleting timestamp:', index);
+      return;
+    }
+    const updatedTimestamps = [...timestamps];
+    updatedTimestamps.splice(index, 1);
+    setTimestamps(updatedTimestamps);
+  };
+
   return {
     timestamps,
     editIndex, setEditIndex,
@@ -56,6 +66,7 @@ export const useTimestamps = () => {
     loadTimestamps,
     addTimestamp,
     editTimestamp,
+    deleteTimestamp,
     clearTimestamps
   };
 };

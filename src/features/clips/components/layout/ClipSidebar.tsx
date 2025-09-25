@@ -13,6 +13,7 @@ export function ClipSidebar({
     clearTimestamps,
     clipTitle,
     handleChangeClipTitle,
+    handleDeleteTimestamp
 }: ClipSidebarProps) {
     const params = useParams();
     const { id: clipId } = params;
@@ -35,6 +36,7 @@ export function ClipSidebar({
                 clearTimestamps={clearTimestamps}
                 handleSave={handleSave}
                 handleTimestampModal={handleTimestampModal}
+                handleDeleteTimestamp={handleDeleteTimestamp}
             />
         </div>
     )

@@ -42,6 +42,7 @@ export interface ClipSidebarProps { // Represents the props for the note display
     clearTimestamps: () => void;
     handleTimestampModal: (index?: number) => void;
     handleSave: (title: string) => void;
+    handleDeleteTimestamp: (index: number) => void;
 }
 
 export interface TimestampModalProps { // Represents the props for the timestamp modal component

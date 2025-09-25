@@ -86,6 +86,7 @@ export default function Home() {
             clearTimestamps={clipPage.clearTimestamps}
             handleTimestampModal={clipPage.handleTimestampModal}
             handleSave={clipPage.handleSave}
+            handleDeleteTimestamp={clipPage.handleDeleteTimestamp}
           />
           {/** MODALS **/}
           <ClipNoteModal
