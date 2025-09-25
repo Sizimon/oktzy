@@ -40,7 +40,7 @@ export interface ClipSidebarProps { // Represents the props for the note display
     handleToTimestamp: (time: number) => void;
     clipUrl: string;
     clearTimestamps: () => void;
-    handleTimestampModal: () => void;
+    handleTimestampModal: (index?: number) => void;
     handleSave: (title: string) => void;
 }
 
@@ -48,7 +48,10 @@ export interface TimestampModalProps { // Represents the props for the timestamp
   isOpen: boolean;
   currentTime: number;
   onSave: (title: string, note: string) => void;
+  onUpdate: (editIndex: number | null, title: string, note: string) => void;
   onClose: () => void;
+  editIndex: number | null;
+  editData: { title: string; note: string; time: number; timeStringConverted: string } | null;
 }
 
 export interface SignInModalProps { // Represents the props for the sign-in modal component

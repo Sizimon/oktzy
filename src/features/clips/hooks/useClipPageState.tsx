@@ -27,7 +27,7 @@ export function useClipPageState(clipId?: number) {
   const playerRef = useRef<any>(null);
 
   // Timestamps
-  const { timestamps, addTimestamp, clearTimestamps, loadTimestamps } = useTimestamps();
+  const { timestamps, addTimestamp, editTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
 
@@ -108,11 +108,19 @@ export function useClipPageState(clipId?: number) {
   ]);
 
   // Handlers (copy from your main page)
-  const handleTimestampModal = () => {
+  const handleTimestampModal = (index?: number) => {
     if (!clipUrl) {
       toast.error('Please enter a valid clip URL before adding timestamps');
       return;
     };
+
+    if (typeof index === 'number' && timestamps[index]) {
+      setEditIndex(index);
+      setEditData(timestamps[index]);
+    } else {
+      setEditIndex(null);
+      setEditData(null);
+    }
     setTimestampModalOpen(true);
   };
 
@@ -133,6 +141,14 @@ export function useClipPageState(clipId?: number) {
     setTimestampModalOpen(false);
     toast.success('Timestamp added');
   };
+
+  const handleUpdateTimestamp = (editIndex: number | null, title: string, note: string) => {
+    editTimestamp(editIndex as number, title, note);
+    setTimestampModalOpen(false);
+    setEditIndex(null);
+    setEditData(null);
+    toast.success('Timestamp updated');
+  }
 
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
@@ -210,9 +226,10 @@ export function useClipPageState(clipId?: number) {
     signInModalOpen, setSignInModalOpen,
     isSaving, setIsSaving,
     playerRef,
-    timestamps, addTimestamp, clearTimestamps, loadTimestamps,
+    timestamps, addTimestamp, clearTimestamps, loadTimestamps, editData, editIndex,
     handleTimestampModal,
     handleAddTimestamp,
+    handleUpdateTimestamp,
     handleToTimestamp,
     handleSave,
     handleChangeClipTitle

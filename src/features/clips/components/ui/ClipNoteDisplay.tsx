@@ -5,7 +5,7 @@ import { ClipSidebarProps } from '@/types/types';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from '@/components/ui/accordion';
 
 
-export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handleToTimestamp }) => {
+export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handleToTimestamp, handleTimestampModal }) => {
     const sortedTimestamps = [...timestamps].sort((a, b) => a.time - b.time);
 
     return (
@@ -35,7 +35,7 @@ export const ClipNoteDisplay: React.FC<ClipSidebarProps> = ({ timestamps, handle
                                         <FaPencil
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                // Handle edit action later
+                                                handleTimestampModal(index);
                                             }}
                                             className="h-4 w-4 text-sm text-gray-500 hover:text-blue-500 cursor-pointer"
                                         />

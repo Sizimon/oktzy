@@ -14,8 +14,6 @@ export function ClipSidebar({
     clipTitle,
     handleChangeClipTitle,
 }: ClipSidebarProps) {
-    // console.log('ClipSidebar received timestamps:', timestamps);
-    // console.log('ClipSidebar timestamps length:', timestamps?.length);
     const params = useParams();
     const { id: clipId } = params;
     return (
@@ -23,7 +21,7 @@ export function ClipSidebar({
         flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full
         ">
             <div>
-                <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-500 focus:outline-none text-lg text-text w-full text-center" value={clipTitle || ''}
+                <input type="text" placeholder="Clip Title" required className="border-b-[1px] border-violet-500 focus:outline-none lg:text-lg text-text w-full text-center" value={clipTitle || ''}
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
