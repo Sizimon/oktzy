@@ -55,9 +55,9 @@ export default function Home() {
           onClick={() => clipPage.setNavOpen(true)}
         >
           {/* Hamburger icon */}
-          <p className='text-text hover:text-violet-500'>
-            <CiMenuBurger size={32} />
-          </p>
+          <span>
+            <CiMenuBurger className='h-6 w-6 lg:h-8 lg:w-8 text-text hover:text-violet-500' />
+          </span>
         </button>
 
         <ClipInput clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
@@ -66,8 +66,8 @@ export default function Home() {
 
       <div className='flex flex-col lg:flex-row w-full z-40 h-9/10'>
         <div className="
-          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 space-y-4 w-full
-          lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4 lg:items-start
+          flex flex-col lg:flex-row font-sans items-center justify-center text-text gap-4 z-50 w-full
+          lg:px-4  lg:py-4 lg:items-start
           "
         >
           <ClipVideoSection
@@ -86,6 +86,7 @@ export default function Home() {
             clearTimestamps={clipPage.clearTimestamps}
             handleTimestampModal={clipPage.handleTimestampModal}
             handleSave={clipPage.handleSave}
+            handleDeleteTimestamp={clipPage.handleDeleteTimestamp}
           />
           {/** MODALS **/}
           <ClipNoteModal
@@ -94,7 +95,12 @@ export default function Home() {
             onSave={(title, note) => {
               clipPage.handleAddTimestamp(title, note);
             }}
+            onUpdate={(editIndex, title, note) => {
+              clipPage.handleUpdateTimestamp(editIndex, title, note);
+            }}
             onClose={() => clipPage.setTimestampModalOpen(false)}
+            editIndex={clipPage.editIndex}
+            editData={clipPage.editData}
           />
           <SignInModal
             isOpen={clipPage.signInModalOpen}

@@ -5,10 +5,12 @@ import { formatCurrentTime } from '@/utils/formatTime';
 
 export const useTimestamps = () => {
   const [timestamps, setTimestamps] = useState<Timestamp[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editData, setEditData] = useState<{ title: string; note: string; time: number; timeStringConverted: string } | null>(null);
 
   const clearTimestamps = useCallback(() => {
     console.log('🔴 clearTimestamps called');
-    console.trace('clearTimestamps call stack'); // This shows you WHERE it's called from
+    console.trace('clearTimestamps call stack');
     setTimestamps([]);
   }, []);
 
@@ -36,10 +38,35 @@ export const useTimestamps = () => {
     });
   };
 
+  const editTimestamp = (index: number, title: string, note: string) => {
+    if (index < 0 || index >= timestamps.length) {
+      console.error('🔴 Invalid index for editing timestamp:', index);
+      return;
+    }
+    const updatedTimestamp = { ...timestamps[index], title, note };
+    const updatedTimestamps = [...timestamps];
+    updatedTimestamps[index] = updatedTimestamp;
+    setTimestamps(updatedTimestamps);
+  }
+
+  const deleteTimestamp = (index: number) => {
+    if (index < 0 || index >= timestamps.length) {
+      console.error('🔴 Invalid index for deleting timestamp:', index);
+      return;
+    }
+    const updatedTimestamps = [...timestamps];
+    updatedTimestamps.splice(index, 1);
+    setTimestamps(updatedTimestamps);
+  };
+
   return {
     timestamps,
+    editIndex, setEditIndex,
+    editData, setEditData,
     loadTimestamps,
     addTimestamp,
+    editTimestamp,
+    deleteTimestamp,
     clearTimestamps
   };
 };
