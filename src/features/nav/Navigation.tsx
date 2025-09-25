@@ -127,7 +127,12 @@ export function Navigation({
                         </div>
                     ) : (
                         <div className='space-y-4 text-center w-full'>
-                            <BtnPrimary onClick={() => setSignInModalOpen(true)}>Sign In</BtnPrimary>
+                            <BtnPrimary onClick={() => {
+                                setSignInModalOpen(true);
+                                setNavOpen(false);
+                                }}>
+                                    Sign In
+                            </BtnPrimary>
                         </div>
                     )}
                 </div>
