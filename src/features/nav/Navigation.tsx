@@ -115,7 +115,7 @@ export function Navigation({
                                 </div>
                             ))
                         ) : (
-                            <span className='text-text/60'>Login to view saved clips.</span>
+                            <p className='text-text/70 italic'>{isAuthenticated ? 'No clips yet. Insert a clip and save it!' : 'Login to view saved clips.'}</p>
                         )}
                     </div>
                 </div>
