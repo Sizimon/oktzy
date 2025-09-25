@@ -8,6 +8,7 @@ import { Clip } from '@/types/types'
 
 import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { FaTrash } from "react-icons/fa6";
 
 import { useRouter } from 'next/navigation'
 
@@ -17,7 +18,7 @@ export function Navigation({
     navOpen,
     setNavOpen
 }: {
-    user: { 
+    user: {
         username: string,
         id: number
     } | null;
@@ -104,14 +105,24 @@ export function Navigation({
                                     id={`clip-${i}`}
                                     key={clip.id}
                                     onClick={() => handleClipClick(clip, router)}
-                                    className='flex flex-row items-center w-full cursor-pointer group relative'
+                                    className='flex flex-row justify-between items-center w-full cursor-pointer group relative'
                                 >
-                                    <MdOutlineKeyboardDoubleArrowRight 
-                                        className="absolute -left-8 text-violet-500 h-6 w-6 opacity-0 group-hover:translate-x-8 group-hover:opacity-100 transition-all duration-200 ease-out"  
-                                    />
-                                    <h3 className="text-text group-hover:translate-x-8 transition-transform duration-200 ease-out">
-                                        {clip.title}
-                                    </h3>
+                                    <div>
+                                        <MdOutlineKeyboardDoubleArrowRight
+                                            className="absolute -left-8 text-violet-500 h-6 w-6 opacity-0 group-hover:translate-x-8 group-hover:opacity-100 transition-all duration-200 ease-out"
+                                        />
+                                        <h3 className="text-text group-hover:translate-x-8 transition-transform duration-200 ease-out">
+                                            {clip.title}
+                                        </h3>
+                                    </div>
+                                    <span>
+                                        <FaTrash
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"
+                                        />
+                                    </span>
                                 </div>
                             ))
                         ) : (
@@ -121,7 +132,7 @@ export function Navigation({
                 </div>
                 <div className='flex flex-col w-full h-1/10 justify-end items-center'>
                     {isAuthenticated ? (
-                            <div className='space-y-4 text-center w-full'>
+                        <div className='space-y-4 text-center w-full'>
                             <p className='text-text'>Logged in as <span className='text-violet-500'>{user?.username}</span></p>
                             <BtnSecondary onClick={logout}>Logout</BtnSecondary>
                         </div>
@@ -130,8 +141,8 @@ export function Navigation({
                             <BtnPrimary onClick={() => {
                                 setSignInModalOpen(true);
                                 setNavOpen(false);
-                                }}>
-                                    Sign In
+                            }}>
+                                Sign In
                             </BtnPrimary>
                         </div>
                     )}
