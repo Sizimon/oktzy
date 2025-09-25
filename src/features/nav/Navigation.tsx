@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { useClip } from '../clips/context/clipProvider';
 import { useAuth } from '../auth/context/authProvider';
 import { Clip } from '@/types/types'
+import { toast } from 'react-toastify';
 
 import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
@@ -119,6 +120,7 @@ export function Navigation({
                                         <FaTrash
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                toast.error('Feature coming soon!');
                                             }}
                                             className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"
                                         />
