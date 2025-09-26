@@ -28,7 +28,7 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { user, isAuthenticated, isLoading: authLoading, hasUnsavedChanges, setHasUnsavedChanges } = useAuth()
   const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
@@ -38,6 +38,19 @@ export function useClipPageState(clipId?: number) {
     if (!clipId || !clips.length) return null;
     return clips.find(clip => Number(clip.id) === clipId) || null;
   }, [clipId, clips.length]); // Use clips.length instead of clips array
+
+  // Change Tracker
+  useEffect(() => {
+    if (!currentClip) {
+      // If not clip is loaded, any input means unsaved changes
+      setHasUnsavedChanges(!!(clipUrl || timestamps.length > 0 || clipTitle));
+      return;
+    }
+    // Compare current state with the loaded clip data
+    const titleChanged = clipTitle !== (currentClip.title || '');
+    const timestampsChanged = JSON.stringify(timestamps) !== JSON.stringify(currentClip.timestamps || []);
+    setHasUnsavedChanges(titleChanged || timestampsChanged);
+  }, [clipUrl, timestamps, clipTitle, currentClip]);
 
   // Single effect to handle all clip loading logic
   useEffect(() => {

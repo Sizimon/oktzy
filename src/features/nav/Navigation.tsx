@@ -31,7 +31,7 @@ export function Navigation({
 }) {
     const router = useRouter();
     const { clips } = useClip();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, hasUnsavedChanges, setHasUnsavedChanges } = useAuth();
 
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
@@ -79,10 +79,18 @@ export function Navigation({
         clip: Clip,
         router: any
     ) {
+        if (hasUnsavedChanges) {
+            toast.error('You have unsaved changes. Please save them before navigating away.');
+            return;
+        }
         router.push(`/${user?.id}/clips/${clip.id}`)
     }
 
     function handleHomeClick() {
+        if (hasUnsavedChanges) {
+            toast.error('You have unsaved changes. Please save them before navigating away.');
+            return;
+        }
         router.push(`/${user?.id}`)
     }
 
