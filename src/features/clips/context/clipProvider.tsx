@@ -108,7 +108,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setError(null)
 
         try {
-            const response = await clipsAPI.delete(String(id))
+            const response = await clipsAPI.delete(id)
             if (response.data) {
                 setClips(prevClips => prevClips.filter(clip => clip.id !== id))
             }

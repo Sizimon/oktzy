@@ -36,6 +36,8 @@ export function Navigation({
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
 
+    console.log(clips);
+
     useEffect(() => {
         if (!navOpen) return;
         const handleClickOutsideNav = (event: MouseEvent) => {

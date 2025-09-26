@@ -268,7 +268,7 @@ export function useClipPageState(clipId?: number) {
       const response = await deleteClip(id);
       if (response.success) {
         toast.success('Clip deleted successfully');
-        router.push(`/${user?.id}/clips`);
+        router.push(`/${user?.id}`);
       } else if (response.error) {
         toast.error(response.error || 'Failed to delete clip');
       }

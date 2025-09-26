@@ -28,7 +28,7 @@ export const clipsAPI = {
             }),
         }),
 
-    delete: (id: string) =>
+    delete: (id: number) =>
         apiRequest(`/clips/delete/${id}`, {
             method: 'DELETE',
         }),
