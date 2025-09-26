@@ -29,7 +29,7 @@ export function useClipPageState(clipId?: number) {
   // Timestamps
   const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
-  const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -240,6 +240,31 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  const handleDeleteClip = async (id: number) => {
+    if (id === undefined) {
+      toast.error('No clip selected for deletion');
+      return;
+    }
+    if (!isAuthenticated) {
+      toast.error('You must be logged in to delete clips');
+      setSignInModalOpen(true);
+      return;
+    }
+
+    try {
+      const response = await deleteClip(id);
+      if (response.success) {
+        toast.success('Clip deleted successfully');
+        router.push(`/${user?.id}/clips`);
+      } else if (response.error) {
+        toast.error(response.error || 'Failed to delete clip');
+      }
+    } catch (error) {
+      console.error('Error deleting clip:', error);
+      toast.error('Network error - please try again');
+    }
+  }
+
   return {
     navOpen, setNavOpen,
     currentClip, setCurrentClip,
@@ -259,6 +284,7 @@ export function useClipPageState(clipId?: number) {
     handleDeleteTimestamp,
     handleToTimestamp,
     handleSave,
-    handleChangeClipTitle
+    handleChangeClipTitle,
+    handleDeleteClip,
   };
 }

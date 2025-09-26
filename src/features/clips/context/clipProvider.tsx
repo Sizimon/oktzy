@@ -15,6 +15,7 @@ interface ClipContextType {
     fetchClips: () => Promise<void>;
     createClip: (title: string, data: CuratorData) => Promise<{ success: boolean; error?: string, id?: number }>;
     updateClip: (id: number, title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
+    deleteClip: (id: number) => Promise<{ success: boolean; error?: string }>;
 }
 
 const ClipContext = createContext<ClipContextType | undefined>(undefined);
@@ -99,6 +100,26 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [user, clips])
 
+    const deleteClip = useCallback(async (id: number): Promise<{ success: boolean; error?: string }> => {
+        if (!user) {
+            return { success: false, error: 'User Not Authenticated' }
+        }
+
+        setError(null)
+
+        try {
+            const response = await clipsAPI.delete(String(id))
+            if (response.data) {
+                setClips(prevClips => prevClips.filter(clip => clip.id !== id))
+            }
+            return { success: true }
+        } catch (error: any) {
+            console.error('Error deleting clip:', error);
+            setError(error.message || 'Failed to delete clip');
+            return { success: false, error: error.message || 'Failed to delete clip' }
+        }
+    }, [user, clips]);
+
     useEffect(() => {
         if (isAuthenticated && user) {
             fetchClips();
@@ -115,8 +136,9 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error,
         fetchClips,
         createClip,
-        updateClip
-    }), [clips, isLoading, error, fetchClips, createClip, updateClip]);
+        updateClip,
+        deleteClip
+    }), [clips, isLoading, error, fetchClips, createClip, updateClip, deleteClip]);
 
     return (
         <ClipContext.Provider value={contextValue}>

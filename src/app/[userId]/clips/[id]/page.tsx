@@ -58,6 +58,7 @@ const ClipPage = () => {
                 setSignInModalOpen={clipPage.setSignInModalOpen}
                 navOpen={clipPage.navOpen}
                 setNavOpen={clipPage.setNavOpen}
+                handleDeleteClip={clipPage.handleDeleteClip}
             />
             <ToastContainer
                 position="top-right"
