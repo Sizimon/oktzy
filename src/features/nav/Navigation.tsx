@@ -17,7 +17,8 @@ export function Navigation({
     user,
     setSignInModalOpen,
     navOpen,
-    setNavOpen
+    setNavOpen,
+    handleDeleteClip
 }: {
     user: {
         username: string,
@@ -26,13 +27,16 @@ export function Navigation({
     setSignInModalOpen: (open: boolean) => void;
     navOpen: boolean;
     setNavOpen: (open: boolean) => void;
+    handleDeleteClip?: (id: number) => void;
 }) {
     const router = useRouter();
     const { clips } = useClip();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, hasUnsavedChanges, setHasUnsavedChanges } = useAuth();
 
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
+
+    console.log(clips);
 
     useEffect(() => {
         if (!navOpen) return;
@@ -77,10 +81,18 @@ export function Navigation({
         clip: Clip,
         router: any
     ) {
+        if (hasUnsavedChanges) {
+            toast.error('You have unsaved changes. Please save them before navigating away.');
+            return;
+        }
         router.push(`/${user?.id}/clips/${clip.id}`)
     }
 
     function handleHomeClick() {
+        if (hasUnsavedChanges) {
+            toast.error('You have unsaved changes. Please save them before navigating away.');
+            return;
+        }
         router.push(`/${user?.id}`)
     }
 
@@ -120,7 +132,8 @@ export function Navigation({
                                         <FaTrash
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                toast.error('Feature coming soon!');
+                                                handleDeleteClip && handleDeleteClip(clip.id);
+                                                // toast.error('Feature coming soon!');
                                             }}
                                             className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"
                                         />

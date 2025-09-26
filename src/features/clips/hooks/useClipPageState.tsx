@@ -28,8 +28,8 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth()
-  const { createClip, updateClip, clips, isLoading: clipsLoading } = useClip()
+  const { user, isAuthenticated, isLoading: authLoading, hasUnsavedChanges, setHasUnsavedChanges } = useAuth()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -38,6 +38,19 @@ export function useClipPageState(clipId?: number) {
     if (!clipId || !clips.length) return null;
     return clips.find(clip => Number(clip.id) === clipId) || null;
   }, [clipId, clips.length]); // Use clips.length instead of clips array
+
+  // Change Tracker
+  useEffect(() => {
+    if (!currentClip) {
+      // If not clip is loaded, any input means unsaved changes
+      setHasUnsavedChanges(!!(clipUrl || timestamps.length > 0 || clipTitle));
+      return;
+    }
+    // Compare current state with the loaded clip data
+    const titleChanged = clipTitle !== (currentClip.title || '');
+    const timestampsChanged = JSON.stringify(timestamps) !== JSON.stringify(currentClip.timestamps || []);
+    setHasUnsavedChanges(titleChanged || timestampsChanged);
+  }, [clipUrl, timestamps, clipTitle, currentClip]);
 
   // Single effect to handle all clip loading logic
   useEffect(() => {
@@ -240,6 +253,31 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  const handleDeleteClip = async (id: number) => {
+    if (id === undefined) {
+      toast.error('No clip selected for deletion');
+      return;
+    }
+    if (!isAuthenticated) {
+      toast.error('You must be logged in to delete clips');
+      setSignInModalOpen(true);
+      return;
+    }
+
+    try {
+      const response = await deleteClip(id);
+      if (response.success) {
+        toast.success('Clip deleted successfully');
+        router.push(`/${user?.id}`);
+      } else if (response.error) {
+        toast.error(response.error || 'Failed to delete clip');
+      }
+    } catch (error) {
+      console.error('Error deleting clip:', error);
+      toast.error('Network error - please try again');
+    }
+  }
+
   return {
     navOpen, setNavOpen,
     currentClip, setCurrentClip,
@@ -259,6 +297,7 @@ export function useClipPageState(clipId?: number) {
     handleDeleteTimestamp,
     handleToTimestamp,
     handleSave,
-    handleChangeClipTitle
+    handleChangeClipTitle,
+    handleDeleteClip,
   };
 }
