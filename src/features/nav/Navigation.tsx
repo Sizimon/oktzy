@@ -18,7 +18,7 @@ export function Navigation({
     setSignInModalOpen,
     navOpen,
     setNavOpen,
-    handleDeleteClip
+    confirmAndDeleteClip
 }: {
     user: {
         username: string,
@@ -27,7 +27,7 @@ export function Navigation({
     setSignInModalOpen: (open: boolean) => void;
     navOpen: boolean;
     setNavOpen: (open: boolean) => void;
-    handleDeleteClip?: (id: number) => void;
+    confirmAndDeleteClip?: (id: number) => void;
 }) {
     const router = useRouter();
     const { clips } = useClip();
@@ -132,7 +132,7 @@ export function Navigation({
                                         <FaTrash
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleDeleteClip && handleDeleteClip(clip.id);
+                                                confirmAndDeleteClip && confirmAndDeleteClip(clip.id);
                                                 // toast.error('Feature coming soon!');
                                             }}
                                             className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"

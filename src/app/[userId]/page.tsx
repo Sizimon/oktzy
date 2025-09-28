@@ -30,7 +30,7 @@ export default function Home() {
         setSignInModalOpen={clipPage.setSignInModalOpen}
         navOpen={clipPage.navOpen}
         setNavOpen={clipPage.setNavOpen}
-        handleDeleteClip={clipPage.handleDeleteClip}
+        confirmAndDeleteClip={clipPage.confirmAndDeleteClip}
       />
       <ToastContainer
         position="top-right"

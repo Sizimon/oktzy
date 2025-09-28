@@ -5,9 +5,11 @@ import { toast } from 'react-toastify'
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClip } from '@/features/clips/context/clipProvider';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export function useClipPageState(clipId?: number) {
   const router = useRouter();
+  const pathname = usePathname();
   const [currentClip, setCurrentClip] = useState<Clip | null>(null);
   const [clipTitle, setClipTitle] = useState('');
 
@@ -28,7 +30,11 @@ export function useClipPageState(clipId?: number) {
 
   // Timestamps
   const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
-  const { user, isAuthenticated, isLoading: authLoading, hasUnsavedChanges, setHasUnsavedChanges } = useAuth()
+
+  // Auth states
+  const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
+
+  // Clip states
   const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
@@ -42,7 +48,6 @@ export function useClipPageState(clipId?: number) {
   // Change Tracker
   useEffect(() => {
     if (!currentClip) {
-      // If not clip is loaded, any input means unsaved changes
       setHasUnsavedChanges(!!(clipUrl || timestamps.length > 0 || clipTitle));
       return;
     }
@@ -109,13 +114,13 @@ export function useClipPageState(clipId?: number) {
       console.log('⏭️ Skipping load - already loaded');
     }
   }, [
-    clipId, 
+    clipId,
     isAuthenticated,
     authLoading,
     clipsLoading,
-    foundClip, 
-    hasLoadedClipData, 
-    currentClip, 
+    foundClip,
+    hasLoadedClipData,
+    currentClip,
     loadTimestamps,
     clips.length
   ]);
@@ -163,31 +168,31 @@ export function useClipPageState(clipId?: number) {
     toast.success('Timestamp updated');
   }
 
-  const handleDeleteTimestamp = async(index: number) => {
+  const handleDeleteTimestamp = async (index: number) => {
     toast.warning(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div>
-                  <p>Confirm deletion of timestamp?</p><br />
-                  <p className='italic'>If deleted by mistake you can restore by not saving the changes.</p>
-                </div>
-                <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={() => {
-                      toast.dismiss();
-                      deleteTimestamp(index);
-                    }}
-                    style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => toast.dismiss()}
-                    style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+        <div>
+          <p>Confirm deletion of timestamp?</p><br />
+          <p className='italic'>If deleted by mistake you can restore by not saving the changes.</p>
+        </div>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => {
+              toast.dismiss();
+              deleteTimestamp(index);
+            }}
+            style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     )
   };
 
@@ -231,7 +236,9 @@ export function useClipPageState(clipId?: number) {
         const response = await createClip(title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip saved successfully');
-          router.push(`/${user?.id}/clips/${response.id}`);
+          setTimeout(() => {
+            router.push(`/${user?.id}/clips/${response.id}`);
+          }, 1000);
         } else if (response.error) {
           toast.error(response.error || 'Failed to save clip');
         }
@@ -253,6 +260,34 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  const confirmAndDeleteClip = async (id: number) => {
+    toast.warning(
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div>
+          <p>Confirm deletion of clip?</p><br />
+          <p className='italic'>This action is PERMANENT and cannot be undone.</p>
+        </div>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+          <button
+            onClick={async () => {
+              toast.dismiss();
+              await handleDeleteClip(id);
+            }}
+            style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+          >
+            DELETE
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const handleDeleteClip = async (id: number) => {
     if (id === undefined) {
       toast.error('No clip selected for deletion');
@@ -268,7 +303,9 @@ export function useClipPageState(clipId?: number) {
       const response = await deleteClip(id);
       if (response.success) {
         toast.success('Clip deleted successfully');
+        if (pathname !== `/${user?.id}`) {
         router.push(`/${user?.id}`);
+        }
       } else if (response.error) {
         toast.error(response.error || 'Failed to delete clip');
       }
@@ -298,6 +335,6 @@ export function useClipPageState(clipId?: number) {
     handleToTimestamp,
     handleSave,
     handleChangeClipTitle,
-    handleDeleteClip,
+    confirmAndDeleteClip,
   };
 }
