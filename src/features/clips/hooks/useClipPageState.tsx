@@ -307,7 +307,7 @@ export function useClipPageState(clipId?: number) {
         // Fetch clips again to update state
         await fetchClips();
 
-        if (pathname !== `/${user?.id}`) {
+        if (pathname === `/${user?.id}/clips/${id}`) {
         router.push(`/${user?.id}`);
         }
       } else if (response.error) {
