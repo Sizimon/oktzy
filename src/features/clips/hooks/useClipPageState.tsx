@@ -35,7 +35,7 @@ export function useClipPageState(clipId?: number) {
   const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
 
   // Clip states
-  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading, fetchClips } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -303,6 +303,10 @@ export function useClipPageState(clipId?: number) {
       const response = await deleteClip(id);
       if (response.success) {
         toast.success('Clip deleted successfully');
+
+        // Fetch clips again to update state
+        await fetchClips();
+
         if (pathname !== `/${user?.id}`) {
         router.push(`/${user?.id}`);
         }
