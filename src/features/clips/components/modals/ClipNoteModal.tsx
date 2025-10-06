@@ -22,19 +22,13 @@ export const ClipNoteModal: React.FC<TimestampModalProps> = ({
 
   const handleSave = () => {
     onSave(title, note); // Pass the local values to parent
-    setTitle(''); // Clear local state
-    setNote('');
   };
 
   const handleUpdate = () => {
     onUpdate(editIndex, title, note); // Create this handler in parent
-    setTitle('');
-    setNote('');
   };
 
   const handleClose = () => {
-    setTitle(''); // Clear local state
-    setNote('');
     onClose();
   };
 

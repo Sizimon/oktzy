@@ -26,7 +26,7 @@ export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
 
     return (
         <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full h-full aspect-video max-h-[80lvh]">
+            <div className="w-full h-full aspect-video lg:aspect-auto max-h-[80lvh]">
                 <ReactPlayer
                     ref={ref}
                     src={clipUrl} // (as you prefer)

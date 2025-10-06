@@ -17,7 +17,7 @@ export function ClipVideoSection({
     ">
       <div className="w-full h-full flex justify-center items-center">
         {!clipUrl ? (
-          <div className="flex flex-col items-center justify-center text-center p-8 rounded-2xl bg-gradient-to-br from-violet-500/10 to-background/80 space-y-4 border border-violet-500/20 shadow-lg">
+          <div className="flex flex-col items-center justify-center text-center p-8 lg:rounded-2xl bg-gradient-to-br from-violet-500/10 to-background/80 space-y-4 border border-violet-500/20 shadow-lg">
             <MdVideoLibrary className="text-violet-500 mb-2" size={64} />
             <p className="text-2xl font-semibold text-violet-600">No video loaded</p>
             <p className="text-text/70 text-base">Paste a Video link above to preview your clip here.</p>

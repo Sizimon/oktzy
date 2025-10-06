@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { useClip } from '../clips/context/clipProvider';
-import { useAuth } from '../auth/context/authProvider';
+import { useClip } from '../../clips/context/clipProvider';
+import { useAuth } from '../../auth/context/authProvider';
 import { Clip } from '@/types/types'
 import { toast } from 'react-toastify';
 
@@ -18,7 +18,7 @@ export function Navigation({
     setSignInModalOpen,
     navOpen,
     setNavOpen,
-    handleDeleteClip
+    confirmAndDeleteClip
 }: {
     user: {
         username: string,
@@ -27,16 +27,19 @@ export function Navigation({
     setSignInModalOpen: (open: boolean) => void;
     navOpen: boolean;
     setNavOpen: (open: boolean) => void;
-    handleDeleteClip?: (id: number) => void;
+    confirmAndDeleteClip?: (id: number) => void;
 }) {
     const router = useRouter();
     const { clips } = useClip();
-    const { isAuthenticated, logout, hasUnsavedChanges, setHasUnsavedChanges } = useAuth();
+    const { isAuthenticated, logout, hasUnsavedChanges } = useAuth();
 
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
 
-    console.log(clips);
+    // In Navigation.tsx
+    useEffect(() => {
+        console.log('🔄 Navigation clips updated:', clips.length, clips);
+    }, [clips]);
 
     useEffect(() => {
         if (!navOpen) return;
@@ -132,8 +135,7 @@ export function Navigation({
                                         <FaTrash
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleDeleteClip && handleDeleteClip(clip.id);
-                                                // toast.error('Feature coming soon!');
+                                                confirmAndDeleteClip && confirmAndDeleteClip(clip.id);
                                             }}
                                             className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"
                                         />

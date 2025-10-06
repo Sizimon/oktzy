@@ -1,18 +1,17 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useTimestamps } from './useTimestamps';
 import { Clip, CuratorData } from '@/types/types'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClip } from '@/features/clips/context/clipProvider';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export function useClipPageState(clipId?: number) {
   const router = useRouter();
+  const pathname = usePathname();
   const [currentClip, setCurrentClip] = useState<Clip | null>(null);
   const [clipTitle, setClipTitle] = useState('');
-
-  // Nav
-  const [navOpen, setNavOpen] = useState<boolean>(false);
 
   // Video States
   const [clipUrl, setClipUrl] = useState('');
@@ -27,8 +26,12 @@ export function useClipPageState(clipId?: number) {
   const playerRef = useRef<any>(null);
 
   // Timestamps
-  const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
-  const { user, isAuthenticated, isLoading: authLoading, hasUnsavedChanges, setHasUnsavedChanges } = useAuth()
+  const { timestamps, setTimestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
+
+  // Auth states
+  const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
+
+  // Clip states
   const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
@@ -37,12 +40,11 @@ export function useClipPageState(clipId?: number) {
   const foundClip = useMemo(() => {
     if (!clipId || !clips.length) return null;
     return clips.find(clip => Number(clip.id) === clipId) || null;
-  }, [clipId, clips.length]); // Use clips.length instead of clips array
+  }, [clipId, clips.length]);
 
   // Change Tracker
   useEffect(() => {
     if (!currentClip) {
-      // If not clip is loaded, any input means unsaved changes
       setHasUnsavedChanges(!!(clipUrl || timestamps.length > 0 || clipTitle));
       return;
     }
@@ -51,6 +53,20 @@ export function useClipPageState(clipId?: number) {
     const timestampsChanged = JSON.stringify(timestamps) !== JSON.stringify(currentClip.timestamps || []);
     setHasUnsavedChanges(titleChanged || timestampsChanged);
   }, [clipUrl, timestamps, clipTitle, currentClip]);
+
+  // Revert changes 
+  const revertChanges = useCallback(() => {
+    if (currentClip) {
+      setClipTitle(currentClip.title || '');
+      setTimestamps(currentClip.timestamps || []);
+
+      // Reset unsaved changes flag
+      setHasUnsavedChanges(false);
+      toast.info('Changes reverted to last save.');
+    } else {
+      toast.error('No saved clip to revert to.');
+    }
+  }, [currentClip, setHasUnsavedChanges]);
 
   // Single effect to handle all clip loading logic
   useEffect(() => {
@@ -109,13 +125,13 @@ export function useClipPageState(clipId?: number) {
       console.log('⏭️ Skipping load - already loaded');
     }
   }, [
-    clipId, 
+    clipId,
     isAuthenticated,
     authLoading,
     clipsLoading,
-    foundClip, 
-    hasLoadedClipData, 
-    currentClip, 
+    foundClip,
+    hasLoadedClipData,
+    currentClip,
     loadTimestamps,
     clips.length
   ]);
@@ -163,31 +179,31 @@ export function useClipPageState(clipId?: number) {
     toast.success('Timestamp updated');
   }
 
-  const handleDeleteTimestamp = async(index: number) => {
+  const handleDeleteTimestamp = async (index: number) => {
     toast.warning(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div>
-                  <p>Confirm deletion of timestamp?</p><br />
-                  <p className='italic'>If deleted by mistake you can restore by not saving the changes.</p>
-                </div>
-                <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={() => {
-                      toast.dismiss();
-                      deleteTimestamp(index);
-                    }}
-                    style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => toast.dismiss()}
-                    style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+        <div>
+          <p>Confirm deletion of timestamp?</p><br />
+          <p className='italic'>If deleted by mistake you can restore by not saving the changes.</p>
+        </div>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => {
+              toast.dismiss();
+              deleteTimestamp(index);
+            }}
+            style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     )
   };
 
@@ -231,7 +247,9 @@ export function useClipPageState(clipId?: number) {
         const response = await createClip(title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip saved successfully');
-          router.push(`/${user?.id}/clips/${response.id}`);
+          setTimeout(() => {
+            router.push(`/${user?.id}/clips/${response.id}`);
+          }, 1000);
         } else if (response.error) {
           toast.error(response.error || 'Failed to save clip');
         }
@@ -253,6 +271,34 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  const confirmAndDeleteClip = async (id: number) => {
+    toast.warning(
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div>
+          <p>Confirm deletion of clip?</p><br />
+          <p className='italic'>This action is PERMANENT and cannot be undone.</p>
+        </div>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+          <button
+            onClick={async () => {
+              toast.dismiss();
+              await handleDeleteClip(id);
+            }}
+            style={{ padding: '4px 12px', background: '#fbbf24', border: 'none', borderRadius: '4px', color: '#222' }}
+          >
+            DELETE
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            style={{ padding: '4px 12px', background: '#64748b', border: 'none', borderRadius: '4px', color: '#fff' }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const handleDeleteClip = async (id: number) => {
     if (id === undefined) {
       toast.error('No clip selected for deletion');
@@ -268,7 +314,10 @@ export function useClipPageState(clipId?: number) {
       const response = await deleteClip(id);
       if (response.success) {
         toast.success('Clip deleted successfully');
+
+        if (pathname === `/${user?.id}/clips/${id}`) {
         router.push(`/${user?.id}`);
+        }
       } else if (response.error) {
         toast.error(response.error || 'Failed to delete clip');
       }
@@ -279,7 +328,7 @@ export function useClipPageState(clipId?: number) {
   }
 
   return {
-    navOpen, setNavOpen,
+    // navOpen, setNavOpen,
     currentClip, setCurrentClip,
     clipTitle, setClipTitle,
     clipUrl, setClipUrl,
@@ -291,6 +340,7 @@ export function useClipPageState(clipId?: number) {
     isSaving, setIsSaving,
     playerRef,
     timestamps, addTimestamp, clearTimestamps, loadTimestamps, editData, editIndex,
+    revertChanges,
     handleTimestampModal,
     handleAddTimestamp,
     handleUpdateTimestamp,
@@ -298,6 +348,6 @@ export function useClipPageState(clipId?: number) {
     handleToTimestamp,
     handleSave,
     handleChangeClipTitle,
-    handleDeleteClip,
+    confirmAndDeleteClip,
   };
 }

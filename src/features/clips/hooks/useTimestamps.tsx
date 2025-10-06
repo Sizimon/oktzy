@@ -60,7 +60,7 @@ export const useTimestamps = () => {
   };
 
   return {
-    timestamps,
+    timestamps, setTimestamps,
     editIndex, setEditIndex,
     editData, setEditData,
     loadTimestamps,

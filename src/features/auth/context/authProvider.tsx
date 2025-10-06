@@ -11,8 +11,8 @@ interface AuthContextType {
     hasUnsavedChanges: boolean;
     setHasUnsavedChanges: (hasUnsavedChanges: boolean) => void;
     setUser: (user: any) => void;
-    login: (usernameOrEmail: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+    login: (usernameOrEmail: string, password: string) => Promise<{ success: boolean; error?: string, userId?: string }>;
+    register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string, userId?: string }>;
     logout: () => void;
 }
 
@@ -24,9 +24,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<any>(null);
     const router = useRouter();
 
-     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // refers to unsaved changes in a clip entry
+     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-    const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string, userId?: string }> => {
         setIsLoading(true);
         try {
             await authAPI.login(email, password);
@@ -35,11 +35,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (!data) {
                 throw new Error('No user data returned from API');
             }
-
             setUser(data.user);
             setIsAuthenticated(true);
-            router.push(`/${data.user.id}`);
-            return { success: true };
+            return { success: true, userId: data.user.id };
         } catch (error) {
             console.error('Error logging in:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Login failed') };
@@ -48,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
-    const register = useCallback(async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const register = useCallback(async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string, userId?: string }> => {
         setIsLoading(true);
         try {
             await authAPI.register(username, email, password);
@@ -60,8 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             setUser(data.user);
             setIsAuthenticated(true);
-            router.push(`/${data.user.id}`);
-            return { success: true };
+            return { success: true, userId: data.user.id };
         } catch (error) {
             console.error('Error registering:', error);
             return { success: false, error: (error instanceof Error ? error.message : 'Registration failed') };
