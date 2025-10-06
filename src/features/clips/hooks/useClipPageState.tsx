@@ -258,6 +258,14 @@ export function useClipPageState(clipId?: number) {
         const response = await updateClip(Number(currentClip.id), title, clipData as CuratorData);
         if (response.success) {
           toast.success('Clip updated successfully');
+          // Update current clip to ensure revert changes has a new baseline
+          setCurrentClip(prev => prev ? {
+            ...prev,
+            title,
+            clipUrl,
+            timestamps: [...timestamps] 
+          } : prev);
+
           setHasUnsavedChanges(false);
         } else if (response.error) {
           toast.error(response.error || 'Failed to update clip');
