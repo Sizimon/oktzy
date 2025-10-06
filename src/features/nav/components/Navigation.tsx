@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { useClip } from '../clips/context/clipProvider';
-import { useAuth } from '../auth/context/authProvider';
+import { useClip } from '../../clips/context/clipProvider';
+import { useAuth } from '../../auth/context/authProvider';
 import { Clip } from '@/types/types'
 import { toast } from 'react-toastify';
 
@@ -31,10 +31,15 @@ export function Navigation({
 }) {
     const router = useRouter();
     const { clips } = useClip();
-    const { isAuthenticated, logout, hasUnsavedChanges, setHasUnsavedChanges } = useAuth();
+    const { isAuthenticated, logout, hasUnsavedChanges } = useAuth();
 
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
+
+    // In Navigation.tsx
+    useEffect(() => {
+        console.log('🔄 Navigation clips updated:', clips.length, clips);
+    }, [clips]);
 
     useEffect(() => {
         if (!navOpen) return;
@@ -131,7 +136,6 @@ export function Navigation({
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 confirmAndDeleteClip && confirmAndDeleteClip(clip.id);
-                                                // toast.error('Feature coming soon!');
                                             }}
                                             className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 ease-out cursor-pointer"
                                         />

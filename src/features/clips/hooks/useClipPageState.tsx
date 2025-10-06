@@ -13,8 +13,8 @@ export function useClipPageState(clipId?: number) {
   const [currentClip, setCurrentClip] = useState<Clip | null>(null);
   const [clipTitle, setClipTitle] = useState('');
 
-  // Nav
-  const [navOpen, setNavOpen] = useState<boolean>(false);
+  // // Nav
+  // const [navOpen, setNavOpen] = useState<boolean>(false);
 
   // Video States
   const [clipUrl, setClipUrl] = useState('');
@@ -304,8 +304,8 @@ export function useClipPageState(clipId?: number) {
       if (response.success) {
         toast.success('Clip deleted successfully');
 
-        // Fetch clips again to update state
-        await fetchClips();
+        // // Fetch clips again to update state
+        // await fetchClips();
 
         if (pathname === `/${user?.id}/clips/${id}`) {
         router.push(`/${user?.id}`);
@@ -320,7 +320,7 @@ export function useClipPageState(clipId?: number) {
   }
 
   return {
-    navOpen, setNavOpen,
+    // navOpen, setNavOpen,
     currentClip, setCurrentClip,
     clipTitle, setClipTitle,
     clipUrl, setClipUrl,
