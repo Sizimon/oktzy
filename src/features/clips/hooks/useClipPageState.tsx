@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useTimestamps } from './useTimestamps';
 import { Clip, CuratorData } from '@/types/types'
 import { toast } from 'react-toastify'
@@ -13,9 +13,6 @@ export function useClipPageState(clipId?: number) {
   const [currentClip, setCurrentClip] = useState<Clip | null>(null);
   const [clipTitle, setClipTitle] = useState('');
 
-  // // Nav
-  // const [navOpen, setNavOpen] = useState<boolean>(false);
-
   // Video States
   const [clipUrl, setClipUrl] = useState('');
   const [currentTime, setCurrentTime] = useState(0);
@@ -29,13 +26,13 @@ export function useClipPageState(clipId?: number) {
   const playerRef = useRef<any>(null);
 
   // Timestamps
-  const { timestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
+  const { timestamps, setTimestamps, addTimestamp, editTimestamp, deleteTimestamp, clearTimestamps, loadTimestamps, editIndex, setEditIndex, editData, setEditData } = useTimestamps();
 
   // Auth states
   const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
 
   // Clip states
-  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading, fetchClips } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -43,7 +40,7 @@ export function useClipPageState(clipId?: number) {
   const foundClip = useMemo(() => {
     if (!clipId || !clips.length) return null;
     return clips.find(clip => Number(clip.id) === clipId) || null;
-  }, [clipId, clips.length]); // Use clips.length instead of clips array
+  }, [clipId, clips.length]);
 
   // Change Tracker
   useEffect(() => {
@@ -56,6 +53,20 @@ export function useClipPageState(clipId?: number) {
     const timestampsChanged = JSON.stringify(timestamps) !== JSON.stringify(currentClip.timestamps || []);
     setHasUnsavedChanges(titleChanged || timestampsChanged);
   }, [clipUrl, timestamps, clipTitle, currentClip]);
+
+  // Revert changes 
+  const revertChanges = useCallback(() => {
+    if (currentClip) {
+      setClipTitle(currentClip.title || '');
+      setTimestamps(currentClip.timestamps || []);
+
+      // Reset unsaved changes flag
+      setHasUnsavedChanges(false);
+      toast.info('Changes reverted to last save.');
+    } else {
+      toast.error('No saved clip to revert to.');
+    }
+  }, [currentClip, setHasUnsavedChanges]);
 
   // Single effect to handle all clip loading logic
   useEffect(() => {
@@ -304,9 +315,6 @@ export function useClipPageState(clipId?: number) {
       if (response.success) {
         toast.success('Clip deleted successfully');
 
-        // // Fetch clips again to update state
-        // await fetchClips();
-
         if (pathname === `/${user?.id}/clips/${id}`) {
         router.push(`/${user?.id}`);
         }
@@ -332,6 +340,7 @@ export function useClipPageState(clipId?: number) {
     isSaving, setIsSaving,
     playerRef,
     timestamps, addTimestamp, clearTimestamps, loadTimestamps, editData, editIndex,
+    revertChanges,
     handleTimestampModal,
     handleAddTimestamp,
     handleUpdateTimestamp,

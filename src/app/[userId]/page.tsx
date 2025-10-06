@@ -46,8 +46,8 @@ export default function Home() {
 
       <div className='flex flex-col lg:flex-row w-full z-40 h-9/10'>
         <div className="
-          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-20 space-y-4 w-full
-          lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4 lg:items-start
+          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-20 gap-4 w-full
+          lg:px-4 lg:py-4 lg:items-start
           "
         >
           <ClipVideoSection

@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<any>(null);
     const router = useRouter();
 
-     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // refers to unsaved changes in a clip entry
+     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string, userId?: string }> => {
         setIsLoading(true);
