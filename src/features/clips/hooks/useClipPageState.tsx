@@ -32,7 +32,7 @@ export function useClipPageState(clipId?: number) {
   const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
 
   // Clip states
-  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading, fetchClips } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -256,10 +256,8 @@ export function useClipPageState(clipId?: number) {
         }
       } else {
         const response = await updateClip(Number(currentClip.id), title, clipData as CuratorData);
-        console.log('Update response:', response);
         if (response.success) {
           toast.success('Clip updated successfully');
-          fetchClips();
           setHasUnsavedChanges(false);
         } else if (response.error) {
           toast.error(response.error || 'Failed to update clip');
@@ -319,7 +317,7 @@ export function useClipPageState(clipId?: number) {
         toast.success('Clip deleted successfully');
 
         if (pathname === `/${user?.id}/clips/${id}`) {
-        router.push(`/${user?.id}`);
+          router.push(`/${user?.id}`);
         }
       } else if (response.error) {
         toast.error(response.error || 'Failed to delete clip');

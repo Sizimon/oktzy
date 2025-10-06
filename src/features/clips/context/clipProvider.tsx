@@ -76,29 +76,31 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [user]);
 
     const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
-        if (!user) {
-            return { success: false, error: 'User Not Authenticated' }
+    if (!user) {
+        return { success: false, error: 'User Not Authenticated' }
+    }
+
+    setError(null)
+
+    try {
+        const response = await clipsAPI.update(id, title, data)
+
+        if (response.data) {
+            const normalizedClip = normalizeClip(response.data)
+            
+            setClips(prevClips => {
+                const filteredClips = prevClips.filter(clip => Number(id) !== Number(clip.id))
+                const newClips = [normalizedClip, ...filteredClips];
+                return newClips;
+            })
         }
-
-        setError(null)
-
-        try {
-            const response = await clipsAPI.update(id, title, data)
-
-            if (response.data) {
-                const normalizedClip = normalizeClip(response.data)
-                setClips(prevClips => {
-                    const filteredClips = prevClips.filter(clip => Number(id) !== Number(clip.id))
-                    return [normalizedClip, ...filteredClips]
-                })
-            }
-            return { success: true }
-        } catch (error: any) {
-            console.error('Error updating clip:', error);
-            setError(error.message || 'Failed to update clip');
-            return { success: false, error: error.message || 'Failed to update clip' }
-        }
-    }, [user, clips])
+        return { success: true }
+    } catch (error: any) {
+        console.error('Error updating clip:', error);
+        setError(error.message || 'Failed to update clip');
+        return { success: false, error: error.message || 'Failed to update clip' }
+    }
+}, [user, clips]) // Keep clips dependency since you're using it
 
     const deleteClip = useCallback(async (id: number): Promise<{ success: boolean; error?: string }> => {
         if (!user) {

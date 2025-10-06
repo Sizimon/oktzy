@@ -36,11 +36,6 @@ export function Navigation({
     // Nav Ref for animation
     const navRef = useRef<HTMLDivElement>(null);
 
-    // In Navigation.tsx
-    useEffect(() => {
-        console.log('🔄 Navigation clips updated:', clips.length, clips);
-    }, [clips]);
-
     useEffect(() => {
         if (!navOpen) return;
         const handleClickOutsideNav = (event: MouseEvent) => {
