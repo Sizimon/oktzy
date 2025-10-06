@@ -16,17 +16,19 @@ export function useVideoState({
     const [isUserPaused, setIsUserPaused] = useState<boolean>(false);
     const [wasPlayingBeforeModal, setWasPlayingBeforeModal] = useState<boolean>(false);
 
+    // 🟢 HANDLES VIDEO PLAYBACK PROGRESS 🟢
     const handleProgress = useCallback((progress: any) => {
         currentTimeRef.current = progress.srcElement ? progress.srcElement.currentTime : 0;
     }, []);
 
-    // Handle when user manually changes volume
+    // 🟢 HANDLES VOLUME CHANGES 🟢
     const handleVolumeChange = useCallback((event: React.SyntheticEvent<HTMLVideoElement>) => {
         const target = event.target as HTMLVideoElement;
         const volume = target.volume;
         setUserVolume(volume);
     }, []);
 
+    // 🟢 HANDLES PLAY/PAUSE BUTTONS 🟢
     const handlePlay = useCallback(() => {
         setIsUserPaused(false);
     }, []);
@@ -35,7 +37,7 @@ export function useVideoState({
         setIsUserPaused(true);
     }, []);
 
-    // Modal open effect
+    // 🟢 MODAL OPEN EFFECT 🟢
     useEffect(() => {
         const isModalOpen = timestampModalOpen || signInModalOpen;
 
@@ -46,7 +48,7 @@ export function useVideoState({
         }
     }, [timestampModalOpen, signInModalOpen, setCurrentTime, isUserPaused]);
 
-    // Modal close effect
+     // 🟢 MODAL CLOSE EFFECT 🟢
     useEffect(() => {
         const isModalOpen = timestampModalOpen || signInModalOpen;
 

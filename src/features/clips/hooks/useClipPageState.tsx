@@ -36,16 +36,16 @@ export function useClipPageState(clipId?: number) {
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
-  // Memoize the current clip to prevent unnecessary lookups
+  // 🟢 MEMOIZED CLIP LOOKUP 🟢
   const foundClip = useMemo(() => {
     if (!clipId || !clips.length) return null;
     return clips.find(clip => Number(clip.id) === clipId) || null;
   }, [clipId, clips.length]);
 
-  // Change Tracker
+  // 🟢 EFFECT TO TRACK UNSAVED CHANGES 🟢
   useEffect(() => {
     if (!currentClip) {
-      setHasUnsavedChanges(!!(clipUrl || timestamps.length > 0 || clipTitle));
+      setHasUnsavedChanges(false);
       return;
     }
     // Compare current state with the loaded clip data
@@ -54,7 +54,7 @@ export function useClipPageState(clipId?: number) {
     setHasUnsavedChanges(titleChanged || timestampsChanged);
   }, [clipUrl, timestamps, clipTitle, currentClip]);
 
-  // Revert changes 
+  // 🟢 HANDLES REVERTING CHANGES 🟢 
   const revertChanges = useCallback(() => {
     if (currentClip) {
       setClipTitle(currentClip.title || '');
@@ -68,15 +68,15 @@ export function useClipPageState(clipId?: number) {
     }
   }, [currentClip, setHasUnsavedChanges]);
 
-  // Single effect to handle all clip loading logic
+  // 🟢 EFFECT TO LOAD CLIP DATA 🟢
   useEffect(() => {
-    // Early return if still loading
+    // Early return if still loading auth or clips
     if (authLoading || clipsLoading) {
       console.log('⏳ Still loading auth or clips, skipping...');
       return;
     }
 
-    // Early return if not authenticated (after auth has loaded)
+    // Clear current clip if not authenticated
     if (!authLoading && !isAuthenticated) {
       console.log('🔴 Not authenticated (after loading), clearing...');
       setCurrentClip(null);
@@ -84,7 +84,7 @@ export function useClipPageState(clipId?: number) {
       return;
     }
 
-    // Early return if no clipId
+    // Check if clipId is valid
     if (!clipId) {
       console.log('🔴 No clipId provided');
       setCurrentClip(null);
@@ -92,12 +92,13 @@ export function useClipPageState(clipId?: number) {
       return;
     }
 
-    // Early return if clips haven't loaded yet
+    // Handle case where clips are loaded but empty
     if (!clipsLoading && clips.length === 0) {
       console.log('📭 No clips available yet');
       return;
     }
 
+    // Find the clip by ID
     if (!foundClip) {
       console.log('🔴 Clip not found in loaded clips');
       setCurrentClip(null);
@@ -105,7 +106,7 @@ export function useClipPageState(clipId?: number) {
       return;
     }
 
-    // Only load if we haven't loaded this clip's data yet
+    // Load clip data if not already loaded or if different clip
     if (!hasLoadedClipData || !currentClip || currentClip.id !== foundClip.id) {
       console.log('✅ Loading clip data for:', foundClip.id);
       console.log('Found clip timestamps:', foundClip.timestamps);
@@ -114,7 +115,8 @@ export function useClipPageState(clipId?: number) {
       setClipUrl(foundClip.clipUrl || '');
 
       console.log('About to load timestamps:', foundClip.timestamps);
-      // To this:
+
+      // Only load timestamps if they exist and are non-empty
       if (foundClip.timestamps && foundClip.timestamps.length > 0) {
         loadTimestamps(foundClip.timestamps);
       } else {
@@ -136,7 +138,7 @@ export function useClipPageState(clipId?: number) {
     clips.length
   ]);
 
-  // Handlers (copy from your main page)
+  // 🟢 HANDLES TIMESTAMP MODAL OPEN/CLOSE 🟢
   const handleTimestampModal = (index?: number) => {
     if (!clipUrl) {
       toast.error('Please enter a valid clip URL before adding timestamps');
@@ -153,6 +155,7 @@ export function useClipPageState(clipId?: number) {
     setTimestampModalOpen(true);
   };
 
+  // 🟢 HANDLES CLIP TITLE CHANGES 🟢
   const handleChangeClipTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (clipUrl.length > 0) {
       setClipTitle?.(e.target.value);
@@ -161,6 +164,7 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  // 🟢 HANDLES NEW TIMESTAMPS 🟢
   const handleAddTimestamp = (title: string, note: string) => {
     if (!title || !note) {
       toast.error('Please provide both a title and a note for the timestamp');
@@ -171,6 +175,7 @@ export function useClipPageState(clipId?: number) {
     toast.success('Timestamp added');
   };
 
+  // 🟢 HANDLES TIMESTAMP EDITS 🟢
   const handleUpdateTimestamp = (editIndex: number | null, title: string, note: string) => {
     editTimestamp(editIndex as number, title, note);
     setTimestampModalOpen(false);
@@ -179,6 +184,7 @@ export function useClipPageState(clipId?: number) {
     toast.success('Timestamp updated');
   }
 
+  // 🟢 HANDLES TIMESTAMP DELETES WITH CONFIRMATION 🟢
   const handleDeleteTimestamp = async (index: number) => {
     toast.warning(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -207,13 +213,14 @@ export function useClipPageState(clipId?: number) {
     )
   };
 
+   // 🟢 HANDLES PLAYBACK TO TIMESTAMP 🟢
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
       playerRef.current.currentTime = time;
     }
   };
 
-  // Handler which saves the clip data to the database
+  // 🟢 HANDLES SAVES & UPDATES 🟢
   const handleSave = async (title: string) => {
     if (!title) {
       toast.error('Please provide a title for the clip before saving');
@@ -280,6 +287,7 @@ export function useClipPageState(clipId?: number) {
     }
   }
 
+  // 🟢 HANDLES CLIP DELETES WITH CONFIRMATION 🟢
   const confirmAndDeleteClip = async (id: number) => {
     toast.warning(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -308,6 +316,7 @@ export function useClipPageState(clipId?: number) {
     )
   }
 
+   // 🟢 ACTUAL DELETE HANDLER 🟢
   const handleDeleteClip = async (id: number) => {
     if (id === undefined) {
       toast.error('No clip selected for deletion');
