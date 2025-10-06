@@ -20,7 +20,7 @@ export default function Home() {
   const clipPage = useClipPageState();
 
   return (
-    <div className='relative w-full h-lvh lg:p-16'>
+    <div className='relative w-full h-lvh lg:p-8'>
       <ToastContainer
         position="top-right"
         autoClose={5000}

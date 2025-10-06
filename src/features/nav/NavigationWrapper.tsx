@@ -16,7 +16,7 @@ export default function NavigationWrapper() {
     <>
       {/* Navigation Toggle Button - Fixed Position */}
       <button 
-        className='fixed top-4 left-4 lg:top-8 lg:left-8 z-50 cursor-pointer'
+        className='fixed top-3 left-6 lg:top-8 lg:left-8 z-50 cursor-pointer'
         aria-label="Open navigation menu"
         title="Open navigation menu"
         onClick={() => setNavOpen(true)}

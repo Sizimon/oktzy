@@ -50,7 +50,7 @@ const ClipPage = () => {
     }
 
     return (
-        <div className='relative w-full h-lvh lg:p-16'>
+        <div className='relative flex items-center w-full h-lvh lg:p-8'>
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
