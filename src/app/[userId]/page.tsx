@@ -8,7 +8,7 @@ import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
 
 // Modal Imports
 import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal';
-import SignInModal from '@/features/auth/components/SignInModal';
+import SignInModal from '@/features/nav/SignInModal';
 
 // Misc Imports
 import { Bounce, ToastContainer } from 'react-toastify';
@@ -39,14 +39,14 @@ export default function Home() {
       <div className='absolute inset-0 gradient-bg-subtle -z-10' />
 
       {/* HEADER */}
-      <div className='flex h-1/10 justify-between items-center lg:items-start px-4 lg:px-0 z-40'>
+      <div className='flex h-1/10 justify-between items-center lg:items-start px-4 lg:px-0 z-10'>
         <ClipInput clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
         <div className='w-8'/>
       </div>
 
       <div className='flex flex-col lg:flex-row w-full z-40 h-9/10'>
         <div className="
-          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-50 space-y-4 w-full
+          flex flex-col lg:flex-row font-sans items-center justify-center text-text z-20 space-y-4 w-full
           lg:px-4 lg:space-x-4 lg:space-y-0 lg:py-4 lg:items-start
           "
         >

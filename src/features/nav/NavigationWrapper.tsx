@@ -4,6 +4,7 @@ import { Navigation } from '@/features/nav/components/Navigation';
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 import { CiMenuBurger } from "react-icons/ci";
+import SignInModal from './SignInModal';
 
 export default function NavigationWrapper() {
   const { user } = useAuth();
@@ -30,6 +31,12 @@ export default function NavigationWrapper() {
         navOpen={navOpen}
         setNavOpen={setNavOpen}
         confirmAndDeleteClip={clipPage.confirmAndDeleteClip}
+      />
+
+      {/* Sign In Modal */}
+      <SignInModal
+        isOpen={signInModalOpen}
+        onClose={() => setSignInModalOpen(false)}
       />
     </>
   );

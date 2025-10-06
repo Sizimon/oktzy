@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import SignInForm from './SignInForm';
-import SignUpForm from './SignUpForm';
+import SignInForm from './components/SignInForm';
+import SignUpForm from './components/SignUpForm';
 import { toast } from 'react-toastify';
 import { SignInModalProps } from '@/types/types';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { login, register, user } = useAuth();
+    const { login, register } = useAuth();
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -87,7 +87,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/70">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
             <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border-[1px] border-white/10 backdrop-blur-md px-6 py-12 rounded-2xl shadow-lg w-5/6 lg:w-2/6 xl:w-1/6">
                 <button onClick={onClose} className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer hover:text-red-500">&times;</button>
                 {formType === 'login' ? (
