@@ -38,7 +38,7 @@ export const ClipInput: React.FC<ClipInputProps> = ({ clipUrl, onInputChange }) 
   }
 
 return (
-  <div className="flex justify-center w-full z-50">
+  <div className="flex justify-center w-full z-20">
     <input
       type="text"
       value={clipUrl}
