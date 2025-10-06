@@ -27,7 +27,6 @@ export function useVideoState({
         setUserVolume(volume);
     }, []);
 
-    // Handle when user manually plays/pauses
     const handlePlay = useCallback(() => {
         setIsUserPaused(false);
     }, []);
@@ -36,16 +35,27 @@ export function useVideoState({
         setIsUserPaused(true);
     }, []);
 
-    // Handle modal open/close behavior
+    // Modal open effect
     useEffect(() => {
-        if (timestampModalOpen || signInModalOpen) {
-            // Store current time for timestamp modal
-            setCurrentTime(currentTimeRef.current);
+        const isModalOpen = timestampModalOpen || signInModalOpen;
 
-            // Remember if video was playing before modal opened
-            setWasPlayingBeforeModal(!isUserPaused);
+        if (isModalOpen) {
+            setCurrentTime(currentTimeRef.current);
+            // Only save the state if we haven't already saved it
+            setWasPlayingBeforeModal(prev => prev !== false ? prev : !isUserPaused);
         }
     }, [timestampModalOpen, signInModalOpen, setCurrentTime, isUserPaused]);
+
+    // Modal close effect
+    useEffect(() => {
+        const isModalOpen = timestampModalOpen || signInModalOpen;
+
+        if (!isModalOpen && wasPlayingBeforeModal) {
+
+            setIsUserPaused(false);
+            setWasPlayingBeforeModal(false); // Reset the flag
+        }
+    }, [timestampModalOpen, signInModalOpen, wasPlayingBeforeModal]);
 
     // Determine if video should be playing
     const shouldPlay = !isUserPaused && !timestampModalOpen && !signInModalOpen;

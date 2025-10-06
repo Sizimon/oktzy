@@ -32,7 +32,7 @@ export function useClipPageState(clipId?: number) {
   const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
 
   // Clip states
-  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading, fetchClips } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -250,6 +250,7 @@ export function useClipPageState(clipId?: number) {
           setTimeout(() => {
             router.push(`/${user?.id}/clips/${response.id}`);
           }, 1000);
+          setHasUnsavedChanges(false);
         } else if (response.error) {
           toast.error(response.error || 'Failed to save clip');
         }
@@ -258,6 +259,8 @@ export function useClipPageState(clipId?: number) {
         console.log('Update response:', response);
         if (response.success) {
           toast.success('Clip updated successfully');
+          fetchClips();
+          setHasUnsavedChanges(false);
         } else if (response.error) {
           toast.error(response.error || 'Failed to update clip');
         }
