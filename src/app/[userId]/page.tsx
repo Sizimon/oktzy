@@ -39,7 +39,7 @@ export default function Home() {
       <div className='absolute inset-0 gradient-bg-subtle -z-10' />
 
       {/* HEADER */}
-      <div className='flex h-1/10 justify-between items-center lg:items-start px-4 lg:px-0 z-10'>
+      <div className='flex h-1/10 justify-between items-center px-4 lg:px-0 z-10'>
         <ClipInput clipUrl={clipPage.clipUrl} onInputChange={clipPage.setClipUrl} />
         <div className='w-8'/>
       </div>

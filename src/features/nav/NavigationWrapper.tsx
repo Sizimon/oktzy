@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Navigation } from '@/features/nav/components/Navigation';
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
-import { CiMenuBurger } from "react-icons/ci";
+import { IoIosArrowDown } from "react-icons/io";
 import SignInModal from './SignInModal';
 
 export default function NavigationWrapper() {
@@ -16,12 +16,12 @@ export default function NavigationWrapper() {
     <>
       {/* Navigation Toggle Button - Fixed Position */}
       <button 
-        className='fixed top-4 left-4 lg:top-8 lg:left-8 z-50 cursor-pointer'
+        className='opacity-50 fixed top-4 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer hover:opacity-100 transition duration-300'
         aria-label="Open navigation menu"
         title="Open navigation menu"
         onClick={() => setNavOpen(true)}
       >
-        <CiMenuBurger className='h-6 w-6 lg:h-8 lg:w-8 text-text hover:text-violet-500' />
+        <IoIosArrowDown className='h-4 w-4 lg:h-6 lg:w-6 text-text hover:text-violet-500 transition-color duration-400' />
       </button>
 
       {/* Navigation Sidebar */}
