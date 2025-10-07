@@ -29,8 +29,8 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Fetch all clips when user is authenticated
     const fetchClips = useCallback(async () => {
-        console.log('🚨 FETCHCLIPS CALLED - Stack trace:');
-        console.trace('Stack trace for fetchClips');
+        // console.log('🚨 FETCHCLIPS CALLED - Stack trace:');
+        // console.trace('Stack trace for fetchClips');
         if (!isAuthenticated) {
             setClips([]);
             return;
@@ -111,15 +111,15 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setError(null)
 
-        console.log('🗑️ DELETING CLIP:', id);
-        console.log('📊 Clips before delete:', clips.map(c => ({ id: c.id, title: c.title })));
+        // console.log('🗑️ DELETING CLIP:', id);
+        // console.log('📊 Clips before delete:', clips.map(c => ({ id: c.id, title: c.title })));
         try {
             const response = await clipsAPI.delete(id)
             if (response.data) {
-                console.log('✅ Delete API successful, updating context');
+                // console.log('✅ Delete API successful, updating context');
                 setClips(prevClips => {
                     const filtered = prevClips.filter(clip => clip.id !== id);
-                    console.log('🔄 New clips after filter:', filtered.map(c => ({ id: c.id, title: c.title })));
+                    // console.log('🔄 New clips after filter:', filtered.map(c => ({ id: c.id, title: c.title })));
                     return filtered;
                 });
             }

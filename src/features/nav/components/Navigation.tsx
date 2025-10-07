@@ -73,9 +73,9 @@ export function Navigation({
         });
     }, [navOpen, navRef]);
 
-    useEffect(() => {
-        console.log('🔍 Navigation render:', { clipsCount: clips.length, clipIds: clips.map(c => c.id) });
-    }, [clips]);
+    // useEffect(() => {
+    //     console.log('🔍 Navigation render:', { clipsCount: clips.length, clipIds: clips.map(c => c.id) });
+    // }, [clips]);
 
     function handleClipClick(
         clip: Clip,
@@ -145,7 +145,7 @@ export function Navigation({
                 `}
             >
                 {/* Header Section */}
-                <div className="flex border-b border-violet-500/50 px-6 py-4 flex-shrink-0 justify-between items-center">
+                <div className="flex border-b border-violet-500/50 lg:px-6 py-4 flex-shrink-0 justify-between items-center">
                     <img 
                         src={Logo.src} 
                         alt="Oktzy Logo" 
@@ -153,11 +153,11 @@ export function Navigation({
                         onClick={handleHomeClick} />
                     {/* User Section */}
                     <div className="
-                        flex-shrink-0 w-full
-                        px-6 py-4 lg:w-80 flex flex-col justify-center
+                        flex-shrink-0
+                        p-4 flex flex-col justify-center
                     ">
                         {isAuthenticated ? (
-                            <div className='space-y-4 text-center'>
+                            <div className='text-center items-center flex flex-col gap-2'>
                                 <p className='text-text'>
                                     Logged in as <span className='text-violet-500 font-medium'>{user?.username}</span>
                                 </p>
