@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { useClip } from '../../clips/context/clipProvider';
 import { useAuth } from '../../auth/context/authProvider';
 import { Clip } from '@/types/types'
 import { toast } from 'react-toastify';
@@ -14,12 +13,14 @@ import Logo from "@/images/Oktzy Test Logo 1.png"
 import { useRouter } from 'next/navigation'
 
 export function Navigation({
+    clips,
     user,
     setSignInModalOpen,
     navOpen,
     setNavOpen,
     confirmAndDeleteClip
 }: {
+    clips: Clip[];
     user: {
         username: string,
         id: number
@@ -30,7 +31,6 @@ export function Navigation({
     confirmAndDeleteClip?: (id: number) => void;
 }) {
     const router = useRouter();
-    const { clips } = useClip();
     const { isAuthenticated, logout, hasUnsavedChanges } = useAuth();
 
     // Nav Ref for animation
@@ -73,6 +73,10 @@ export function Navigation({
         });
     }, [navOpen, navRef]);
 
+    useEffect(() => {
+        console.log('🔍 Navigation render:', { clipsCount: clips.length, clipIds: clips.map(c => c.id) });
+    }, [clips]);
+
     function handleClipClick(
         clip: Clip,
         router: any
@@ -81,7 +85,10 @@ export function Navigation({
             toast.error('You have unsaved changes. Please save them before navigating away.');
             return;
         }
-        router.push(`/${user?.id}/clips/${clip.id}`)
+        setNavOpen(false);
+        setTimeout(() => {
+            router.push(`/${user?.id}/clips/${clip.id}`)
+        }, 500); // Slight delay to ensure state updates
     }
 
     function handleHomeClick() {
@@ -89,7 +96,10 @@ export function Navigation({
             toast.error('You have unsaved changes. Please save them before navigating away.');
             return;
         }
-        router.push(`/${user?.id}`)
+        setNavOpen(false);
+        setTimeout(() => {
+            router.push(`/${user?.id}`)
+        }, 500); // Slight delay to ensure state updates
     }
 
     // Add this ref
@@ -136,7 +146,11 @@ export function Navigation({
             >
                 {/* Header Section */}
                 <div className="flex border-b border-violet-500/50 px-6 py-4 flex-shrink-0 justify-between items-center">
-                    <img src={Logo.src} alt="Oktzy Logo" className="h-24 mb-2 cursor-pointer" onClick={handleHomeClick} />
+                    <img 
+                        src={Logo.src} 
+                        alt="Oktzy Logo" 
+                        className="h-24 mb-2 cursor-pointer" 
+                        onClick={handleHomeClick} />
                     {/* User Section */}
                     <div className="
                         flex-shrink-0 w-full
@@ -188,6 +202,7 @@ export function Navigation({
                                                 <FaTrash
                                                     onClick={(e) => {
                                                         e.stopPropagation();
+                                                        setNavOpen(false);
                                                         confirmAndDeleteClip && confirmAndDeleteClip(clip.id);
                                                     }}
                                                     className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 cursor-pointer"

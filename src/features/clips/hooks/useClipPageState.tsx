@@ -213,7 +213,7 @@ export function useClipPageState(clipId?: number) {
     )
   };
 
-   // 🟢 HANDLES PLAYBACK TO TIMESTAMP 🟢
+  // 🟢 HANDLES PLAYBACK TO TIMESTAMP 🟢
   const handleToTimestamp = (time: number) => {
     if (playerRef.current) {
       playerRef.current.currentTime = time;
@@ -270,7 +270,7 @@ export function useClipPageState(clipId?: number) {
             ...prev,
             title,
             clipUrl,
-            timestamps: [...timestamps] 
+            timestamps: [...timestamps]
           } : prev);
 
           setHasUnsavedChanges(false);
@@ -289,10 +289,11 @@ export function useClipPageState(clipId?: number) {
 
   // 🟢 HANDLES CLIP DELETES WITH CONFIRMATION 🟢
   const confirmAndDeleteClip = async (id: number) => {
+    const clipTitle = clips.find(c => c.id === id)?.title || 'this clip';
     toast.warning(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div>
-          <p>Confirm deletion of clip?</p><br />
+          <p>Confirm deletion of {clipTitle}</p><br />
           <p className='italic'>This action is PERMANENT and cannot be undone.</p>
         </div>
         <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
@@ -316,7 +317,7 @@ export function useClipPageState(clipId?: number) {
     )
   }
 
-   // 🟢 ACTUAL DELETE HANDLER 🟢
+  // 🟢 ACTUAL DELETE HANDLER 🟢
   const handleDeleteClip = async (id: number) => {
     if (id === undefined) {
       toast.error('No clip selected for deletion');
@@ -332,7 +333,6 @@ export function useClipPageState(clipId?: number) {
       const response = await deleteClip(id);
       if (response.success) {
         toast.success('Clip deleted successfully');
-
         if (pathname === `/${user?.id}/clips/${id}`) {
           router.push(`/${user?.id}`);
         }

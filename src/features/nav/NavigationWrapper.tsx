@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Navigation } from '@/features/nav/components/Navigation';
 import { useAuth } from '@/features/auth/context/authProvider';
+import { useClip } from '@/features/clips/context/clipProvider';
 import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 import { IoIosArrowDown } from "react-icons/io";
 import SignInModal from './SignInModal';
@@ -11,6 +12,7 @@ export default function NavigationWrapper() {
   const [navOpen, setNavOpen] = useState(false);
   const [signInModalOpen, setSignInModalOpen] = useState(false);
   const clipPage = useClipPageState();
+  const { clips } = useClip();
 
   return (
     <>
@@ -26,6 +28,7 @@ export default function NavigationWrapper() {
 
       {/* Navigation Sidebar */}
       <Navigation
+        clips={clips}
         user={user}
         setSignInModalOpen={setSignInModalOpen}
         navOpen={navOpen}

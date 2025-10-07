@@ -29,6 +29,8 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Fetch all clips when user is authenticated
     const fetchClips = useCallback(async () => {
+        console.log('🚨 FETCHCLIPS CALLED - Stack trace:');
+        console.trace('Stack trace for fetchClips');
         if (!isAuthenticated) {
             setClips([]);
             return;
@@ -76,31 +78,31 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [user]);
 
     const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
-    if (!user) {
-        return { success: false, error: 'User Not Authenticated' }
-    }
-
-    setError(null)
-
-    try {
-        const response = await clipsAPI.update(id, title, data)
-
-        if (response.data) {
-            const normalizedClip = normalizeClip(response.data)
-            
-            setClips(prevClips => {
-                const filteredClips = prevClips.filter(clip => Number(id) !== Number(clip.id))
-                const newClips = [normalizedClip, ...filteredClips];
-                return newClips;
-            })
+        if (!user) {
+            return { success: false, error: 'User Not Authenticated' }
         }
-        return { success: true }
-    } catch (error: any) {
-        console.error('Error updating clip:', error);
-        setError(error.message || 'Failed to update clip');
-        return { success: false, error: error.message || 'Failed to update clip' }
-    }
-}, [user, clips]) // Keep clips dependency since you're using it
+
+        setError(null)
+
+        try {
+            const response = await clipsAPI.update(id, title, data)
+
+            if (response.data) {
+                const normalizedClip = normalizeClip(response.data)
+
+                setClips(prevClips => {
+                    const filteredClips = prevClips.filter(clip => Number(id) !== Number(clip.id))
+                    const newClips = [normalizedClip, ...filteredClips];
+                    return newClips;
+                })
+            }
+            return { success: true }
+        } catch (error: any) {
+            console.error('Error updating clip:', error);
+            setError(error.message || 'Failed to update clip');
+            return { success: false, error: error.message || 'Failed to update clip' }
+        }
+    }, [user]);
 
     const deleteClip = useCallback(async (id: number): Promise<{ success: boolean; error?: string }> => {
         if (!user) {
@@ -109,18 +111,25 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setError(null)
 
+        console.log('🗑️ DELETING CLIP:', id);
+        console.log('📊 Clips before delete:', clips.map(c => ({ id: c.id, title: c.title })));
         try {
             const response = await clipsAPI.delete(id)
             if (response.data) {
-                setClips(prevClips => prevClips.filter(clip => clip.id !== id))
+                console.log('✅ Delete API successful, updating context');
+                setClips(prevClips => {
+                    const filtered = prevClips.filter(clip => clip.id !== id);
+                    console.log('🔄 New clips after filter:', filtered.map(c => ({ id: c.id, title: c.title })));
+                    return filtered;
+                });
             }
-            return { success: true }
+            return { success: true };
         } catch (error: any) {
             console.error('Error deleting clip:', error);
             setError(error.message || 'Failed to delete clip');
             return { success: false, error: error.message || 'Failed to delete clip' }
         }
-    }, [user, clips]);
+    }, [user]);
 
     useEffect(() => {
         if (isAuthenticated && user) {
@@ -129,7 +138,7 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setClips([]);
             setError(null);
         }
-    }, [isAuthenticated, user, fetchClips]);
+    }, [isAuthenticated, user]);
 
     // Memoize context value
     const contextValue = useMemo(() => ({
