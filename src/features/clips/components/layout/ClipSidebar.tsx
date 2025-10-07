@@ -23,12 +23,12 @@ export function ClipSidebar({
 }: ClipSidebarProps) {
     const params = useParams();
     const { id: clipId } = params;
-    const { hasUnsavedChanges } = useAuth();
+    const { hasUnsavedChanges, isAuthenticated } = useAuth();
     const revertBtnRef = useRef<HTMLButtonElement>(null);
 
     useLayoutEffect(() => {
         if (revertBtnRef.current) {
-            if (hasUnsavedChanges) {
+            if (hasUnsavedChanges && isAuthenticated) {
                 gsap.to(revertBtnRef.current, {
                     opacity: 1,
                     scale: 1,

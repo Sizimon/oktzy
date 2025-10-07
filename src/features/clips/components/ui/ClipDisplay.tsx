@@ -18,7 +18,7 @@ export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
         handlePlay,
         handlePause,
         shouldPlay,
-    } = useVideoState({ // Pass necessary props to the hook
+    } = useVideoState({
         timestampModalOpen,
         signInModalOpen,
         setCurrentTime,
@@ -29,7 +29,7 @@ export const ClipDisplay = forwardRef<any, ClipDisplayProps>(({
             <div className="w-full h-full aspect-video lg:aspect-auto max-h-[80lvh]">
                 <ReactPlayer
                     ref={ref}
-                    src={clipUrl} // (as you prefer)
+                    src={clipUrl}
                     width="100%"
                     height="100%"
                     playing={shouldPlay}

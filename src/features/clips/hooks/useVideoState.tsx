@@ -16,18 +16,19 @@ export function useVideoState({
     const [isUserPaused, setIsUserPaused] = useState<boolean>(false);
     const [wasPlayingBeforeModal, setWasPlayingBeforeModal] = useState<boolean>(false);
 
+    // 🟢 HANDLES VIDEO PLAYBACK PROGRESS 🟢
     const handleProgress = useCallback((progress: any) => {
         currentTimeRef.current = progress.srcElement ? progress.srcElement.currentTime : 0;
     }, []);
 
-    // Handle when user manually changes volume
+    // 🟢 HANDLES VOLUME CHANGES 🟢
     const handleVolumeChange = useCallback((event: React.SyntheticEvent<HTMLVideoElement>) => {
         const target = event.target as HTMLVideoElement;
         const volume = target.volume;
         setUserVolume(volume);
     }, []);
 
-    // Handle when user manually plays/pauses
+    // 🟢 HANDLES PLAY/PAUSE BUTTONS 🟢
     const handlePlay = useCallback(() => {
         setIsUserPaused(false);
     }, []);
@@ -36,16 +37,27 @@ export function useVideoState({
         setIsUserPaused(true);
     }, []);
 
-    // Handle modal open/close behavior
+    // 🟢 MODAL OPEN EFFECT 🟢
     useEffect(() => {
-        if (timestampModalOpen || signInModalOpen) {
-            // Store current time for timestamp modal
-            setCurrentTime(currentTimeRef.current);
+        const isModalOpen = timestampModalOpen || signInModalOpen;
 
-            // Remember if video was playing before modal opened
-            setWasPlayingBeforeModal(!isUserPaused);
+        if (isModalOpen) {
+            setCurrentTime(currentTimeRef.current);
+            // Only save the state if we haven't already saved it
+            setWasPlayingBeforeModal(prev => prev !== false ? prev : !isUserPaused);
         }
     }, [timestampModalOpen, signInModalOpen, setCurrentTime, isUserPaused]);
+
+     // 🟢 MODAL CLOSE EFFECT 🟢
+    useEffect(() => {
+        const isModalOpen = timestampModalOpen || signInModalOpen;
+
+        if (!isModalOpen && wasPlayingBeforeModal) {
+
+            setIsUserPaused(false);
+            setWasPlayingBeforeModal(false); // Reset the flag
+        }
+    }, [timestampModalOpen, signInModalOpen, wasPlayingBeforeModal]);
 
     // Determine if video should be playing
     const shouldPlay = !isUserPaused && !timestampModalOpen && !signInModalOpen;

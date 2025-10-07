@@ -32,7 +32,6 @@ export default function RootLayout({
       >
         <CustomThemeProvider>
           <Providers>
-            <NavigationWrapper />
             {children}
           </Providers>
         </CustomThemeProvider>
