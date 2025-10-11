@@ -193,7 +193,7 @@ export function Navigation({
                 <div className="flex-1 overflow-hidden flex flex-col items-center">
 
                     {/* Clips Section - Separate Mobile/Desktop */}
-                    <div className="flex-1 p-6 w-full flex flex-col items-center justify-evenly">
+                    <div className="flex-1 p-6 w-full flex flex-col items-center justify-start lg:justify-evenly">
                         <h3 className="text-lg text-text/80 mb-6 font-medium text-center">Your Clips</h3>
 
                         {/* Mobile: Vertical Scrolling */}
