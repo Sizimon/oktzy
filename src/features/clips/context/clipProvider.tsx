@@ -41,8 +41,13 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         try {
             const result = await clipsAPI.getAll();
-            const normalizedClips = result.data.map(normalizeClip)
-            setClips(normalizedClips || []);
+            const normalizedClips: Clip[] = result.data.map(normalizeClip)
+            const sortedClips = normalizedClips.sort((a, b) => {
+                const dateA = new Date(a.updated_at || 0).getTime();
+                const dateB = new Date(b.updated_at || 0).getTime();
+                return dateB - dateA;
+            });
+            setClips(sortedClips || []);
         } catch (err: any) {
             console.error('Error fetching clips:', err);
             setError(err.message || 'Failed to fetch clips');

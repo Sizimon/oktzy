@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { BtnPrimary, BtnSecondary } from '@/components/ui/buttonVariants';
 import { FaTrash } from "react-icons/fa6";
 import Logo from "@/images/Oktzy Test Logo 1.png"
+import { IoIosArrowUp } from "react-icons/io";
 
 import { useRouter } from 'next/navigation'
 
@@ -147,6 +148,13 @@ export function Navigation({
             >
                 {/* Header Section */}
                 <div className="flex border-b border-violet-500/50 lg:px-6 py-4 flex-shrink-0 justify-between items-center">
+                    <button 
+                        className='absolute lg:hidden lg:pointer-events-none top-2 left-1/2 -translate-x-1/2'
+                        onClick={() => setNavOpen(false)}
+                        aria-label="Close Navigation Menu"
+                    >
+                            <IoIosArrowUp className='h-6 w-6 text-text hover:text-violet-500 transition-color duration-400' />
+                    </button>
                     <img
                         src={Logo.src}
                         alt="Oktzy Logo"
