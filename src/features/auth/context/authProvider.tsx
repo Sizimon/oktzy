@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback, useMemo } from 'react';
 import { authAPI } from '@/features/auth/api/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -25,6 +25,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const router = useRouter();
 
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const allowNavigation = useRef(false);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            if (hasUnsavedChanges && isAuthenticated) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        }
+
+        const handlePopState = (e: PopStateEvent) => {
+            if (hasUnsavedChanges && isAuthenticated && !allowNavigation.current) {
+                const shouldLeave = window.confirm(
+                    'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.'
+                );
+
+                if (shouldLeave) {
+                    // User confirmed - allow navigation on next trigger
+                    allowNavigation.current = true;
+                    setHasUnsavedChanges(false);
+                    window.history.back(); // Trigger the navigation
+                } else {
+                    // User cancelled - prevent navigation
+                    window.history.pushState(null, '', window.location.href);
+                }
+            } else {
+                // Reset the flag after navigation
+                allowNavigation.current = false;
+            }
+        };
+
+        if (hasUnsavedChanges && isAuthenticated) {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            window.addEventListener('popstate', handlePopState);
+            window.history.pushState(null, '', window.location.href);
+        }
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [hasUnsavedChanges, isAuthenticated, setHasUnsavedChanges]);
 
     const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string, userId?: string }> => {
         setIsLoading(true);
