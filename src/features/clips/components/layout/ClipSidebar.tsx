@@ -66,7 +66,12 @@ export function ClipSidebar({
                     onChange={handleChangeClipTitle} />
             </div>
             <div className='flex flex-row space-x-4 justify-center items-center w-full flex-shrink-0'>
-                <BtnPrimary onClick={() => handleSave(clipTitle || '')}>{params.id ? 'Update Clip' : 'Save Clip'}</BtnPrimary>
+                {params.id ? (
+                    <BtnPrimary disabled={!hasUnsavedChanges} onClick={() => handleSave(clipTitle || '')}>Update Clip</BtnPrimary>
+                ) : (
+                    <BtnPrimary disabled={!clipUrl} onClick={() => handleSave(clipTitle || '')}>Save Clip</BtnPrimary>
+                )}
+                {/* <BtnPrimary onClick={() => handleSave(clipTitle || '')}>{params.id ? 'Update Clip' : 'Save Clip'}</BtnPrimary> */}
                 <BtnSecondary onClick={handleTimestampModal}>Add Timestamp</BtnSecondary>
             </div>
             <ClipNoteDisplay
