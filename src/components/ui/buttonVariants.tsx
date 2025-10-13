@@ -1,8 +1,15 @@
-export function BtnPrimary({ children, onClick }: { children: React.ReactNode; onClick?: () => void; }) {
+export function BtnPrimary({ children, onClick, disabled }: { children: React.ReactNode; onClick?: () => void; disabled?: boolean }) {
     return (
         <button
             onClick={onClick}
-            className='bg-violet-500 hover:bg-violet-600 text-white p-2 text-sm lg:text-base rounded-full transition-colors cursor-pointer w-full'
+            disabled={disabled}
+            className={`
+                p-2 text-sm lg:text-base rounded-full transition-colors w-full duration-300
+                ${disabled 
+                    ? 'bg-gray-400 text-gray-600 opacity-50' 
+                    : 'bg-violet-500 hover:bg-violet-600 text-white cursor-pointer'
+                }
+            `}
         >
             {children}
         </button>
