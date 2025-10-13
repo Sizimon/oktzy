@@ -170,7 +170,10 @@ export function Navigation({
                                 <p className='text-text'>
                                     Logged in as <span className='text-violet-500 font-medium'>{user?.username}</span>
                                 </p>
-                                <BtnSecondary onClick={logout}>
+                                <BtnSecondary onClick={() => {
+                                    logout();
+                                    setNavOpen(false);
+                                }}>
                                     Logout
                                 </BtnSecondary>
                             </div>
@@ -217,7 +220,7 @@ export function Navigation({
                                                         setNavOpen(false);
                                                         confirmAndDeleteClip && confirmAndDeleteClip(clip.id);
                                                     }}
-                                                    className="text-gray-500/50 opacity-0 group-hover:opacity-100 hover:text-red-500 h-4 w-4 transition-all duration-200 cursor-pointer"
+                                                    className="text-red-500 opacity-50 lg:text-gray-500/50 lg:opacity-0 lg:group-hover:opacity-100 lg:hover:text-red-500 h-4 w-4 transition-all duration-200 cursor-pointer"
                                                 />
                                             </div>
                                             <h4 className="text-text group-hover:text-violet-500 transition-colors duration-200 font-medium">

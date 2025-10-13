@@ -10,7 +10,14 @@ const SignInForm = ({
     setFormType: (formType: 'login' | 'register') => void;
 }) => {
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 flex flex-col justify-center items-center text-text w-full">
+        <form 
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+                setEmail('');
+                setPassword('');
+            }} 
+            className="space-y-4 flex flex-col justify-center items-center text-text w-full">
             <input
                 type="email"
                 placeholder="Email"

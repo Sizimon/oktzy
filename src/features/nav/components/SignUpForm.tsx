@@ -14,7 +14,16 @@ const SignUpForm = ({
     setFormType: (formType: 'login' | 'register') => void;
 }) => {
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 flex flex-col justify-center items-center text-text w-full">
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+                setEmail('');
+                setPassword('');
+                setUsername('');
+                setConfirmPassword('');
+            }}
+            className="space-y-4 flex flex-col justify-center items-center text-text w-full">
             <input
                 type="text"
                 placeholder="Username"
