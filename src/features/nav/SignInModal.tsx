@@ -8,6 +8,7 @@ import { SignInModalProps } from '@/types/types';
 import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/features/auth/context/authProvider';
+import { useClip } from '../clips/context/clipProvider';
 
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [formType, setFormType] = useState<'login' | 'register'>('login');
@@ -16,6 +17,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { processPendingClip } = useClip();
     const { login, register } = useAuth();
     const router = useRouter();
 
@@ -34,10 +36,14 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
                 if (result.success) {
                     toast.success('Login successful');
+                    const pendingResult = await processPendingClip();
                     setTimeout(() => {
                         onClose();
-                        if (result.userId) {
-                            router.push(`/${result.userId}`); // or wherever you redirect
+
+                        if (pendingResult.success && pendingResult.id) {
+                            router.push(`/${result.userId}/clips/${pendingResult.id}`);
+                        } else if (result.userId) {
+                            router.push(`/${result.userId}`);
                         }
                     }, 2000);
                 } else {
@@ -74,7 +80,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 } else {
                     toast.error(result.error || 'Login failed');
                 }
-                
+
             } catch (error) {
                 console.error('Registration error:', error);
                 toast.error('Network error - please try again');

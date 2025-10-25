@@ -10,20 +10,27 @@ interface ClipContextType {
     clips: Clip[];
     isLoading: boolean;
     error: string | null;
+    pendingClip: any | null;
 
     // Actions
     fetchClips: () => Promise<void>;
     createClip: (title: string, data: CuratorData) => Promise<{ success: boolean; error?: string, id?: number }>;
     updateClip: (id: number, title: string, data: CuratorData) => Promise<{ success: boolean; error?: string }>;
     deleteClip: (id: number) => Promise<{ success: boolean; error?: string }>;
+    savePendingClip: (title: string, data: CuratorData) => void;
+    processPendingClip: () => Promise<{ success: boolean; error?: string, id?: number }>;
+    clearPendingClip: () => void;
 }
 
 const ClipContext = createContext<ClipContextType | undefined>(undefined);
 
 export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [clips, setClips] = useState<Clip[]>([]);
+    const [pendingClip, setPendingClip] = useState<{ title: string; data: CuratorData } | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
+    console.log('Pending Clip:', pendingClip);
 
     const { user, isAuthenticated } = useAuth();
 
@@ -58,8 +65,9 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [isAuthenticated]);
 
     const createClip = useCallback(async (title: string, data: CuratorData): Promise<{ success: boolean; error?: string, id?: number }> => {
-        if (!user) {
-            return { success: false, error: 'User not authenticated' };
+        if (!user || !isAuthenticated) {
+            console.log('📝 User not authenticated, saving clip as pending');
+            return { success: false, error: 'Please log in to save this clip. We\'ll save it automatically when you sign in!' };
         }
 
         setError(null);
@@ -81,6 +89,39 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return { success: false, error: error.message || 'Failed to create clip' };
         }
     }, [user]);
+
+    const savePendingClip = useCallback((title: string, data: CuratorData) => {
+        console.log('📝 Saving clip as pending');
+        setPendingClip({
+            title,
+            data,
+        });
+    }, []);
+
+    const processPendingClip = useCallback(async () => {
+        if (pendingClip && user) {
+            console.log('📝 Processing pending clip after authentication');
+            try {
+                const result = await createClip(pendingClip.title, pendingClip.data);
+                if (result.success) {
+                    console.log('✅ Pending clip saved successfully after login');
+                    setPendingClip(null);
+                    return { success: true, id: result.id };
+                } else {
+                    console.error('❌ Failed to save pending clip after login:', result.error);
+                    return { success: false, error: result.error };
+                }
+            } catch (error) {
+                console.error('❌ Error processing pending clip:', error);
+                return { success: false, error: 'Failed to process pending clip' };
+            }
+        }
+        return { success: false, error: 'No pending clip or user' };
+    }, [createClip, user, pendingClip]);
+
+    const clearPendingClip = useCallback(() => {
+        setPendingClip(null);
+    }, []);
 
     const updateClip = useCallback(async (id: number, title: string, data: CuratorData): Promise<{ success: boolean; error?: string }> => {
         if (!user) {
@@ -139,22 +180,31 @@ export const ClipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         if (isAuthenticated && user) {
             fetchClips();
+
+            if (pendingClip) {
+                processPendingClip();
+            }
+
         } else {
             setClips([]);
             setError(null);
         }
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, processPendingClip, pendingClip]);
 
     // Memoize context value
     const contextValue = useMemo(() => ({
         clips,
         isLoading,
         error,
+        pendingClip,
         fetchClips,
         createClip,
         updateClip,
-        deleteClip
-    }), [clips, isLoading, error, fetchClips, createClip, updateClip, deleteClip]);
+        deleteClip,
+        savePendingClip,
+        processPendingClip,
+        clearPendingClip
+    }), [clips, isLoading, error, pendingClip, fetchClips, createClip, updateClip, deleteClip, savePendingClip, processPendingClip, clearPendingClip]);
 
     return (
         <ClipContext.Provider value={contextValue}>
