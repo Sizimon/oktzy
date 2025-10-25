@@ -71,10 +71,14 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
                 if (result.success) {
                     toast.success('Login successful');
+                    const pendingResult = await processPendingClip();
                     setTimeout(() => {
                         onClose();
-                        if (result.userId) {
-                            router.push(`/${result.userId}`); // or wherever you redirect
+                        
+                        if (pendingResult.success && pendingResult.id) {
+                            router.push(`/${result.userId}/clips/${pendingResult.id}`);
+                        } else if (result.userId) {
+                            router.push(`/${result.userId}`);
                         }
                     }, 2000);
                 } else {
