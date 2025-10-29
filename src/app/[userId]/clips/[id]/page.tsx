@@ -1,12 +1,12 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/features/auth/context/authProvider';
 import { useClip } from '@/features/clips/context/clipProvider';
 
 import { ClipLoader } from 'react-spinners';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
 
 // Components
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
@@ -21,6 +21,47 @@ const ClipPage = () => {
     const { user, isAuthenticated, isLoading: authLoading } = useAuth();
     const { isLoading: clipsLoading } = useClip();
     const [error, setError] = useState<string>('');
+
+    const hasShownToast = useRef<boolean>(false);
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (hasShownToast.current) return; // Prevent multiple executions
+        const loginSuccess = searchParams.get('loginSuccess');
+        const registerSuccess = searchParams.get('registerSuccess');
+
+        console.log('🔍 loginSuccess:', loginSuccess);
+        console.log('🔍 registerSuccess:', registerSuccess);
+
+        if (loginSuccess === 'true') {
+            console.log('🎉 Showing login success toast');
+            hasShownToast.current = true;
+            setTimeout(() => {
+                toast.success('Welcome back! Your clip has been saved 👋');
+            }, 200);
+
+            // Clean up after showing toast
+            setTimeout(() => {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('loginSuccess');
+                url.searchParams.delete('registerSuccess');
+                window.history.replaceState({}, '', url.toString());
+            }, 2500);
+        } else if (registerSuccess === 'true') {
+            console.log('🎉 Showing register success toast');
+            hasShownToast.current = true;
+            setTimeout(() => {
+                toast.success('Welcome to Oktzy! Your clip has been saved 🎉');
+            }, 200);
+
+            setTimeout(() => {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('loginSuccess');
+                url.searchParams.delete('registerSuccess');
+                window.history.replaceState({}, '', url.toString());
+            }, 2500);
+        }
+    }, [searchParams]);
 
     const idAsNum = Number(id);
 

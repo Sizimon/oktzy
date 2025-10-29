@@ -5,10 +5,8 @@ import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import { toast } from 'react-toastify';
 import { SignInModalProps } from '@/types/types';
-import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/features/auth/context/authProvider';
-import { useClip } from '../clips/context/clipProvider';
 
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [formType, setFormType] = useState<'login' | 'register'>('login');
@@ -17,9 +15,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { processPendingClip } = useClip();
     const { login, register } = useAuth();
-    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,30 +27,22 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 setIsLoading(false);
                 return;
             }
+
             try {
                 const result = await login(email, password);
-
                 if (result.success) {
-                    toast.success('Login successful');
-                    const pendingResult = await processPendingClip();
-                    setTimeout(() => {
-                        onClose();
-
-                        if (pendingResult.success && pendingResult.id) {
-                            router.push(`/${result.userId}/clips/${pendingResult.id}`);
-                        } else if (result.userId) {
-                            router.push(`/${result.userId}`);
-                        }
-                    }, 2000);
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('loginSuccess', 'true');
+                    window.history.replaceState({}, '', currentUrl.toString());
+                    onClose();
                 } else {
-                    toast.error(result.error || 'Login failed');
+                    toast.error(result.error || 'Login failed'); // Add this line
                 }
-
             } catch (error) {
                 console.error('Login error:', error);
                 toast.error('Network error - please try again');
             }
-            // Handle login logic here
+
         } else if (formType === 'register') {
             if (!email || !password || !confirmPassword || !username) {
                 toast.error('Please fill in all fields');
@@ -66,23 +54,17 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 setIsLoading(false);
                 return;
             }
+
             try {
                 const result = await register(username, email, password);
 
                 if (result.success) {
-                    toast.success('Login successful');
-                    const pendingResult = await processPendingClip();
-                    setTimeout(() => {
-                        onClose();
-                        
-                        if (pendingResult.success && pendingResult.id) {
-                            router.push(`/${result.userId}/clips/${pendingResult.id}`);
-                        } else if (result.userId) {
-                            router.push(`/${result.userId}`);
-                        }
-                    }, 2000);
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('registerSuccess', 'true');
+                    window.history.replaceState({}, '', currentUrl.toString());
+                    onClose();
                 } else {
-                    toast.error(result.error || 'Login failed');
+                    toast.error(result.error || 'Registration failed'); // Fixed this line
                 }
 
             } catch (error) {
