@@ -32,7 +32,7 @@ export function useClipPageState(clipId?: number) {
   const { user, isAuthenticated, isLoading: authLoading, setHasUnsavedChanges } = useAuth()
 
   // Clip states
-  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading } = useClip()
+  const { createClip, updateClip, deleteClip, clips, isLoading: clipsLoading, savePendingClip } = useClip()
 
   const [hasLoadedClipData, setHasLoadedClipData] = useState(false);
 
@@ -243,10 +243,12 @@ export function useClipPageState(clipId?: number) {
     }
 
     if (!isAuthenticated) {
-      toast.error('You must be logged in to save clips');
+      savePendingClip(title, clipData as CuratorData);
+      toast.success('Clip saved! Sign in to sync to your account 📝');
       setSignInModalOpen(true);
       return;
     }
+    
     setIsSaving(true);
 
     try {

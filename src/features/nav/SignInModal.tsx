@@ -5,7 +5,6 @@ import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import { toast } from 'react-toastify';
 import { SignInModalProps } from '@/types/types';
-import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/features/auth/context/authProvider';
 
@@ -17,7 +16,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { login, register } = useAuth();
-    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,26 +27,22 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 setIsLoading(false);
                 return;
             }
+
             try {
                 const result = await login(email, password);
-
                 if (result.success) {
-                    toast.success('Login successful');
-                    setTimeout(() => {
-                        onClose();
-                        if (result.userId) {
-                            router.push(`/${result.userId}`); // or wherever you redirect
-                        }
-                    }, 2000);
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('loginSuccess', 'true');
+                    window.history.replaceState({}, '', currentUrl.toString());
+                    onClose();
                 } else {
                     toast.error(result.error || 'Login failed');
                 }
-
             } catch (error) {
                 console.error('Login error:', error);
                 toast.error('Network error - please try again');
             }
-            // Handle login logic here
+
         } else if (formType === 'register') {
             if (!email || !password || !confirmPassword || !username) {
                 toast.error('Please fill in all fields');
@@ -60,21 +54,19 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 setIsLoading(false);
                 return;
             }
+
             try {
                 const result = await register(username, email, password);
 
                 if (result.success) {
-                    toast.success('Login successful');
-                    setTimeout(() => {
-                        onClose();
-                        if (result.userId) {
-                            router.push(`/${result.userId}`); // or wherever you redirect
-                        }
-                    }, 2000);
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('registerSuccess', 'true');
+                    window.history.replaceState({}, '', currentUrl.toString());
+                    onClose();
                 } else {
-                    toast.error(result.error || 'Login failed');
+                    toast.error(result.error || 'Registration failed'); 
                 }
-                
+
             } catch (error) {
                 console.error('Registration error:', error);
                 toast.error('Network error - please try again');

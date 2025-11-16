@@ -1,5 +1,6 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 // Component Imports
 import { ClipInput } from '@/features/clips/components/ui/ClipInput';
@@ -11,7 +12,7 @@ import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal'
 import SignInModal from '@/features/nav/SignInModal';
 
 // Misc Imports
-import { Bounce, ToastContainer } from 'react-toastify';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
 
 
 // Context Imports
@@ -19,6 +20,48 @@ import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 
 export default function Home() {
   const clipPage = useClipPageState();
+
+  const hasShownToast = useRef<boolean>(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (hasShownToast.current) return; // Prevent multiple executions
+    const loginSuccess = searchParams.get('loginSuccess');
+    const registerSuccess = searchParams.get('registerSuccess');
+
+    console.log('🔍 loginSuccess:', loginSuccess);
+    console.log('🔍 registerSuccess:', registerSuccess);
+
+    if (loginSuccess === 'true') {
+      console.log('🎉 Showing login success toast');
+      hasShownToast.current = true;
+      setTimeout(() => {
+        toast.success('Welcome back! 👋');
+      }, 200);
+
+      // Clean up after showing toast
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('loginSuccess');
+        url.searchParams.delete('registerSuccess');
+        window.history.replaceState({}, '', url.toString());
+      }, 2500);
+      
+    } else if (registerSuccess === 'true') {
+      console.log('🎉 Showing register success toast');
+      hasShownToast.current = true;
+      setTimeout(() => {
+        toast.success('Welcome to Oktzy! 🎉');
+      }, 200);
+
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('loginSuccess');
+        url.searchParams.delete('registerSuccess');
+        window.history.replaceState({}, '', url.toString());
+      }, 2500);
+    }
+  }, [searchParams]);
 
   return (
     <div className='relative w-full h-lvh lg:p-8'>
