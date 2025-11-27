@@ -99,7 +99,7 @@ export const ClipInput: React.FC<ClipInputProps> = ({ clipUrl, onInputChange }) 
       <input
         type="text"
         value={clipUrl}
-        placeholder="Enter clip URL..."
+        placeholder="Paste your video URL..."
         onInput={handleInput}
         onPaste={handlePaste}
         onKeyDown={handleKeyDown}
