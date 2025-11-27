@@ -53,16 +53,6 @@ export function Navigation({
 
     }, [navOpen]);
 
-    // Set initial hidden state once
-    useEffect(() => {
-        if (navRef.current) {
-            gsap.set(navRef.current, {
-                y: '-100%',
-                opacity: 0
-            });
-        }
-    }, [navRef]);
-
     // Animate dropdown
     useEffect(() => {
         if (!navRef.current) return;
@@ -73,10 +63,6 @@ export function Navigation({
             ease: navOpen ? 'power2.out' : 'power2.in'
         });
     }, [navOpen, navRef]);
-
-    // useEffect(() => {
-    //     console.log('🔍 Navigation render:', { clipsCount: clips.length, clipIds: clips.map(c => c.id) });
-    // }, [clips]);
 
     function handleClipClick(
         clip: Clip,
@@ -143,6 +129,7 @@ export function Navigation({
                     h-screen sm:h-1/2
                     bg-foreground/20 backdrop-blur-md
                     flex flex-col
+                    transform -translate-y-full opacity-0
                     ${navOpen ? 'pointer-events-auto' : 'pointer-events-none'}
                 `}
             >

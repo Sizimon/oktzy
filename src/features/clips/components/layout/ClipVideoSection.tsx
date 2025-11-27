@@ -10,11 +10,11 @@ export function ClipVideoSection({
   ref
 }: ClipDisplayProps) {
   return (
-    <div className="
+    <div className={`${!clipUrl ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
       relative w-full flex flex-col flex-[2] items-center justify-center h-full
       bg-foreground/5 backdrop-blur-sm border border-white/10
-      lg:p-4 lg:rounded-2xl
-    ">
+      lg:p-4 lg:rounded-2xl transition-opacity duration-700
+    `}>
       <div className="w-full h-full flex justify-center items-center">
         {!clipUrl ? (
           <div className="flex flex-col items-center justify-center text-center p-8 lg:rounded-2xl bg-gradient-to-br from-violet-500/10 to-background/80 space-y-4 border border-violet-500/20 shadow-lg">
