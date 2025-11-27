@@ -51,9 +51,9 @@ export function ClipSidebar({
     }, [hasUnsavedChanges]);
 
     return (
-        <div className="
-        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full
-        ">
+        <div className={`${!clipUrl ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
+        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full transition-opacity duration-700
+        `}>
             <button
                 ref={revertBtnRef}
                 className="fixed top-4 right-4 w-6 h-6 text-white hover:text-violet-500 cursor-pointer opacity-0 pointer-events-none"
