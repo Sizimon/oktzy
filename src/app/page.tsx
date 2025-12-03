@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Component Imports
 import { ClipInput } from '@/features/clips/components/ui/ClipInput';
 import { ClipVideoSection } from '@/features/clips/components/layout/ClipVideoSection';
 import { ClipSidebar } from '@/features/clips/components/layout/ClipSidebar';
+import { LandingModal } from '@/features/landing/components/LandingModal';
 
 // Modal Imports
 import { ClipNoteModal } from '@/features/clips/components/modals/ClipNoteModal';
@@ -17,7 +18,24 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import { useClipPageState } from '@/features/clips/hooks/useClipPageState';
 
 export default function Home() {
+  const [showLandingModal, setShowLandingModal] = useState(false);
   const clipPage = useClipPageState();
+
+  useEffect(() => {
+    // Check if user has seen the landing modal before
+    const hasSeenLanding = localStorage.getItem('oktzy-seen-landing');
+    if (!hasSeenLanding) {
+      // Small delay to let the page load first
+      setTimeout(() => {
+        setShowLandingModal(true);
+      }, 500);
+    }
+  }, []);
+
+  const handleContinue = () => {
+    localStorage.setItem('oktzy-seen-landing', 'true');
+    setShowLandingModal(false);
+  };
 
   return (
     <div className='relative w-full h-lvh lg:p-8'>
@@ -83,6 +101,12 @@ export default function Home() {
           <SignInModal
             isOpen={clipPage.signInModalOpen}
             onClose={() => clipPage.setSignInModalOpen(false)} />
+
+          {/* Landing Modal */}
+          <LandingModal
+            isOpen={showLandingModal}
+            onContinue={handleContinue}
+          />
           {/** MODALS **/}
         </div>
       </div>
