@@ -1,10 +1,8 @@
-import type { NextConfig } from "next";
 import path from "path";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  basePath: '',
-  assetPrefix: '',
   trailingSlash: true,
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname, 'src');
@@ -12,6 +10,9 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  images: {
+    unoptimized: true,
   },
 };
 
