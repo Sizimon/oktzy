@@ -9,19 +9,21 @@ const SignUpForm = ({
     setPassword: (password: string) => void;
     confirmPassword: string;
     setConfirmPassword: (confirmPassword: string) => void;
-    handleSubmit: (e: React.FormEvent) => void;
+    handleSubmit: (e: React.FormEvent) => Promise<boolean>;
     formType: 'login' | 'register';
     setFormType: (formType: 'login' | 'register') => void;
 }) => {
     return (
         <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault();
-                handleSubmit(e);
-                setEmail('');
-                setPassword('');
-                setUsername('');
-                setConfirmPassword('');
+                const success = await handleSubmit(e);
+                if (success) {
+                    setEmail('');
+                    setPassword('');
+                    setUsername('');
+                    setConfirmPassword('');
+                }
             }}
             className="space-y-4 flex flex-col justify-center items-center text-text w-full">
             <input
@@ -30,7 +32,7 @@ const SignUpForm = ({
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <input
                 type="email"
@@ -38,7 +40,7 @@ const SignUpForm = ({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <input
                 type="password"
@@ -46,7 +48,7 @@ const SignUpForm = ({
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <input
                 type="password"
@@ -54,7 +56,7 @@ const SignUpForm = ({
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <div className="mt-4 flex flex-col justify-center items-center w-full gap-4">
                 <button

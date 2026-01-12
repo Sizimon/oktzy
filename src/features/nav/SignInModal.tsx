@@ -17,70 +17,62 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { login, register } = useAuth();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<boolean> => {
         e.preventDefault();
         setIsLoading(true);
 
-        if (formType === 'login') {
-            if (!email || !password) {
-                toast.error('Please enter your email and password');
-                setIsLoading(false);
-                return;
-            }
+        try {
+            if (formType === 'login') {
+                if (!email || !password) {
+                    toast.error('Please enter your email and password');
+                    return false;
+                }
 
-            try {
                 const result = await login(email, password);
                 if (result.success) {
                     const currentUrl = new URL(window.location.href);
                     currentUrl.searchParams.set('loginSuccess', 'true');
                     window.history.replaceState({}, '', currentUrl.toString());
                     onClose();
+                    return true;
                 } else {
                     toast.error(result.error || 'Login failed');
+                    return false;
                 }
-            } catch (error) {
-                console.error('Login error:', error);
-                toast.error('Network error - please try again');
-            }
 
-        } else if (formType === 'register') {
-            if (!email || !password || !confirmPassword || !username) {
-                toast.error('Please fill in all fields');
-                setIsLoading(false);
-                return;
-            }
-            if (password !== confirmPassword) {
-                toast.error('Passwords do not match');
-                setIsLoading(false);
-                return;
-            }
+            } else if (formType === 'register') {
+                if (!email || !password || !confirmPassword || !username) {
+                    toast.error('Please fill in all fields');
+                    return false;
+                }
 
-            try {
-                const result = await register(username, email, password);
-
+                // Add your register logic here
+                const result = await register(email, username, password);
                 if (result.success) {
-                    const currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('registerSuccess', 'true');
-                    window.history.replaceState({}, '', currentUrl.toString());
+                    toast.success('Registration successful!');
                     onClose();
+                    return true;
                 } else {
-                    toast.error(result.error || 'Registration failed'); 
+                    toast.error(result.error || 'Registration failed');
+                    return false;
                 }
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                toast.error('Network error - please try again');
             }
-        }
 
-        setIsLoading(false);
+            return false; // Fallback return
+        } catch (error) {
+            console.error('Authentication error:', error);
+            toast.error('Network error - please try again');
+            return false;
+        } finally {
+            setIsLoading(false); // Always reset loading state
+        }
     };
 
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-            <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border-[1px] border-white/10 backdrop-blur-md px-6 py-12 rounded-2xl shadow-lg w-5/6 lg:w-2/6 xl:w-1/6">
+            <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border border-white/10 backdrop-blur-md px-6 py-12 rounded-2xl shadow-lg w-5/6 lg:w-2/6 xl:w-1/6">
                 <button onClick={onClose} className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer hover:text-red-500">&times;</button>
                 {formType === 'login' ? (
                     <SignInForm

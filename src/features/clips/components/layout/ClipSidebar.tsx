@@ -52,7 +52,7 @@ export function ClipSidebar({
 
     return (
         <div className={`${!clipUrl ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
-        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border-[1px] border-white/10 h-full transition-opacity duration-700
+        flex-1 flex flex-col w-11/12 rounded-2xl space-y-4 justify-start items-center p-4 bg-foreground/5 backdrop-blur-sm border border-white/10 h-full transition-opacity duration-700
         `}>
             <button
                 ref={revertBtnRef}

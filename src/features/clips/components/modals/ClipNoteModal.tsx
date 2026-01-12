@@ -36,7 +36,7 @@ export const ClipNoteModal: React.FC<TimestampModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-      <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border-[1px] border-white/10 backdrop-blur-md p-4 rounded-2xl shadow-lg w-11/12 lg:w-5/12 xl:w-3/12">
+      <div className="flex flex-col justify-center items-center text-text bg-foreground/60 border border-white/10 backdrop-blur-md p-4 rounded-2xl shadow-lg w-11/12 lg:w-5/12 xl:w-3/12">
         <input
           type="text"
           placeholder="Title"
@@ -49,7 +49,7 @@ export const ClipNoteModal: React.FC<TimestampModalProps> = ({
           placeholder="Your note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="mb-4 p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl outline-1 focus:outline-violet-500 w-full min-h-[120px] no-scrollbar"
+          className="mb-4 p-2 border border-white/10 bg-slate-900/40 rounded-2xl outline-1 focus:outline-violet-500 w-full min-h-[120px] no-scrollbar"
         />
         <div className="flex flex-row justify-center w-full space-x-4">
           {editIndex !== null ? (

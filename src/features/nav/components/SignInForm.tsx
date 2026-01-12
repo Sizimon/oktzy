@@ -5,17 +5,19 @@ const SignInForm = ({
     setEmail: (email: string) => void;
     password: string;
     setPassword: (password: string) => void;
-    handleSubmit: (e: React.FormEvent) => void;
+    handleSubmit: (e: React.FormEvent) => Promise<boolean>;
     formType: 'login' | 'register';
     setFormType: (formType: 'login' | 'register') => void;
 }) => {
     return (
         <form 
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault();
-                handleSubmit(e);
-                setEmail('');
-                setPassword('');
+                const success = await handleSubmit(e);
+                if (success) {
+                    setEmail('');
+                    setPassword('');
+                }
             }} 
             className="space-y-4 flex flex-col justify-center items-center text-text w-full">
             <input
@@ -24,7 +26,7 @@ const SignInForm = ({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <input
                 type="password"
@@ -32,7 +34,7 @@ const SignInForm = ({
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-2 border-[1px] border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
+                className="p-2 border border-white/10 bg-slate-900/40 rounded-2xl focus:outline-none w-full"
             />
             <div className="mt-4 flex flex-col justify-center items-center w-full gap-4">
                 <button

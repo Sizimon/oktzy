@@ -103,7 +103,7 @@ export const ClipInput: React.FC<ClipInputProps> = ({ clipUrl, onInputChange }) 
         onInput={handleInput}
         onPaste={handlePaste}
         onKeyDown={handleKeyDown}
-        className="p-2 border-[1px] opacity-50 border-white/10 outline-1 focus:outline-violet-500 focus:opacity-100 text-sm lg:text-base bg-foreground/5 text-text rounded-full w-2/3 lg:w-1/3 transition-all duration-300"
+        className="p-2 border opacity-50 border-white/10 outline-1 focus:outline-violet-500 focus:opacity-100 text-sm lg:text-base bg-foreground/5 text-text rounded-full w-2/3 lg:w-1/3 transition-all duration-300"
       />
     </div>
   );
